@@ -119,7 +119,7 @@
         "placeholders": {
             "companyName": "مثال: شركة الياسين للتجارة",
             "commercialReg": "مثال: 1234567890",
-            "companyEmail": "info@company.com",
+            "companyEmail": "info",
             "address": "مثال: شارع الإرسال، مبنى رقم 5، الطابق الثالث"
         },
         "hints": {
