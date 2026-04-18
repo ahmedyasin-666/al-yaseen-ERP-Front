@@ -1,0 +1,130 @@
+{
+    "sidebar": {
+        "overview": "Overview",
+        "settings": "Settings",
+        "users": "Users",
+        "addUser": "Add User",
+        "roles": "Roles",
+        "companies": "Companies",
+        "addCompany": "Add Company",
+        "branches": "Branches",
+        "reports": "Reports",
+        "analytics": "Analytics",
+        "close": "Close"
+    },
+    "navbar": {
+        "profile": "Profile",
+        "logout": "Logout",
+        "notifications": "Notifications",
+        "settings": "Settings",
+        "erpyassin": "ERP-Yassin Management System"
+    },
+    "footer": {
+        "rights": "All rights reserved",
+        "email": "Email",
+        "phone": "Phone"
+    },
+    "login": {
+        "title": "Welcome Back!",
+        "subtitle": "Please log in to your account",
+        "email": "Email Address",
+        "emailPlaceholder": "Enter your email",
+        "password": "Password",
+        "passwordPlaceholder": "Enter your password",
+        "rememberMe": "Remember me",
+        "forgotPassword": "Forgot password?",
+        "signIn": "Sign In",
+        "or": "OR",
+        "noAccount": "Don't have an account?",
+        "register": "Sign Up"
+    },
+    "register": {
+        "title": "Create a New Account",
+        "subtitle": "Set up your account to get started",
+        "firstName": "First Name",
+        "firstNamePlaceholder": "Enter your first name",
+        "lastName": "Last Name",
+        "lastNamePlaceholder": "Enter your last name",
+        "email": "Email Address",
+        "emailPlaceholder": "Enter your email",
+        "phone": "Phone Number",
+        "phonePlaceholder": "Enter your phone number",
+        "password": "Password",
+        "passwordPlaceholder": "Enter your password",
+        "passwordConfirm": "Confirm Password",
+        "passwordConfirmPlaceholder": "Re-enter your password",
+        "signUp": "Sign Up",
+        "or": "OR",
+        "haveAccount": "Already have an account?",
+        "login": "Log In",
+        "country": "Country",
+        "selectCountry": "Select your country",
+        "alreadyHaveAccount": "Already have an account?"
+    },
+    "setup": {
+        "greeting": "Hello, {name}",
+        "logout": "Logout",
+        "loading": "Loading...",
+        "stepOf": "Step {current} of {total}",
+        "prev": "Previous",
+        "next": "Next",
+        "submit": "Create Company",
+        "creating": "Creating...",
+        "step1": {
+            "title": "Basic Information",
+            "subtitle": "Company name and contact details"
+        },
+        "step2": {
+            "title": "Geographic Location",
+            "subtitle": "Country, region, and city"
+        },
+        "step3": {
+            "title": "Industry & Currency",
+            "subtitle": "Business type and default currency"
+        },
+        "step4": {
+            "title": "Financial Settings",
+            "subtitle": "Taxes and date format"
+        },
+        "fields": {
+            "companyName": "Company Name",
+            "commercialReg": "Commercial Registration Number",
+            "companyEmail": "Company Email",
+            "mobile": "Mobile Number",
+            "landline": "Landline",
+            "country": "Country",
+            "selectCountry": "Select country...",
+            "region": "Region",
+            "selectRegion": "Select region...",
+            "city": "City",
+            "selectCity": "Select city...",
+            "address": "Detailed Address",
+            "timezone": "Timezone",
+            "selectTimezone": "Select timezone...",
+            "industry": "Industry Sector",
+            "selectIndustry": "Select industry...",
+            "businessType": "Business Type",
+            "selectBusinessType": "Select business type...",
+            "currency": "Default Currency",
+            "selectCurrency": "Select currency...",
+            "vatRate": "VAT Rate",
+            "incomeTax": "Income Tax Rate",
+            "dateFormat": "Date Format",
+            "selectDateFormat": "Select date format...",
+            "logo": "Company Logo",
+            "logoUpload": "Click or drag to upload logo",
+            "logoMaxSize": "Max size 2MB",
+            "logoHint": "Prefer a square image with transparent background"
+        },
+        "placeholders": {
+            "companyName": "e.g. Al-Yassin Trading Co.",
+            "commercialReg": "e.g. 1234567890",
+            "companyEmail": "info@company.com",
+            "address": "e.g. Al-Irsal St., Building 5, 3rd Floor"
+        },
+        "hints": {
+            "vatRate": "Enter 0 if not VAT-registered",
+            "incomeTax": "Enter 0 if income tax does not apply"
+        }
+    }
+}

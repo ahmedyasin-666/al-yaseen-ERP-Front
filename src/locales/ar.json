@@ -1,0 +1,130 @@
+{
+    "sidebar": {
+        "overview": "نظرة عامة",
+        "settings": "الإعدادات",
+        "users": "المستخدمون",
+        "addUser": "إضافة مستخدم",
+        "roles": "الأدوار",
+        "companies": "الشركات",
+        "addCompany": "إضافة شركة",
+        "branches": "الفروع",
+        "reports": "التقارير",
+        "analytics": "التحليلات",
+        "close": "إغلاق"
+    },
+    "navbar": {
+        "profile": "الملف الشخصي",
+        "logout": "تسجيل الخروج",
+        "notifications": "الإشعارات",
+        "settings": "الإعدادات",
+        "erpyassin": "نظام الياسين لإدارة موارد المؤسسات"
+    },
+    "footer": {
+        "rights": "جميع الحقوق محفوظة",
+        "email": "البريد الإلكتروني",
+        "phone": "الهاتف"
+    },
+    "login": {
+        "title": "مرحباً بعودتك!",
+        "subtitle": "يرجى تسجيل الدخول إلى حسابك",
+        "email": "البريد الإلكتروني",
+        "emailPlaceholder": "أدخل بريدك الإلكتروني",
+        "password": "كلمة المرور",
+        "passwordPlaceholder": "أدخل كلمة المرور",
+        "rememberMe": "تذكرني",
+        "forgotPassword": "هل نسيت كلمة المرور؟",
+        "signIn": "تسجيل الدخول",
+        "or": "أو",
+        "noAccount": "ليس لديك حساب؟",
+        "register": "قم بالتسجيل"
+    },
+    "register": {
+        "title": "إنشاء حساب جديد",
+        "subtitle": "قم بإعداد حسابك للبدء",
+        "firstName": "الاسم الأول",
+        "firstNamePlaceholder": "أدخل اسمك الأول",
+        "lastName": "اسم العائلة",
+        "lastNamePlaceholder": "أدخل اسم العائلة",
+        "email": "البريد الإلكتروني",
+        "emailPlaceholder": "أدخل بريدك الإلكتروني",
+        "phone": "رقم الهاتف",
+        "phonePlaceholder": "أدخل رقم هاتفك",
+        "password": "كلمة المرور",
+        "passwordPlaceholder": "أدخل كلمة المرور",
+        "passwordConfirm": "تأكيد كلمة المرور",
+        "passwordConfirmPlaceholder": "أعد إدخال كلمة المرور",
+        "signUp": "إنشاء حساب",
+        "or": "أو",
+        "haveAccount": "هل لديك حساب؟",
+        "login": "تسجيل الدخول",
+        "country": "الدولة",
+        "selectCountry": "اختر دولتك",
+        "alreadyHaveAccount": "هل لديك حساب؟"
+    },
+    "setup": {
+        "greeting": "مرحباً، {name}",
+        "logout": "تسجيل الخروج",
+        "loading": "جارٍ التحميل...",
+        "stepOf": "الخطوة {current} من {total}",
+        "prev": "السابق",
+        "next": "التالي",
+        "submit": "إنشاء الشركة",
+        "creating": "جارٍ الإنشاء...",
+        "step1": {
+            "title": "المعلومات الأساسية",
+            "subtitle": "اسم الشركة وبيانات التواصل"
+        },
+        "step2": {
+            "title": "الموقع الجغرافي",
+            "subtitle": "الدولة والمنطقة والمدينة"
+        },
+        "step3": {
+            "title": "القطاع والعملة",
+            "subtitle": "نوع النشاط والعملة المستخدمة"
+        },
+        "step4": {
+            "title": "الإعدادات المالية",
+            "subtitle": "الضرائب وصيغة التاريخ"
+        },
+        "fields": {
+            "companyName": "اسم الشركة",
+            "commercialReg": "رقم السجل التجاري",
+            "companyEmail": "البريد الإلكتروني للشركة",
+            "mobile": "رقم الجوال",
+            "landline": "الهاتف الأرضي",
+            "country": "الدولة",
+            "selectCountry": "اختر الدولة...",
+            "region": "المنطقة",
+            "selectRegion": "اختر المنطقة...",
+            "city": "المدينة",
+            "selectCity": "اختر المدينة...",
+            "address": "العنوان التفصيلي",
+            "timezone": "المنطقة الزمنية",
+            "selectTimezone": "اختر المنطقة الزمنية...",
+            "industry": "القطاع الصناعي",
+            "selectIndustry": "اختر القطاع...",
+            "businessType": "نوع النشاط التجاري",
+            "selectBusinessType": "اختر نوع النشاط...",
+            "currency": "العملة الافتراضية",
+            "selectCurrency": "اختر العملة...",
+            "vatRate": "نسبة ضريبة القيمة المضافة",
+            "incomeTax": "نسبة ضريبة الدخل",
+            "dateFormat": "صيغة التاريخ",
+            "selectDateFormat": "اختر صيغة التاريخ...",
+            "logo": "شعار الشركة",
+            "logoUpload": "اضغط أو اسحب الشعار لرفعه",
+            "logoMaxSize": "الحد الأقصى 2MB",
+            "logoHint": "يفضل استخدام صورة مربعة بخلفية شفافة"
+        },
+        "placeholders": {
+            "companyName": "مثال: شركة الياسين للتجارة",
+            "commercialReg": "مثال: 1234567890",
+            "companyEmail": "info@company.com",
+            "address": "مثال: شارع الإرسال، مبنى رقم 5، الطابق الثالث"
+        },
+        "hints": {
+            "vatRate": "أدخل 0 إذا لم تكن مسجلاً لضريبة القيمة المضافة",
+            "incomeTax": "أدخل 0 إذا لم تنطبق ضريبة الدخل"
+        }
+    }
+}
