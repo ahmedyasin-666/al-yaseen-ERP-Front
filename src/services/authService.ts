@@ -3,11 +3,12 @@ import type {
     LoginPayload,
     RegisterPayload,
     AuthResponse,
-    AuthUser,
+    MeResponse,
 } from '@/types/auth'
 
 export const authService = {
-    // ─── تسجيل الدخول ────────────────────────────
+
+    // ─── تسجيل الدخول ────────────────────────────────────────
     async login(payload: LoginPayload): Promise<AuthResponse> {
         const { data } = await api.post<AuthResponse>('auth/login', {
             ...payload,
@@ -16,25 +17,26 @@ export const authService = {
         return data
     },
 
-    // ─── إنشاء حساب جديد ─────────────────────────
+    // ─── إنشاء حساب جديد ─────────────────────────────────────
     async register(payload: RegisterPayload): Promise<AuthResponse> {
         const { data } = await api.post<AuthResponse>('auth/register', payload)
         return data
     },
 
-    // ─── تسجيل الخروج (الجهاز الحالي) ────────────
+    // ─── تسجيل الخروج (الجهاز الحالي) ────────────────────────
     async logout(): Promise<void> {
         await api.post('auth/logout')
     },
 
-    // ─── تسجيل الخروج من كل الأجهزة ──────────────
+    // ─── تسجيل الخروج من كل الأجهزة ──────────────────────────
     async logoutAll(): Promise<void> {
         await api.post('auth/logout-all')
     },
 
-    // ─── جلب بيانات المستخدم الحالي ───────────────
-    async me(): Promise<{ user: AuthUser; roles: string[]; permissions: string[]; company_id: string | null }> {
-        const { data } = await api.get('auth/me')
-        return data // ← ليس data.user فقط
+    // ─── جلب بيانات المستخدم الحالي ───────────────────────────
+    // يُستدعى عند كل تحميل للتطبيق (App.vue أو router guard)
+    async me(): Promise<MeResponse> {
+        const { data } = await api.get<MeResponse>('auth/me')
+        return data
     },
 }

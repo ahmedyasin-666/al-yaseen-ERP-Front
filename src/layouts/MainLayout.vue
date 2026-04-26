@@ -1,7 +1,12 @@
 <template>
     <div class="layout-container" :dir="langStore.dir">
         <!-- Sidebar -->
-        <Sidebar :is-open="isSidebarOpen" :dir="langStore.dir" @closeSidebar="isSidebarOpen = false" />
+        <Sidebar 
+        :is-open="isSidebarOpen" 
+        :dir="langStore.dir" 
+        @closeSidebar="isSidebarOpen = false"
+         @close="isSidebarOpen = false" 
+         />
 
         <!-- Main Content -->
         <div :class="[
@@ -21,9 +26,9 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import Navbar from '@/components/Navbar.vue'
-import Sidebar from '@/components/Sidebar.vue'
-import Footer from '@/components/Footer.vue'
+import Navbar from '@/components/navigation/Navbar.vue'
+import Sidebar from '@/components/navigation/Sidebar.vue'
+import Footer from '@/components/navigation/Footer.vue'
 import { useLangStore } from '@/stores/langStore'
 
 const isSidebarOpen = ref(true)

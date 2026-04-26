@@ -178,7 +178,7 @@
                                             <input v-model="form.mobile_number" type="tel" class="form-control"
                                                 :class="{ 'is-invalid': errors.mobile_number }"
                                                 :placeholder="mobilePlaceholder" dir="ltr" inputmode="numeric"
-                                                @input="sanitizeMobile" />
+                                                @input="sanitizeMobile" maxlength="9" />
                                             <div class="input-group-text p-0">
                                                 <PhoneCodeSelect v-model="form.phone_code" :options="countryCodes" />
                                             </div>
@@ -211,7 +211,8 @@
 
                                             <input v-model="form.landline" type="tel" class="form-control rounded-0"
                                                 :class="{ 'is-invalid': errors.landline }" placeholder="022xxxxxx"
-                                                dir="ltr" inputmode="numeric" />
+                                                dir="ltr" inputmode="numeric" maxlength="12"
+                                                @input="sanitizeLandline" />
                                             <span v-if="langStore.lang === 'ar'" class="input-group-text"
                                                 dir="ltr">+970</span>
                                             <span v-if="langStore.lang === 'en'" class="input-group-text">
@@ -286,10 +287,9 @@
                                                 <i class="fas fa-globe"></i>
                                             </span>
                                             <MDBSelect v-model="form.country_id" :options="countries"
-                                                :label="$t('setup.fields.country')" :dir="langStore.dir"
-                                                :placeholder="$t('setup.fields.selectCountry')"
+                                                :dir="langStore.dir" :placeholder="$t('setup.fields.selectCountry')"
                                                 :disabled="initialLoading" filter :feedback="errors.country_id"
-                                                @change="onCountryChange" />
+                                                @change="onCountryChange" height="44.63px" />
                                         </div>
                                         <div v-if="errors.country_id" class="invalid-feedback d-block mt-1">
                                             {{ errors.country_id }}
@@ -302,10 +302,9 @@
                                                 <i class="fas fa-map-marked-alt"></i>
                                             </span>
                                             <MDBSelect v-model="form.region_id" :options="filteredRegions"
-                                                :label="$t('setup.fields.region')"
                                                 :placeholder="$t('setup.fields.selectRegion')" :dir="langStore.dir"
                                                 :disabled="!form.country_id || initialLoading" filter
-                                                @change="onRegionChange" />
+                                                @change="onRegionChange" height="44.63px" />
                                         </div>
                                     </MDBCol>
 
@@ -315,9 +314,8 @@
                                                 <i class="fas fa-city"></i>
                                             </span>
                                             <MDBSelect v-model="form.city_id" :options="filteredCities"
-                                                :label="$t('setup.fields.city')"
                                                 :placeholder="$t('setup.fields.selectCity')" :dir="langStore.dir"
-                                                :disabled="!form.region_id || initialLoading" filter />
+                                                :disabled="!form.region_id || initialLoading" filter height="44.63px" />
                                         </div>
                                     </MDBCol>
 
@@ -344,9 +342,8 @@
                                                 <i class="fas fa-clock"></i>
                                             </span>
                                             <MDBSelect v-model="form.timezone" :options="timezones"
-                                                :label="$t('setup.fields.timezone')"
                                                 :placeholder="$t('setup.fields.selectTimezone')" :dir="langStore.dir"
-                                                :disabled="initialLoading" />
+                                                :disabled="initialLoading" height="44.63px" />
                                         </div>
                                     </MDBCol>
 
@@ -365,11 +362,11 @@
                                                 <i class="fas fa-industry"></i>
                                             </span>
                                             <MDBSelect v-model="form.industry_id" :options="industries"
-                                                :label="$t('setup.fields.industry')"
                                                 :placeholder="$t('setup.fields.selectIndustry')" :dir="langStore.dir"
                                                 :disabled="initialLoading" filter
                                                 :valid-state="errors.industry_id ? 'invalid' : ''"
-                                                :feedback="errors.industry_id" @change="onIndustryChange" />
+                                                :feedback="errors.industry_id" @change="onIndustryChange"
+                                                height="44.63px" />
                                         </div>
                                         <div v-if="errors.industry_id" class="invalid-feedback d-block mt-1">
                                             {{ errors.industry_id }}
@@ -382,11 +379,10 @@
                                                 <i class="fas fa-briefcase"></i>
                                             </span>
                                             <MDBSelect v-model="form.business_type_id" :options="filteredBusinessTypes"
-                                                :label="$t('setup.fields.businessType')"
                                                 :placeholder="$t('setup.fields.selectBusinessType')"
                                                 :dir="langStore.dir" :disabled="!form.industry_id || initialLoading"
                                                 :valid-state="errors.business_type_id ? 'invalid' : ''"
-                                                :feedback="errors.business_type_id" />
+                                                :feedback="errors.business_type_id" height="44.63px" />
                                         </div>
                                         <div v-if="errors.business_type_id" class="invalid-feedback d-block mt-1">
                                             {{ errors.business_type_id }}
@@ -399,11 +395,10 @@
                                                 <i class="fas fa-coins"></i>
                                             </span>
                                             <MDBSelect v-model="form.default_currency_id" :options="currencies"
-                                                :label="$t('setup.fields.currency')"
                                                 :placeholder="$t('setup.fields.selectCurrency')" :dir="langStore.dir"
                                                 :disabled="initialLoading" filter
                                                 :valid-state="errors.default_currency_id ? 'invalid' : ''"
-                                                :feedback="errors.default_currency_id" />
+                                                :feedback="errors.default_currency_id" height="44.63px" />
                                         </div>
                                         <div v-if="errors.default_currency_id" class="invalid-feedback d-block mt-1">
                                             {{ errors.default_currency_id }}
@@ -430,7 +425,7 @@
                                             </span>
                                             <input v-model.number="form.vat_rate" type="number" class="form-control"
                                                 :class="{ 'is-invalid': errors.vat_rate }" placeholder="0.00" min="0"
-                                                max="100" step="0.01" dir="ltr" />
+                                                max="100" step="0.01" dir="ltr" height="44.63px" />
                                             <span class="input-group-text">
                                                 <i class="fas fa-percent"></i>
                                             </span>
@@ -474,11 +469,10 @@
                                                 <i class="fas fa-calendar-alt"></i>
                                             </span>
                                             <MDBSelect v-model="form.date_format" :options="dateFormats"
-                                                :label="$t('setup.fields.dateFormat')"
                                                 :placeholder="$t('setup.fields.selectDateFormat')" :dir="langStore.dir"
                                                 :disabled="initialLoading"
                                                 :valid-state="errors.date_format ? 'invalid' : ''"
-                                                :feedback="errors.date_format" />
+                                                :feedback="errors.date_format" height="44.63px" />
                                         </div>
                                     </MDBCol>
 
@@ -634,8 +628,8 @@ import type {
 } from '@/types/company'
 import PhoneCodeSelect from '@/components/PhoneCodeSelect.vue'
 
-const { t, locale } = useI18n()
 const authStore = useAuthStore()
+const { t, locale } = useI18n()
 const langStore = useLangStore()
 
 // ── اللغة والخروج ──────────────────────────
@@ -644,7 +638,6 @@ function toggleLang() {
     langStore.switchLang(lang)
     locale.value = lang
     console.log(authStore.permissions);
-
 }
 
 async function handleLogout() {
@@ -726,7 +719,15 @@ const mobilePlaceholder = computed(() => {
 
 // تنظيف: أرقام فقط
 function sanitizeMobile() {
-    form.mobile_number = form.mobile_number.replace(/\D/g, '')
+    form.mobile_number = form.mobile_number
+        .replace(/\D/g, '')   // أرقام فقط
+        .slice(0, 9)
+}
+
+function sanitizeLandline() {
+    form.landline = form.landline
+        .replace(/\D/g, '')
+        .slice(0, 12)
 }
 
 // ── القوائم الثابتة ─────────────────────────
@@ -851,14 +852,21 @@ function validateStep(step: number): boolean {
     if (step === 1) {
         if (!form.title.trim())
             errors.title = t('setup.validation.companyNameRequired')
+        if (form.title.length < 3)
+            errors.title = 'Too short'
         if (!form.commercial_registeration_number.trim())
             errors.commercial_registeration_number = t('setup.validation.commercialRegRequired')
+        if (!/^[A-Za-z0-9\-]{5,20}$/.test(form.commercial_registeration_number))
+            errors.commercial_registeration_number = 'Invalid format'
         if (!form.email.trim())
             errors.email = t('setup.validation.emailRequired')
         else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
             errors.email = t('setup.validation.emailInvalid')
-        if (form.mobile_number && !/^\d{7,15}$/.test(form.mobile_number))
+        if (form.mobile_number && !/^\d{9}$/.test(form.mobile_number))
             errors.mobile_number = t('setup.validation.mobileInvalid')
+        if (form.landline && form.landline.length < 7) {
+            errors.landline = t('setup.validation.landlineInvalid')
+        }
     }
 
     if (step === 2) {
@@ -873,6 +881,10 @@ function validateStep(step: number): boolean {
             errors.business_type_id = t('setup.validation.businessTypeRequired')
         if (!form.default_currency_id)
             errors.default_currency_id = t('setup.validation.currencyRequired')
+        if (form.vat_rate < 0 || form.vat_rate > 100)
+            errors.vat_rate = 'Invalid VAT'
+        if (form.income_tax_rate < 0 || form.income_tax_rate > 100)
+            errors.income_tax_rate = 'Invalid tax'
     }
 
     return Object.keys(errors).length === 0
@@ -899,7 +911,7 @@ async function submitSetup() {
         const payload = { ...form }
         delete (payload as Record<string, unknown>).mobile_number // لا نرسل الحقل المنفصل
         const response = await companyService.setup(payload)
-        authStore.setCompany(String(response.company.id))
+        authStore.setCompany(String(response.company.ulid ?? String(response.company.id)))
         await router.push('/dashboard')
     } catch (err: unknown) {
         const axiosErr = err as {

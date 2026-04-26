@@ -4,4 +4,9 @@ declare module '*.vue' {
     export default component
 }
 
+declare module '*.css?url' {
+  const url: string
+  export default url
+}
+
 // declare module '@/*'

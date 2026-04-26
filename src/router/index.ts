@@ -6,6 +6,13 @@ import Register from '@/views/auth/Register.vue'
 import CompanySetup from '@/views/company/CompanySetup.vue'
 import ProfileView from '@/views/profile/ProfileView.vue'
 import SettingsView from '@/views/settings/SettingsView.vue'
+import FiscalYearsView from '@/views/fiscal-years/FiscalYearsView.vue'
+import Accounts from '@/views/financial/accounts/Accounts.vue'
+import Journals from '@/views/financial/Journals/Journals.vue'
+import Entries from '@/views/financial/entries/Entries.vue'
+import CostCenters from '@/views/financial/CostCenters/CostCenters.vue'
+import Reports from '@/views/financial/reports/Reports.vue'
+import OpeningBalance from '@/views/financial/OpeningBalance.vue'
 
 const routes = [
     // ─── صفحات الزوار فقط ──────────────────────────────
@@ -56,6 +63,51 @@ const routes = [
                 name: 'Settings',
                 component: SettingsView,
             },
+            {
+                path: 'settings/fiscal-years',
+                name: 'FiscalYears',
+                component: FiscalYearsView,
+                meta: { requiresAuth: true, requiresCompany: true },
+            },
+
+            // ─── Financial Module ─────────────────────────────────────
+            {
+                path: 'financial/accounts',
+                name: 'Accounts',
+                component: Accounts,
+                meta: { requiresAuth: true, requiresCompany: true },
+            },
+            {
+                path: 'financial/journals',
+                name: 'Journals',
+                component: Journals,
+                meta: { requiresAuth: true, requiresCompany: true },
+            },
+            {
+                path: 'financial/entries',
+                name: 'Entries',
+                component: Entries,
+                meta: { requiresAuth: true, requiresCompany: true },
+            },
+            {
+                path: 'financial/cost-centers',
+                name: 'CostCenters',
+                component: CostCenters,
+                meta: { requiresAuth: true, requiresCompany: true },
+            },
+            {
+                path: 'financial/reports',
+                name: 'FinancialReports',
+                component: Reports,
+                meta: { requiresAuth: true, requiresCompany: true },
+            },
+            {
+                path: 'financial/opening-balance',
+                name: 'OpeningBalance',
+                component: OpeningBalance,
+                meta: { requiresAuth: true, requiresCompany: true },
+            },
+
         ],
     },
 

@@ -56,4 +56,5 @@ export const profileService = {
         const { data } = await api.put(`core/companies/${ulid}`, payload)
         return data
     },
+    
 }

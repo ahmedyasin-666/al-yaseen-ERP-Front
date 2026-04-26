@@ -9,6 +9,6 @@ import { useAuthStore } from '@/stores/authStore'
 const authStore = useAuthStore()
 
 onMounted(async () => {
-  await authStore.fetchMe()
+  await authStore.fetchMe();
 })
 </script>

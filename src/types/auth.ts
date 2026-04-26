@@ -1,3 +1,7 @@
+// ═══════════════════════════════════════════════
+//  src/types/auth.ts
+// ═══════════════════════════════════════════════
+
 export interface UserCompany {
     ulid: string
     title: string
@@ -34,7 +38,7 @@ export interface AuthUser {
     email: string
     phone: string
     avatar: string
-    status: 'active' | 'inactive' | 'suspended' | 'pending'
+    status: 'active' | 'inactive' | 'suspended' | 'pending' | 'new'
     company_id: string | null
     company?: UserCompany | null
     last_login_at: string | null
@@ -65,13 +69,32 @@ export interface RegisterPayload {
 }
 
 // ═══════════════════════════════════════════════
-//  ما يرجع من الباك اند (login & register)
+//  ما يرجع من الباك اند (login & register & me)
 // ═══════════════════════════════════════════════
 export interface AuthResponse {
     token: string
     token_type: 'Bearer'
     user: AuthUser
     company_id: string | null
+    /**
+     * ULID السنة المالية الافتراضية للشركة
+     * - يُرجعها الباك اند من company.defaultFiscalYear
+     * - null إن لم تكن هناك سنة مالية افتراضية
+     * - الفرونت يحفظها في localStorage فقط إن لم يكن هناك اختيار سابق
+     */
+    fiscal_year_id: string | null
+    roles: string[]
+    permissions: string[]
+    next_step?: string
+}
+
+// ما يرجع من /auth/me (نفس الشكل تقريباً بدون token)
+export interface MeResponse {
+    user: AuthUser
+    company_id: string | null
+    fiscal_year_id: string | null
+    roles: string[]
+    permissions: string[]
 }
 
 // ═══════════════════════════════════════════════
