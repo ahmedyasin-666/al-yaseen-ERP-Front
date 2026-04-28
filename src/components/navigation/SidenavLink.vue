@@ -32,7 +32,6 @@ const isActive = computed(() => route.path === props.to || route.path.startsWith
     margin-bottom: 2px;
 }
 
-/* ── Link ── */
 .sidenav-link {
     display: flex;
     align-items: center;
@@ -42,7 +41,7 @@ const isActive = computed(() => route.path === props.to || route.path.startsWith
     color: rgba(255, 255, 255, 0.8);
     text-decoration: none;
     font-size: 0.875rem;
-    transition: background 0.18s, color 0.18s, padding-inline-start 0.18s;
+    transition: background 0.18s, color 0.18s;
     white-space: nowrap;
 }
 
@@ -57,7 +56,6 @@ const isActive = computed(() => route.path === props.to || route.path.startsWith
     font-weight: 600;
 }
 
-/* ── Sub-item indent ── */
 .sidenav-item-sub .sidenav-link {
     padding-inline-start: 2.2rem;
     font-size: 0.845rem;

@@ -1,15 +1,15 @@
 <template>
     <li class="sidenav-collapse-item" :class="{ open: isOpen }">
 
-        <!-- Toggle button -->
         <button class="sidenav-link sidenav-toggle" :class="{ active: isParentActive }" :aria-expanded="isOpen"
             :aria-controls="id" @click="toggle">
             <i :class="[icon, 'fa-fw sidenav-icon']" />
             <span class="sidenav-label">{{ label }}</span>
+            <span v-if="fiscalStatus" class="sfb-dot" :class="`dot-${fiscalStatus}`"
+                style="margin-inline-start: auto; margin-inline-end: 0.35rem;" />
             <i class="fas fa-chevron-down sidenav-chevron" :class="{ rotated: isOpen }" />
         </button>
 
-        <!-- Collapsible sub-list -->
         <div :id="id" class="sidenav-sub-wrapper" :style="subWrapperStyle" ref="subRef">
             <ul class="sidenav-submenu">
                 <slot />
@@ -27,26 +27,25 @@ const props = defineProps<{
     id: string
     icon: string
     label: string
-    /** مسارات تُحدِّد متى تكون الـ parent active وتُفتح تلقائياً */
     routes?: string[]
+    fiscalStatus?: string
 }>()
+
+const emit = defineEmits<{ open: [] }>()
 
 const route = useRoute()
 const isOpen = ref(false)
 const subRef = ref<HTMLElement | null>(null)
 const height = ref(0)
 
-// ── هل أي مسار فرعي active؟ ──────────────────────────────────
 const isParentActive = computed(() =>
     props.routes?.some(r => route.path.startsWith(r)) ?? false
 )
 
-// ── تُفتح تلقائياً إذا كان المسار الحالي ضمن هذا القسم ──────
 watch(isParentActive, (val) => {
     if (val) openCollapse()
 }, { immediate: true })
 
-// ── قياس الارتفاع الفعلي للمحتوى ──────────────────────────────
 async function measureHeight() {
     await nextTick()
     height.value = subRef.value?.scrollHeight ?? 0
@@ -62,6 +61,7 @@ function toggle() {
 function openCollapse() {
     measureHeight()
     isOpen.value = true
+    emit('open')
 }
 
 function closeCollapse() {
@@ -79,7 +79,6 @@ const subWrapperStyle = computed(() => ({
     margin-bottom: 2px;
 }
 
-/* ── Toggle button ── */
 .sidenav-toggle {
     width: 100%;
     background: none;
@@ -107,9 +106,7 @@ const subWrapperStyle = computed(() => ({
     background: rgba(255, 255, 255, 0.05);
 }
 
-/* ── Chevron ── */
 .sidenav-chevron {
-    margin-inline-start: auto;
     font-size: 0.7rem;
     opacity: 0.6;
     transition: transform 0.25s ease;
@@ -121,7 +118,6 @@ const subWrapperStyle = computed(() => ({
     opacity: 1;
 }
 
-/* ── Icon ── */
 .sidenav-icon {
     font-size: 0.9rem;
     width: 1.1rem;
@@ -139,17 +135,47 @@ const subWrapperStyle = computed(() => ({
     flex: 1;
 }
 
-/* ── Collapse wrapper (smooth height animation) ── */
 .sidenav-sub-wrapper {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ── Sub-menu list ── */
 .sidenav-submenu {
     list-style: none;
-    padding: 0.2rem 0 0.25rem;
+    padding: 5px;
     margin: 0;
+    background: #13243a;
+    border: 1px solid rgba(74, 222, 128, .1);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+}
+
+.sidenav-collapse-item.open .sidenav-toggle {
+    border-radius: 8px 8px 0 0;
+    background: rgba(29, 115, 66, .15);
+    border: 1px solid rgba(74, 222, 128, .12);
+    border-bottom: none;
+}
+
+/* dot مشترك — يُستخدم من TheSidebar عبر :deep أو global */
+.sfb-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.dot-open {
+    background: #4ade80;
+}
+
+.dot-closed {
+    background: #fbbf24;
+}
+
+.dot-locked {
+    background: #f87171;
 }
 </style>

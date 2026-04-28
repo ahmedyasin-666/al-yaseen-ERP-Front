@@ -278,8 +278,8 @@
                                     <div class="input-group input-group-lg">
                                         <span class="input-group-text"><i class="fas fa-globe" /></span>
                                         <MDBSelect v-model="companyForm.country_id" :options="countries"
-                                            :label="$t('setup.fields.country')" :dir="langStore.dir" filter
-                                            @change="onCountryChange" />
+                                            :placeholder="$t('setup.fields.country')" :dir="langStore.dir" filter
+                                            @change="onCountryChange" height="44px" />
                                     </div>
                                     <div v-if="companyErrors.country_id" class="invalid-feedback d-block mt-1">
                                         {{ companyErrors.country_id }}
@@ -291,8 +291,8 @@
                                     <div class="input-group input-group-lg">
                                         <span class="input-group-text"><i class="fas fa-map-marked-alt" /></span>
                                         <MDBSelect v-model="companyForm.region_id" :options="filteredRegions"
-                                            :label="$t('setup.fields.region')" :dir="langStore.dir"
-                                            :disabled="!companyForm.country_id" filter @change="onRegionChange" />
+                                            :placeholder="$t('setup.fields.region')" :dir="langStore.dir"
+                                            :disabled="!companyForm.country_id" height="44px" filter @change="onRegionChange" />
                                     </div>
                                 </MDBCol>
 
@@ -301,8 +301,8 @@
                                     <div class="input-group input-group-lg">
                                         <span class="input-group-text"><i class="fas fa-city" /></span>
                                         <MDBSelect v-model="companyForm.city_id" :options="filteredCities"
-                                            :label="$t('setup.fields.city')" :dir="langStore.dir"
-                                            :disabled="!companyForm.region_id" filter />
+                                            :placeholder="$t('setup.fields.city')" :dir="langStore.dir"
+                                            :disabled="!companyForm.region_id" height="44px" filter />
                                     </div>
                                 </MDBCol>
 
@@ -320,7 +320,7 @@
                                     <div class="input-group input-group-lg">
                                         <span class="input-group-text"><i class="fas fa-industry" /></span>
                                         <MDBSelect v-model="companyForm.industry_id" :options="industries"
-                                            :label="$t('setup.fields.industry')" :dir="langStore.dir" filter
+                                            :placeholder="$t('setup.fields.industry')" height="44px" :dir="langStore.dir" filter
                                             @change="onIndustryChange" />
                                     </div>
                                     <div v-if="companyErrors.industry_id" class="invalid-feedback d-block mt-1">
@@ -333,8 +333,8 @@
                                     <div class="input-group input-group-lg">
                                         <span class="input-group-text"><i class="fas fa-briefcase" /></span>
                                         <MDBSelect v-model="companyForm.business_type_id"
-                                            :options="filteredBusinessTypes" :label="$t('setup.fields.businessType')"
-                                            :dir="langStore.dir" :disabled="!companyForm.industry_id" filter />
+                                            :options="filteredBusinessTypes" :placeholder="$t('setup.fields.businessType')"
+                                            :dir="langStore.dir" :disabled="!companyForm.industry_id" height="44px" filter />
                                     </div>
                                 </MDBCol>
 
@@ -343,7 +343,7 @@
                                     <div class="input-group input-group-lg">
                                         <span class="input-group-text"><i class="fas fa-coins" /></span>
                                         <MDBSelect v-model="companyForm.default_currency_id" :options="currencies"
-                                            :label="$t('setup.fields.currency')" :dir="langStore.dir" filter />
+                                            :placeholder="$t('setup.fields.currency')" :dir="langStore.dir" height="44px" filter />
                                     </div>
                                 </MDBCol>
 
@@ -352,7 +352,7 @@
                                     <div class="input-group input-group-lg">
                                         <span class="input-group-text"><i class="fas fa-clock" /></span>
                                         <MDBSelect v-model="companyForm.timezone" :options="timezones"
-                                            :label="$t('setup.fields.timezone')" :dir="langStore.dir" />
+                                            :placeholder="$t('setup.fields.timezone')" :dir="langStore.dir" height="44px" />
                                     </div>
                                 </MDBCol>
 
@@ -851,7 +851,7 @@ async function savePassword() {
 
 /* ══ Hero ══ */
 .pf-hero {
-    background: #fff;
+    background: var(--color-background-primary, #fff);
     border-radius: 1.25rem;
     border: 1px solid rgba(0, 0, 0, 0.07);
     box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
@@ -859,13 +859,21 @@ async function savePassword() {
 }
 
 .hero-strip {
-    height: 90px;
-    background: linear-gradient(135deg, #1d334f 0%, #1d7342 100%);
+    height: 100px;
+    background: #1d334f;
+    position: relative;
+}
+
+.hero-strip::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 60%, rgba(29, 115, 66, .55));
 }
 
 .hero-body {
-    margin-top: -52px;
     padding: 0 2rem 1.75rem;
+    position: relative;
 }
 
 .avatar-zone {
@@ -875,9 +883,12 @@ async function savePassword() {
     border-radius: 50%;
     cursor: pointer;
     flex-shrink: 0;
-    border: 4px solid #fff;
+    border: 4px solid var(--color-background-primary, #fff);
     box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
     background: #eef0f3;
+    margin-top: -54px;
+    /* ← نص الارتفاع بالضبط */
+    z-index: 1;
 }
 
 .avatar-img {

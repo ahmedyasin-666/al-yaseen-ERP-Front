@@ -14,9 +14,9 @@
                     <h6 class="fw-bold text-white mb-0">{{ $t('reports.title') }}</h6>
                     <MDBBreadcrumb class="mb-0 small">
                         <MDBBreadcrumbItem><a href="#" class="text-white-50 text-decoration-none">{{ $t('common.home')
-                        }}</a></MDBBreadcrumbItem>
+                                }}</a></MDBBreadcrumbItem>
                         <MDBBreadcrumbItem><a href="#" class="text-white-50 text-decoration-none">{{
-                            $t('sidebar.financial') }}</a></MDBBreadcrumbItem>
+                                $t('sidebar.financial') }}</a></MDBBreadcrumbItem>
                         <MDBBreadcrumbItem active class="text-white">{{ $t('reports.title') }}</MDBBreadcrumbItem>
                     </MDBBreadcrumb>
                 </div>
@@ -42,10 +42,10 @@
                     <MDBCol md="3">
                         <label class="form-label fw-bold small">{{ $t('reports.fiscalYear') }} <span
                                 class="text-danger">*</span></label>
-                        <div class="input-group ">
+                        <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                             <MDBSelect v-model="filters.fiscal_year_id" :options="fiscalYearOptions"
-                                :placeholder="$t('reports.fiscalYear')" :dir="langStore.dir"  />
+                                :placeholder="$t('reports.fiscalYear')" :dir="langStore.dir" />
                         </div>
                     </MDBCol>
                     <!-- Date range — only for Trial Balance & General Ledger -->
@@ -96,8 +96,10 @@
                         <h5 class="fw-bold text-white mb-1">{{ currentTabLabel }}</h5>
                         <div class="text-white small d-flex gap-3 flex-wrap">
                             <span><i class="fas fa-calendar me-1"></i>{{ reportData.fiscal_year?.name }}</span>
-                            <span v-if="reportData.filters?.date_from"><i class="fas fa-filter me-1"></i>{{
-                                reportData.filters.date_from }} → {{ reportData.filters.date_to }}</span>
+                            <span v-if="reportData.filters?.date_from">
+                                <i class="fas fa-filter me-1"></i>{{ reportData.filters.date_from }} → {{
+                                reportData.filters.date_to }}
+                            </span>
                         </div>
                     </div>
                     <div class="d-flex gap-3 text-white">
@@ -137,18 +139,22 @@
                                     </td>
                                     <td class="text-center">
                                         <span class="badge rounded-pill px-2 small"
-                                            :class="typeClass(line.account_type)">{{
-                                                $t(`accounts.types.${line.account_type}`) }}</span>
+                                            :class="typeClass(line.account_type)">
+                                            {{ $t(`accounts.types.${line.account_type}`) }}
+                                        </span>
                                     </td>
-                                    <td class="text-end font-monospace small">{{ fmt(line.opening_debit) }}</td>
-                                    <td class="text-end font-monospace small">{{ fmt(line.opening_credit) }}</td>
-                                    <td class="text-end font-monospace small text-primary">{{ fmt(line.period_debit) }}
-                                    </td>
-                                    <td class="text-end font-monospace small text-success">{{ fmt(line.period_credit) }}
-                                    </td>
-                                    <td class="text-end font-monospace small fw-bold">{{ fmt(line.closing_debit) }}</td>
-                                    <td class="text-end font-monospace small fw-bold">{{ fmt(line.closing_credit) }}
-                                    </td>
+                                    <td class="text-end font-monospace small">{{ line.opening_debit > 0 ?
+                                        fmt(line.opening_debit) : '—' }}</td>
+                                    <td class="text-end font-monospace small">{{ line.opening_credit > 0 ?
+                                        fmt(line.opening_credit) : '—' }}</td>
+                                    <td class="text-end font-monospace small text-primary">{{ line.period_debit > 0 ?
+                                        fmt(line.period_debit) : '—' }}</td>
+                                    <td class="text-end font-monospace small text-success">{{ line.period_credit > 0 ?
+                                        fmt(line.period_credit) : '—' }}</td>
+                                    <td class="text-end font-monospace small fw-bold">{{ line.closing_debit > 0 ?
+                                        fmt(line.closing_debit) : '—' }}</td>
+                                    <td class="text-end font-monospace small fw-bold">{{ line.closing_credit > 0 ?
+                                        fmt(line.closing_credit) : '—' }}</td>
                                 </tr>
                             </tbody>
                             <tfoot>
@@ -171,15 +177,52 @@
 
             <!-- ── General Ledger ── -->
             <template v-else-if="activeTab === 'general_ledger'">
-                <!-- Account info -->
+
+                <!-- Account info cards -->
                 <MDBRow class="g-3 mb-4">
-                    <MDBCol md="3" v-for="info in ledgerAccountInfo" :key="info.label">
-                        <div class="p-3 rounded-3 border bg-light">
-                            <div class="text-muted small mb-1">{{ info.label }}</div>
-                            <div class="fw-semibold font-monospace small">{{ info.value }}</div>
+                    <MDBCol md="3">
+                        <div class="info-card">
+                            <div class="info-label">{{ $t('accounts.code') }}</div>
+                            <div class="info-value">{{ reportData.account?.code }}</div>
+                        </div>
+                    </MDBCol>
+                    <MDBCol md="3">
+                        <div class="info-card">
+                            <div class="info-label">{{ $t('accounts.name') }}</div>
+                            <div class="info-value">{{ reportData.account?.name }}</div>
+                        </div>
+                    </MDBCol>
+                    <MDBCol md="3">
+                        <div class="info-card">
+                            <div class="info-label">{{ $t('accounts.normalSide') }}</div>
+                            <div class="info-value">
+                                <span class="badge rounded-pill" :class="reportData.account?.normal_balance_side === 'debit'
+                                    ? 'bg-primary bg-opacity-10 text-primary'
+                                    : 'bg-success bg-opacity-10 text-success'">
+                                    {{ reportData.account?.normal_balance_side === 'debit' ? $t('accounts.debit') :
+                                    $t('accounts.credit') }}
+                                </span>
+                            </div>
+                        </div>
+                    </MDBCol>
+                    <!-- ✅ الرصيد الافتتاحي من القيود -->
+                    <MDBCol md="3">
+                        <div class="info-card"
+                            :class="reportData.account?.opening_balance > 0 ? 'info-card--highlight' : ''">
+                            <div class="info-label">{{ $t('accounts.openingBalance') }}</div>
+                            <div class="info-value font-monospace">
+                                {{ fmt(reportData.account?.opening_balance) }}
+                                <span class="badge rounded-pill ms-1 small" :class="reportData.account?.opening_side === 'debit'
+                                    ? 'bg-primary bg-opacity-10 text-primary'
+                                    : 'bg-success bg-opacity-10 text-success'">
+                                    {{ reportData.account?.opening_side === 'debit' ? $t('accounts.debit') :
+                                    $t('accounts.credit') }}
+                                </span>
+                            </div>
                         </div>
                     </MDBCol>
                 </MDBRow>
+
                 <MDBCard class="border-0 shadow-sm rounded-4 overflow-hidden">
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover table-striped align-middle mb-0 table-custom">
@@ -195,21 +238,48 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                <!-- ✅ سطر الرصيد الافتتاحي -->
+                                <tr v-if="reportData.account?.opening_balance > 0" class="opening-row">
+                                    <td class="font-monospace small text-muted fst-italic">—</td>
+                                    <td class="small text-nowrap text-muted fst-italic">{{
+                                        reportData.fiscal_year?.start_date ?? '—' }}</td>
+                                    <td class="small text-muted fst-italic">{{ $t('reports.gl.openingJournal') }}</td>
+                                    <td class="small text-muted fst-italic">{{ $t('reports.gl.openingBalance') }}</td>
+                                    <td class="text-end font-monospace small">
+                                        {{ reportData.account?.opening_side === 'debit' ?
+                                            fmt(reportData.account?.opening_balance) : '—' }}
+                                    </td>
+                                    <td class="text-end font-monospace small">
+                                        {{ reportData.account?.opening_side === 'credit' ?
+                                            fmt(reportData.account?.opening_balance) : '—' }}
+                                    </td>
+                                    <td class="text-end font-monospace small fw-bold">
+                                        {{ fmt(reportData.account?.opening_balance) }}
+                                        <span class="badge rounded-pill ms-1 small" :class="reportData.account?.opening_side === 'debit'
+                                            ? 'bg-primary bg-opacity-10 text-primary'
+                                            : 'bg-success bg-opacity-10 text-success'">
+                                            {{ reportData.account?.opening_side === 'debit' ? $t('accounts.debit') :
+                                            $t('accounts.credit') }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                <!-- حركات الفترة -->
                                 <tr v-for="line in reportData.lines" :key="line.number + line.date">
                                     <td class="font-monospace small text-primary fw-semibold">{{ line.number }}</td>
                                     <td class="small text-nowrap">{{ line.date }}</td>
                                     <td class="small">{{ line.journal }}</td>
                                     <td class="small text-muted">{{ line.description ?? '—' }}</td>
                                     <td class="text-end font-monospace small">{{ line.debit > 0 ? fmt(line.debit) : '—'
-                                    }}</td>
+                                        }}</td>
                                     <td class="text-end font-monospace small">{{ line.credit > 0 ? fmt(line.credit) :
                                         '—' }}</td>
                                     <td class="text-end font-monospace small fw-bold">
                                         {{ fmt(line.balance) }}
-                                        <span class="badge rounded-pill ms-1 small"
-                                            :class="line.balance_side === 'debit' ? 'bg-primary bg-opacity-10 text-primary' : 'bg-success bg-opacity-10 text-success'">
+                                        <span class="badge rounded-pill ms-1 small" :class="line.balance_side === 'debit'
+                                            ? 'bg-primary bg-opacity-10 text-primary'
+                                            : 'bg-success bg-opacity-10 text-success'">
                                             {{ line.balance_side === 'debit' ? $t('accounts.debit') :
-                                                $t('accounts.credit') }}
+                                            $t('accounts.credit') }}
                                         </span>
                                     </td>
                                 </tr>
@@ -221,7 +291,14 @@
                                         fmt(reportData.totals.total_debit) }}</td>
                                     <td class="text-end font-monospace text-success">{{
                                         fmt(reportData.totals.total_credit) }}</td>
-                                    <td class="text-end font-monospace">{{ fmt(reportData.totals.closing_balance) }}
+                                    <td class="text-end font-monospace">
+                                        {{ fmt(reportData.totals.closing_balance) }}
+                                        <span class="badge rounded-pill ms-1 small" :class="reportData.totals.closing_side === 'debit'
+                                            ? 'bg-primary bg-opacity-25 text-primary'
+                                            : 'bg-success bg-opacity-25 text-success'">
+                                            {{ reportData.totals.closing_side === 'debit' ? $t('accounts.debit') :
+                                            $t('accounts.credit') }}
+                                        </span>
                                     </td>
                                 </tr>
                             </tfoot>
@@ -397,7 +474,13 @@
                                             <td class="small text-muted">{{ $t('reports.bs.netIncome') }}</td>
                                             <td class="text-end font-monospace small"
                                                 :class="reportData.net_income_in_equity >= 0 ? 'text-success' : 'text-danger'">
-                                                {{ fmt(reportData.net_income_in_equity) }}</td>
+                                                {{ fmt(Math.abs(reportData.net_income_in_equity)) }}
+                                                <span class="badge rounded-pill ms-1 small"
+                                                    :class="reportData.net_income_in_equity >= 0 ? 'bg-success bg-opacity-10 text-success' : 'bg-danger bg-opacity-10 text-danger'">
+                                                    {{ reportData.net_income_in_equity >= 0 ? $t('reports.is.profit') :
+                                                    $t('reports.is.loss') }}
+                                                </span>
+                                            </td>
                                         </tr>
                                     </tbody>
                                     <tfoot>
@@ -422,7 +505,7 @@
                             </div>
                             <div class="d-flex gap-4 font-monospace small">
                                 <span>{{ $t('reports.bs.assets') }}: <strong>{{ fmt(reportData.total_assets)
-                                }}</strong></span>
+                                        }}</strong></span>
                                 <span>=</span>
                                 <span>{{ $t('reports.bs.liabilitiesEquity') }}: <strong>{{
                                     fmt(reportData.total_liabilities_and_equity) }}</strong></span>
@@ -477,11 +560,11 @@ onMounted(async () => {
     if (fyStore.currentId) filters.fiscal_year_id = fyStore.currentId
 
     const accounts = await accountService.getDropdown({ allow_posting: true })
-    accountOptions.value = accounts.map(a => ({ value: a.ulid, text: `${a.code} — ${a.name}` }))
+    accountOptions.value = accounts.map((a: any) => ({ value: a.ulid, text: `${a.code} — ${a.name}` }))
 })
 
 const fiscalYearOptions = computed(() =>
-    fyStore.years.map(y => ({ value: y.ulid, text: y.name }))
+    fyStore.years.map((y: any) => ({ value: y.ulid, text: y.name }))
 )
 
 const reportTabs = computed(() => [
@@ -491,21 +574,10 @@ const reportTabs = computed(() => [
     { key: 'balance_sheet' as ReportTab, label: t('reports.balanceSheet'), icon: 'fas fa-building' },
 ])
 
-const currentTabLabel = computed(() => reportTabs.value.find(t => t.key === activeTab.value)?.label ?? '')
+const currentTabLabel = computed(() => reportTabs.value.find(tab => tab.key === activeTab.value)?.label ?? '')
 
-const ledgerAccountInfo = computed(() => {
-    if (!reportData.value?.account) return []
-    const a = reportData.value.account
-    return [
-        { label: t('accounts.code'), value: a.code },
-        { label: t('accounts.name'), value: a.name },
-        { label: t('accounts.normalSide'), value: a.normal_balance_side },
-        { label: t('accounts.openingBalance'), value: `${fmt(a.opening_balance)} (${a.opening_side})` },
-    ]
-})
-
-function fmt(val: number) {
-    return (val || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+function fmt(val: number | undefined | null) {
+    return ((val ?? 0)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 }
 
 function typeClass(type: string) {
@@ -545,10 +617,15 @@ async function loadReport() {
         reportData.value = res.data
     } catch (e: any) {
         toast.value?.show(e?.response?.data?.message ?? t('common.error'), 'danger')
-    } finally { loading.value = false }
+    } finally {
+        loading.value = false
+    }
 }
 
-function clearReport() { reportData.value = null; Object.assign(filters, { date_from: '', date_to: '', account_ulid: '' }) }
+function clearReport() {
+    reportData.value = null
+    Object.assign(filters, { date_from: '', date_to: '', account_ulid: '' })
+}
 
 function printReport() {
     if (!reportData.value) return
@@ -573,8 +650,8 @@ function printReport() {
     width: 46px;
     height: 46px;
     border-radius: 12px;
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, .15);
+    border: 1px solid rgba(255, 255, 255, .25);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -620,9 +697,46 @@ function printReport() {
     box-shadow: 0 4px 14px rgba(29, 51, 79, .25);
 }
 
+/* Info cards for General Ledger */
+.info-card {
+    padding: .75rem 1rem;
+    border-radius: .75rem;
+    border: 1px solid rgba(0, 0, 0, .08);
+    background: #f8f9fa;
+}
+
+.info-card--highlight {
+    border-color: rgba(29, 115, 66, .3);
+    background: #f0faf5;
+}
+
+.info-label {
+    font-size: .75rem;
+    color: #6c757d;
+    margin-bottom: .25rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+.info-value {
+    font-size: .9rem;
+    color: #1d334f;
+    font-weight: 600;
+}
+
+/* Opening row in ledger table */
+.opening-row {
+    background: #fffbeb !important;
+}
+
+.opening-row td {
+    border-color: #fde68a !important;
+}
+
 .table-custom th {
     background: #f8f9fa;
-    font-size: 0.83rem;
+    font-size: .83rem;
     font-weight: 700;
     color: #344054;
     white-space: nowrap;
@@ -630,11 +744,9 @@ function printReport() {
 }
 
 .table-custom td {
-    font-size: 0.88rem;
+    font-size: .88rem;
     vertical-align: middle;
 }
-
-.net-income-card {}
 
 .profit-card {
     background: linear-gradient(135deg, #1d7342, #16a34a);

@@ -32,11 +32,13 @@
         "notifications": "الإشعارات",
         "settings": "الإعدادات",
         "erpyassin": "نظام الياسين لإدارة موارد المؤسسات",
-        "fiscalYear":"السنة المالية",
-        "selectFiscalYear":"اختر السنة المالية",
-        "noFiscalYear":"لا توجد سنوات مالية",
+        "fiscalYear": "السنة المالية",
+        "selectFiscalYear": "اختر السنة المالية",
+        "noFiscalYear": "لا توجد سنوات مالية",
         "company": "الشركة",
-        "noYears": "لا توجد سنوات مالية"
+        "noYears": "لا توجد سنوات مالية",
+        "years": "سنوات",
+        "selectYear": "اختر السنة"
     },
     "footer": {
         "rights": "جميع الحقوق محفوظة",
@@ -198,6 +200,56 @@
             "lockedDesc": "سنوات مقفلة نهائياً"
         }
     },
+    "yearEnd": {
+        "title": "إقفال نهاية السنة",
+        "balanced": "متوازن",
+        "unbalanced": "غير متوازن",
+        "step1Title": "الإعداد",
+        "step1Desc": "اختر السنة المالية وحساب الأرباح المحتجزة",
+        "fiscalYear": "السنة المالية",
+        "selectFiscalYear": "اختر السنة المالية",
+        "retainedEarnings": "حساب الأرباح المحتجزة",
+        "selectAccount": "اختر الحساب",
+        "preview": "معاينة",
+        "totalRevenues": "إجمالي الإيرادات",
+        "totalExpenses": "إجمالي المصروفات",
+        "netProfit": "صافي الربح",
+        "netLoss": "صافي الخسارة",
+        "closingEntries": "قيود الإقفال",
+        "closingEntriesPreview": "معاينة قيود الإقفال",
+        "lines": "أسطر",
+        "entryType": "نوع القيد",
+        "types": {
+            "revenue": "إيراد",
+            "expense": "مصروف",
+            "retained_earnings": "أرباح محتجزة"
+        },
+        "step2Title": "الخيارات",
+        "step2Desc": "تحديد إعدادات الإقفال",
+        "carryForward": "ترحيل إلى السنة الجديدة",
+        "carryForwardDesc": "نقل الأرصدة إلى السنة المالية التالية",
+        "newFiscalYear": "السنة المالية الجديدة",
+        "selectNewYear": "اختر السنة الجديدة",
+        "carryForwardHint": "سيتم ترحيل الأرصدة كأرصدة افتتاحية",
+        "cannotExecute": "لا يمكن التنفيذ",
+        "unbalancedDesc": "يجب أن يكون ميزان المراجعة متوازن قبل الإقفال",
+        "alreadyClosed": "تم الإقفال مسبقاً",
+        "alreadyClosedDesc": "تم إقفال هذه السنة المالية بالفعل",
+        "step3Title": "تنفيذ الإقفال",
+        "step3Desc": "إتمام إقفال السنة المالية",
+        "closingYear": "السنة المراد إقفالها",
+        "retainedAccount": "حساب الأرباح المحتجزة",
+        "execute": "تنفيذ",
+        "confirmTitle": "تأكيد الإقفال",
+        "confirmMessage": "هل أنت متأكد من إقفال السنة المالية {name}؟",
+        "executeSuccess": "تم إقفال السنة بنجاح",
+        "executeSuccessDesc": "تم إقفال السنة المالية {name} بنجاح",
+        "closingEntry": "قيد الإقفال",
+        "carriedAccounts": "الحسابات المرحلة",
+        "accounts": "حساب",
+        "selectToPreview": "اختر البيانات للمعاينة",
+        "selectToPreviewDesc": "حدد السنة المالية والحساب لعرض المعاينة"
+    },
     "common": {
         "home": "الرئيسية",
         "settings": "الإعدادات",
@@ -230,7 +282,9 @@
         "page": "صفحة",
         "total": "الإجمالي",
         "optional": "اختياري",
-        "actionCannotBeUndone": "لا يمكن التراجع عن هذا الإجراء!"
+        "actionCannotBeUndone": "لا يمكن التراجع عن هذا الإجراء!",
+        "yes": "نعم",
+        "no": "لا"
     },
     "accounts": {
         "title": "دليل الحسابات",
@@ -422,7 +476,9 @@
             "date": "التاريخ",
             "journal": "الدفتر",
             "description": "البيان",
-            "balance": "الرصيد"
+            "balance": "الرصيد",
+            "openingJournal": "قيد افتتاحي",
+            "openingBalance": "رصيد افتتاحي"
         },
         "is": {
             "revenues": "الإيرادات",
@@ -430,7 +486,9 @@
             "totalRevenues": "إجمالي الإيرادات",
             "totalExpenses": "إجمالي المصروفات",
             "netProfit": "صافي الربح",
-            "netLoss": "صافي الخسارة"
+            "netLoss": "صافي الخسارة",
+            "profit": "ربح",
+            "loss": "خسارة"
         },
         "bs": {
             "assets": "الأصول",
@@ -465,5 +523,59 @@
         "deleteMessage": "سيتم حذف القيد الافتتاحي. يمكنك إعادة إنشائه بعد تعديل الأرصدة.",
         "generatedSuccess": "تم إنشاء القيد الافتتاحي وترحيله بنجاح",
         "deletedSuccess": "تم حذف القيد الافتتاحي"
+    },
+    "profile": {
+        "active": "نشط",
+        "lastLogin": "آخر تسجيل دخول",
+        "accountType": "نوع الحساب",
+        "owner": "مالك",
+        "personalInfo": "المعلومات الشخصية",
+        "personalInfoSub": "تحديث بيانات ملفك الشخصي",
+        "companyInfo": "معلومات الشركة",
+        "companyInfoSub": "إدارة بيانات شركتك",
+        "security": "الأمان",
+        "securitySub": "تغيير كلمة المرور وإعدادات الأمان",
+        "firstName": "الاسم الأول",
+        "lastName": "الاسم الأخير",
+        "email": "البريد الإلكتروني",
+        "emailReadOnly": "لا يمكن تغيير البريد الإلكتروني",
+        "phone": "رقم الهاتف",
+        "phonePlaceholder": "أدخل رقم هاتفك",
+        "saveChanges": "حفظ التغييرات",
+        "saving": "جارٍ الحفظ...",
+        "avatarUpdated": "تم تحديث الصورة الشخصية بنجاح",
+        "avatarError": "فشل تحديث الصورة الشخصية",
+        "personalSaved": "تم حفظ المعلومات الشخصية بنجاح",
+        "companySaved": "تم حفظ معلومات الشركة بنجاح",
+        "passwordChanged": "تم تغيير كلمة المرور بنجاح",
+        "saveError": "حدث خطأ أثناء الحفظ",
+        "currentPassword": "كلمة المرور الحالية",
+        "newPassword": "كلمة المرور الجديدة",
+        "confirmPassword": "تأكيد كلمة المرور",
+        "changePassword": "تغيير كلمة المرور",
+        "passwordWeak": "ضعيفة",
+        "passwordMedium": "متوسطة",
+        "passwordStrong": "قوية",
+        "securityTips": "نصائح الأمان",
+        "tabs": {
+            "personal": "المعلومات الشخصية",
+            "company": "الشركة",
+            "security": "الأمان"
+        },
+        "validation": {
+            "firstNameRequired": "الاسم الأول مطلوب",
+            "lastNameRequired": "الاسم الأخير مطلوب",
+            "currentPasswordRequired": "كلمة المرور الحالية مطلوبة",
+            "newPasswordRequired": "كلمة المرور الجديدة مطلوبة",
+            "passwordTooShort": "كلمة المرور يجب أن تكون 8 أحرف على الأقل",
+            "passwordMismatch": "كلمتا المرور غير متطابقتين"
+        },
+        "tips": {
+            "length": "استخدم 8 أحرف على الأقل",
+            "uppercase": "أضف أحرفاً كبيرة وصغيرة",
+            "numbers": "أضف أرقاماً",
+            "special": "استخدم رموزاً خاصة مثل !@#$",
+            "unique": "لا تعيد استخدام كلمة مرور سابقة"
+        }
     }
 }

@@ -13,6 +13,7 @@ import Entries from '@/views/financial/entries/Entries.vue'
 import CostCenters from '@/views/financial/CostCenters/CostCenters.vue'
 import Reports from '@/views/financial/reports/Reports.vue'
 import OpeningBalance from '@/views/financial/OpeningBalance.vue'
+import YearEndClosing from '@/views/financial/YearEndClosing.vue'
 
 const routes = [
     // ─── صفحات الزوار فقط ──────────────────────────────
@@ -107,6 +108,12 @@ const routes = [
                 component: OpeningBalance,
                 meta: { requiresAuth: true, requiresCompany: true },
             },
+            {
+                path: 'financial/year-end-closing',
+                name: 'YearEndClosing',
+                component: YearEndClosing,
+                meta: { requiresAuth: true, requiresCompany: true },
+            }
 
         ],
     },

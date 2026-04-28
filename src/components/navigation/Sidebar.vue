@@ -1,11 +1,4 @@
 <template>
-    <!--
-     ╔══════════════════════════════════════════════════════════╗
-     ║  TheSidebar.vue — Frontend Panel                        ║
-     ║  Custom MDB-style sidenav — no paid Vue component needed ║
-     ╚══════════════════════════════════════════════════════════╝
-    -->
-
     <!-- Overlay (mobile) -->
     <Transition name="overlay-fade">
         <div v-if="isOpen && isMobile" class="sidenav-overlay" @click="$emit('close')" />
@@ -17,12 +10,12 @@
         langStore.isRtl ? 'sidenav-rtl' : 'sidenav-ltr',
     ]" :dir="langStore.dir">
 
-        <!-- ══ Logo ════════════════════════════════════════════════ -->
+        <!-- ══ Logo ══ -->
         <RouterLink to="/dashboard" class="sidenav-logo ripple-effect">
             <img :src="logo" width="130" alt="Logo" class="img-fluid" />
         </RouterLink>
 
-        <!-- ══ User Info ══════════════════════════════════════════ -->
+        <!-- ══ User Info ══ -->
         <div class="sidenav-user">
             <img :src="authStore.user?.company?.logo || avatarFallback" class="sidenav-avatar" alt="Avatar" />
             <div class="sidenav-user-info">
@@ -35,77 +28,48 @@
             </div>
         </div>
 
-        <!-- ══ Fiscal Year Block ══════════════════════════════════ -->
-        <div class="sidenav-fiscal-block">
-
-            <!-- Divider -->
-            <div class="sfb-sep" />
-
-            <!-- Fiscal Year row (clickable) -->
-            <div class="sfb-row sfb-row--clickable" @click="toggleFiscalSwitcher">
-                <div class="sfb-icon" :class="fiscalYear ? 'sfb-icon--active' : 'sfb-icon--warn'">
-                    <i class="fas fa-calendar-alt" />
-                </div>
-                <div class="sfb-body">
-                    <span class="sfb-label">{{ $t('navbar.fiscalYear') }}</span>
-                    <span class="sfb-value sfb-value--accent">
-                        {{ fiscalYear?.name ?? $t('navbar.noFiscalYear') }}
-                    </span>
-                </div>
-                <div class="sfb-right">
-                    <span v-if="fiscalYear" class="sfb-dot" :class="`dot-${fiscalYear.status}`"
-                        :title="fiscalYear.status_label" />
-                    <i class="fas sfb-chevron" :class="showSwitcher ? 'fa-chevron-up' : 'fa-chevron-down'" />
-                </div>
-            </div>
-
-            <!-- ── Fiscal Switcher Dropdown ── -->
-            <Transition name="sfb-slide">
-                <div v-if="showSwitcher" class="sfb-switcher">
-                    <div v-if="fiscalStore.loading" class="text-center py-3">
-                        <div class="sfb-spinner" />
-                    </div>
-                    <template v-else>
-                        <div v-for="year in fiscalStore.years" :key="year.ulid" class="sfb-item" :class="{
-                            'sfb-item--active': year.ulid === fiscalStore.currentId,
-                            'sfb-item--current': year.is_current,
-                        }" @click="onSwitchYear(year)">
-                            <div class="d-flex align-items-center gap-2">
-                                <span class="sfb-dot" :class="`dot-${year.status}`" />
-                                <div>
-                                    <div class="sfb-item-name">{{ year.name }}</div>
-                                    <div class="sfb-item-dates">
-                                        {{ year.start_date }} → {{ year.end_date }}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center gap-2 flex-shrink-0">
-                                <span class="sfb-badge" :class="`badge-${year.status}`">
-                                    {{ year.status_label }}
-                                </span>
-                                <i v-if="year.ulid === fiscalStore.currentId" class="fas fa-check"
-                                    style="color:#4ade80;font-size:0.75rem;" />
-                            </div>
-                        </div>
-                        <div v-if="!fiscalStore.years.length" class="sfb-empty">
-                            {{ $t('navbar.noYears') }}
-                        </div>
-                    </template>
-                </div>
-            </Transition>
-
-        </div>
-
-        <!-- ══ Menu ═══════════════════════════════════════════════ -->
+        <!-- ══ Menu ══ -->
         <ul class="sidenav-menu">
 
-            <!-- ─── Overview ──────────────────────────────────── -->
+            <!-- ── Fiscal Year ── -->
+            <SidenavCollapse id="collapse-fiscal" class="mb-3" icon="fas fa-calendar-alt"
+                :label="fiscalYear?.name ?? $t('navbar.noFiscalYear')" :routes="[]" :fiscal-status="fiscalYear?.status"
+                @open="onFiscalOpen">
+                <!-- panel header -->
+                <li class="fy-panel-head">
+                    <span class="fy-panel-title">{{ $t('navbar.selectYear') }}</span>
+                    <span class="fy-count">{{ fiscalStore.years.length }} {{ $t('navbar.years') }}</span>
+                </li>
+
+                <!-- loading -->
+                <li v-if="fiscalStore.loading" class="fy-loading">
+                    <div class="fy-spinner" />
+                </li>
+
+                <!-- list -->
+                <template v-else>
+                    <li v-for="year in fiscalStore.years" :key="year.ulid" class="fy-item"
+                        :class="{ 'fy-item--active': year.ulid === fiscalStore.currentId }" @click="onSwitchYear(year)">
+                        <div class="fy-item-body">
+                            <span class="fy-item-name">{{ year.name }}</span>
+                            <span class="fy-item-dates">{{ year.start_date }} – {{ year.end_date }}</span>
+                        </div>
+                        <span class="fy-badge" :class="`badge-${year.status}`">{{ year.status_label }}</span>
+                        <i v-if="year.ulid === fiscalStore.currentId" class="fas fa-check fy-check" />
+                    </li>
+                    <li v-if="!fiscalStore.years.length" class="fy-empty">
+                        {{ $t('navbar.noYears') }}
+                    </li>
+                </template>
+            </SidenavCollapse>
+
+            <!-- ── Overview ── -->
             <SidenavLink to="/dashboard" icon="fas fa-tachometer-alt" :label="$t('sidebar.overview')" />
 
-            <!-- ─── Profile ───────────────────────────────────── -->
+            <!-- ── Profile ── -->
             <SidenavLink to="/profile" icon="fas fa-user" :label="$t('sidebar.profile')" />
 
-            <!-- ══ SETTINGS SECTION ════════════════════════════ -->
+            <!-- ══ SETTINGS ══ -->
             <li class="sidenav-divider-wrap">
                 <hr class="sidenav-divider" />
                 <span class="sidenav-heading">{{ $t('sidebar.sections.settings') }}</span>
@@ -117,7 +81,7 @@
                     sub />
             </SidenavCollapse>
 
-            <!-- ── FINANCIAL SECTION ─────────────────────────────── -->
+            <!-- ══ FINANCIAL ══ -->
             <li class="sidenav-divider-wrap">
                 <hr class="sidenav-divider" />
                 <span class="sidenav-heading">{{ $t('sidebar.sections.financial') }}</span>
@@ -142,7 +106,7 @@
 
         </ul>
 
-        <!-- ══ Footer ════════════════════════════════════════════ -->
+        <!-- ══ Footer ══ -->
         <div class="sidenav-footer">
             <button class="sidenav-close-btn" @click="$emit('close')">
                 <i :class="langStore.isRtl ? 'fas fa-angle-double-right' : 'fas fa-angle-double-left'" />
@@ -174,33 +138,19 @@ const fiscalStore = useFiscalYearStore()
 
 const avatarFallback = 'https://ui-avatars.com/api/?background=1d334f&color=fff&name=U'
 
-// ── Fiscal Year Switcher ───────────────────────────────────────
 const fiscalYear = computed(() => fiscalStore.currentYear)
-const showSwitcher = ref(false)
 
-async function toggleFiscalSwitcher() {
-    showSwitcher.value = !showSwitcher.value
-    if (showSwitcher.value && !fiscalStore.years.length) {
+async function onFiscalOpen() {
+    if (!fiscalStore.years.length) {
         await fiscalStore.fetchSwitcher()
     }
 }
 
 async function onSwitchYear(year: FiscalYear) {
-    if (year.ulid === fiscalStore.currentId) {
-        showSwitcher.value = false
-        return
-    }
+    if (year.ulid === fiscalStore.currentId) return
     await fiscalStore.switchTo(year.ulid)
-    showSwitcher.value = false
 }
 
-onMounted(async () => {
-    if (!fiscalStore.years.length) {
-        await fiscalStore.fetchSwitcher()
-    }
-})
-
-// ── Detect mobile ──────────────────────────────────────────────
 const isMobile = ref(window.innerWidth < 992)
 const onResize = () => { isMobile.value = window.innerWidth < 992 }
 onMounted(() => window.addEventListener('resize', onResize))
@@ -208,14 +158,9 @@ onUnmounted(() => window.removeEventListener('resize', onResize))
 </script>
 
 <style scoped>
-/* ════════════════════════════════════════════════════════════════
-   Design tokens
-════════════════════════════════════════════════════════════════ */
+/* ════ Design tokens ════ */
 .sidenav {
     --snav-bg: #1d334f;
-    --snav-bg-hover: #162843;
-    --snav-bg-active: #1d7342;
-    --snav-accent: #1d7342;
     --snav-text: rgba(255, 255, 255, 0.85);
     --snav-text-muted: rgba(255, 255, 255, 0.45);
     --snav-divider: rgba(255, 255, 255, 0.1);
@@ -249,7 +194,6 @@ onUnmounted(() => window.removeEventListener('resize', onResize))
     border-radius: 4px;
 }
 
-/* ── Position ── */
 .sidenav-ltr {
     left: 0;
     right: auto;
@@ -262,7 +206,6 @@ onUnmounted(() => window.removeEventListener('resize', onResize))
     box-shadow: -4px 0 20px rgba(0, 0, 0, 0.25);
 }
 
-/* ── Open / Hidden ── */
 .sidenav-open {
     transform: translateX(0);
 }
@@ -275,9 +218,7 @@ onUnmounted(() => window.removeEventListener('resize', onResize))
     transform: translateX(100%);
 }
 
-/* ════════════════════════════════════════════════════════════════
-   Logo
-════════════════════════════════════════════════════════════════ */
+/* ════ Logo ════ */
 .sidenav-logo {
     display: flex;
     justify-content: center;
@@ -292,9 +233,7 @@ onUnmounted(() => window.removeEventListener('resize', onResize))
     background: rgba(255, 255, 255, 0.04);
 }
 
-/* ════════════════════════════════════════════════════════════════
-   User info
-════════════════════════════════════════════════════════════════ */
+/* ════ User ════ */
 .sidenav-user {
     display: flex;
     align-items: center;
@@ -335,257 +274,7 @@ onUnmounted(() => window.removeEventListener('resize', onResize))
     text-overflow: ellipsis;
 }
 
-/* ════════════════════════════════════════════════════════════════
-   Fiscal Year Block  (sfb-*)
-════════════════════════════════════════════════════════════════ */
-.sidenav-fiscal-block {
-    margin: 0.6rem 0.6rem 0;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.09);
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-/* ── Row ── */
-.sfb-row {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    padding: 0.55rem 0.75rem;
-}
-
-.sfb-row--clickable {
-    cursor: pointer;
-    transition: background 0.18s;
-    user-select: none;
-}
-
-.sfb-row--clickable:hover {
-    background: rgba(255, 255, 255, 0.07);
-}
-
-/* ── Icon ── */
-.sfb-icon {
-    width: 28px;
-    height: 28px;
-    border-radius: 7px;
-    background: rgba(255, 255, 255, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.72rem;
-    color: rgba(255, 255, 255, 0.75);
-    flex-shrink: 0;
-    transition: background 0.2s;
-}
-
-.sfb-icon--active {
-    background: rgba(29, 115, 66, 0.5);
-    color: #4ade80;
-}
-
-.sfb-icon--warn {
-    background: rgba(251, 191, 36, 0.2);
-    color: #fbbf24;
-}
-
-/* ── Body ── */
-.sfb-body {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.25;
-    flex: 1;
-    min-width: 0;
-}
-
-.sfb-label {
-    font-size: 0.58rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--snav-text-muted);
-}
-
-.sfb-value {
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.9);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.sfb-value--accent {
-    color: #7ee8b0;
-}
-
-/* ── Right side ── */
-.sfb-right {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    flex-shrink: 0;
-}
-
-.sfb-chevron {
-    font-size: 0.58rem;
-    color: var(--snav-text-muted);
-    transition: transform 0.2s;
-}
-
-/* ── Separator ── */
-.sfb-sep {
-    height: 1px;
-    background: rgba(255, 255, 255, 0.07);
-    margin: 0 0.5rem;
-}
-
-/* ── Status dots ── */
-.sfb-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    display: inline-block;
-    flex-shrink: 0;
-}
-
-.dot-open {
-    background: #4ade80;
-    box-shadow: 0 0 5px #4ade80;
-}
-
-.dot-closed {
-    background: #fbbf24;
-    box-shadow: 0 0 5px #fbbf24;
-}
-
-.dot-locked {
-    background: #f87171;
-    box-shadow: 0 0 5px #f87171;
-}
-
-/* ── Switcher dropdown ── */
-.sfb-switcher {
-    background: rgba(0, 0, 0, 0.2);
-    border-top: 1px solid rgba(255, 255, 255, 0.07);
-    max-height: 240px;
-    overflow-y: auto;
-    padding: 0.3rem;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
-}
-
-.sfb-switcher::-webkit-scrollbar {
-    width: 3px;
-}
-
-.sfb-switcher::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
-}
-
-.sfb-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.5rem 0.6rem;
-    border-radius: 7px;
-    cursor: pointer;
-    gap: 0.5rem;
-    color: rgba(255, 255, 255, 0.8);
-    transition: background 0.15s;
-}
-
-.sfb-item:hover {
-    background: rgba(255, 255, 255, 0.07);
-}
-
-.sfb-item--active {
-    background: rgba(29, 115, 66, 0.35) !important;
-    border: 1px solid rgba(74, 222, 128, 0.25);
-}
-
-.sfb-item-name {
-    font-size: 0.8rem;
-    font-weight: 600;
-}
-
-.sfb-item-dates {
-    font-size: 0.65rem;
-    opacity: 0.55;
-}
-
-.sfb-badge {
-    font-size: 0.6rem;
-    padding: 2px 7px;
-    border-radius: 20px;
-    font-weight: 600;
-    white-space: nowrap;
-}
-
-.badge-open {
-    background: rgba(74, 222, 128, 0.15);
-    color: #4ade80;
-    border: 1px solid rgba(74, 222, 128, 0.3);
-}
-
-.badge-closed {
-    background: rgba(251, 191, 36, 0.15);
-    color: #fbbf24;
-    border: 1px solid rgba(251, 191, 36, 0.3);
-}
-
-.badge-locked {
-    background: rgba(248, 113, 113, 0.15);
-    color: #f87171;
-    border: 1px solid rgba(248, 113, 113, 0.3);
-}
-
-.sfb-empty {
-    text-align: center;
-    padding: 0.75rem;
-    font-size: 0.75rem;
-    color: var(--snav-text-muted);
-}
-
-/* ── Spinner ── */
-.sfb-spinner {
-    width: 20px;
-    height: 20px;
-    border: 2px solid rgba(255, 255, 255, 0.15);
-    border-top-color: #4ade80;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    margin: 0 auto;
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-/* ── Transition ── */
-.sfb-slide-enter-active,
-.sfb-slide-leave-active {
-    transition: max-height 0.25s ease, opacity 0.2s ease;
-    overflow: hidden;
-}
-
-.sfb-slide-enter-from,
-.sfb-slide-leave-to {
-    max-height: 0;
-    opacity: 0;
-}
-
-.sfb-slide-enter-to,
-.sfb-slide-leave-from {
-    max-height: 240px;
-    opacity: 1;
-}
-
-/* ════════════════════════════════════════════════════════════════
-   Menu list
-════════════════════════════════════════════════════════════════ */
+/* ════ Menu ════ */
 .sidenav-menu {
     list-style: none;
     padding: 0.5rem 0.5rem 1rem;
@@ -593,7 +282,6 @@ onUnmounted(() => window.removeEventListener('resize', onResize))
     flex-grow: 1;
 }
 
-/* ── Divider + Heading ── */
 .sidenav-divider-wrap {
     padding: 0.75rem 0.6rem 0.25rem;
     list-style: none;
@@ -614,9 +302,219 @@ onUnmounted(() => window.removeEventListener('resize', onResize))
     padding-inline-start: 0.4rem;
 }
 
-/* ════════════════════════════════════════════════════════════════
-   Footer
-════════════════════════════════════════════════════════════════ */
+/* ════ Fiscal Year — لمسة CSS فقط ════ */
+.dot-open {
+    background: #4ade80;
+}
+
+.dot-closed {
+    background: #fbbf24;
+}
+
+.dot-locked {
+    background: #f87171;
+}
+
+.badge-open {
+    background: rgba(74, 222, 128, .12);
+    color: #4ade80;
+    border: 1px solid rgba(74, 222, 128, .25);
+}
+
+.badge-closed {
+    background: rgba(251, 191, 36, .12);
+    color: #fbbf24;
+    border: 1px solid rgba(251, 191, 36, .25);
+}
+
+.badge-locked {
+    background: rgba(248, 113, 113, .12);
+    color: #f87171;
+    border: 1px solid rgba(248, 113, 113, .25);
+}
+
+/* ════ Fiscal Year Dropdown ════ */
+
+/* panel header */
+.fy-panel-head {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px 6px;
+    border-bottom: 1px solid rgba(255, 255, 255, .05);
+}
+
+.fy-panel-title {
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: rgba(255, 255, 255, .3);
+}
+
+.fy-count {
+    font-size: 0.6rem;
+    padding: 1px 6px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, .06);
+    color: rgba(255, 255, 255, .35);
+}
+
+/* item */
+.fy-item {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 9px;
+    border-radius: 7px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    margin-bottom: 2px;
+    transition: background .13s, border-color .13s;
+}
+
+.fy-item:last-child {
+    margin-bottom: 0;
+}
+
+.fy-item:hover {
+    background: rgba(255, 255, 255, .05);
+}
+
+.fy-item--active {
+    background: rgba(29, 115, 66, .22);
+    border-color: rgba(74, 222, 128, .18);
+    position: relative;
+}
+
+.fy-item--active::before {
+    content: '';
+    display: block;
+    width: 3px;
+    align-self: stretch;
+    background: #4ade80;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+.fy-item-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.fy-item-name {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, .88);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+}
+
+.fy-item-dates {
+    display: block;
+    font-size: 0.62rem;
+    color: rgba(255, 255, 255, .3);
+    margin-top: 2px;
+}
+
+/* badge */
+.fy-badge {
+    font-size: 0.58rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 20px;
+    flex-shrink: 0;
+    letter-spacing: .02em;
+}
+
+.badge-open {
+    background: rgba(74, 222, 128, .1);
+    color: #4ade80;
+    border: 1px solid rgba(74, 222, 128, .2);
+}
+
+.badge-closed {
+    background: rgba(251, 191, 36, .1);
+    color: #fbbf24;
+    border: 1px solid rgba(251, 191, 36, .2);
+}
+
+.badge-locked {
+    background: rgba(248, 113, 113, .1);
+    color: #f87171;
+    border: 1px solid rgba(248, 113, 113, .2);
+}
+
+.fy-check {
+    font-size: 0.6rem;
+    color: #4ade80;
+    flex-shrink: 0;
+}
+
+/* loading */
+.fy-loading {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    padding: 12px;
+}
+
+.fy-spinner {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, .1);
+    border-top-color: #4ade80;
+    animation: spin .7s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.fy-empty {
+    list-style: none;
+    text-align: center;
+    padding: 12px;
+    font-size: 0.73rem;
+    color: rgba(255, 255, 255, .3);
+}
+
+/* ── dots (يُستخدم في SidenavCollapse أيضاً) ── */
+.sfb-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.dot-open {
+    background: #4ade80;
+}
+
+.dot-closed {
+    background: #fbbf24;
+}
+
+.dot-locked {
+    background: #f87171;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ════ Footer ════ */
 .sidenav-footer {
     border-top: 1px solid var(--snav-divider);
     padding: 0.75rem;
@@ -644,9 +542,7 @@ onUnmounted(() => window.removeEventListener('resize', onResize))
     background: rgba(255, 255, 255, 0.12);
 }
 
-/* ════════════════════════════════════════════════════════════════
-   Overlay (mobile)
-════════════════════════════════════════════════════════════════ */
+/* ════ Overlay ════ */
 .sidenav-overlay {
     position: fixed;
     inset: 0;

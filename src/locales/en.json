@@ -36,7 +36,9 @@
         "selectFiscalYear": "Select Fiscal Year",
         "noFiscalYear": "No fiscal year found",
         "company": "Company",
-        "noYears": "No fiscal years available"
+        "noYears": "No fiscal years available",
+        "years": "Fiscal Years",
+        "selectYear": "Select Year"
     },
     "footer": {
         "rights": "All rights reserved",
@@ -230,7 +232,9 @@
         "page": "Page",
         "total": "Total",
         "optional": "Optional",
-        "actionCannotBeUndone": "This action cannot be undone!"
+        "actionCannotBeUndone": "This action cannot be undone!",
+        "yes": "Yes",
+        "no": "No"
     },
     "accounts": {
         "title": "Chart of Accounts",
@@ -422,7 +426,9 @@
             "date": "Date",
             "journal": "Journal",
             "description": "Description",
-            "balance": "Balance"
+            "balance": "Balance",
+            "openingJournal": "Opening Entry",
+            "openingBalance": "Opening Balance"
         },
         "is": {
             "revenues": "Revenues",
@@ -430,7 +436,9 @@
             "totalRevenues": "Total Revenues",
             "totalExpenses": "Total Expenses",
             "netProfit": "Net Profit",
-            "netLoss": "Net Loss"
+            "netLoss": "Net Loss",
+            "profit": "Profit",
+            "loss": "Loss"
         },
         "bs": {
             "assets": "Assets",
@@ -465,5 +473,109 @@
         "deleteMessage": "This will delete the opening entry. You can regenerate it later.",
         "generatedSuccess": "Opening entry generated successfully",
         "deletedSuccess": "Opening entry deleted successfully"
+    },
+    "profile": {
+        "active": "Active",
+        "lastLogin": "Last Login",
+        "accountType": "Account Type",
+        "owner": "Owner",
+        "personalInfo": "Personal Information",
+        "personalInfoSub": "Update your profile details",
+        "companyInfo": "Company Information",
+        "companyInfoSub": "Manage your company data",
+        "security": "Security",
+        "securitySub": "Change password and security settings",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "email": "Email",
+        "emailReadOnly": "Email address cannot be changed",
+        "phone": "Phone Number",
+        "phonePlaceholder": "Enter your phone number",
+        "saveChanges": "Save Changes",
+        "saving": "Saving...",
+        "avatarUpdated": "Avatar updated successfully",
+        "avatarError": "Failed to update avatar",
+        "personalSaved": "Personal information saved successfully",
+        "companySaved": "Company information saved successfully",
+        "passwordChanged": "Password changed successfully",
+        "saveError": "An error occurred while saving",
+        "currentPassword": "Current Password",
+        "newPassword": "New Password",
+        "confirmPassword": "Confirm Password",
+        "changePassword": "Change Password",
+        "passwordWeak": "Weak",
+        "passwordMedium": "Medium",
+        "passwordStrong": "Strong",
+        "securityTips": "Security Tips",
+        "tabs": {
+            "personal": "Personal Info",
+            "company": "Company",
+            "security": "Security"
+        },
+        "validation": {
+            "firstNameRequired": "First name is required",
+            "lastNameRequired": "Last name is required",
+            "currentPasswordRequired": "Current password is required",
+            "newPasswordRequired": "New password is required",
+            "passwordTooShort": "Password must be at least 8 characters",
+            "passwordMismatch": "Passwords do not match"
+        },
+        "tips": {
+            "length": "Use at least 8 characters",
+            "uppercase": "Mix uppercase and lowercase letters",
+            "numbers": "Include numbers",
+            "special": "Use special characters like !@#$",
+            "unique": "Don't reuse a previous password"
+        }
+    },
+    "yearEnd": {
+        "title": "Year End Closing",
+        "balanced": "Balanced",
+        "unbalanced": "Unbalanced",
+        "step1Title": "Setup",
+        "step1Desc": "Select fiscal year and retained earnings account",
+        "fiscalYear": "Fiscal Year",
+        "selectFiscalYear": "Select fiscal year",
+        "retainedEarnings": "Retained Earnings Account",
+        "selectAccount": "Select account",
+        "preview": "Preview",
+        "totalRevenues": "Total Revenues",
+        "totalExpenses": "Total Expenses",
+        "netProfit": "Net Profit",
+        "netLoss": "Net Loss",
+        "closingEntries": "Closing Entries",
+        "closingEntriesPreview": "Closing Entries Preview",
+        "lines": "Lines",
+        "entryType": "Entry Type",
+        "types": {
+            "revenue": "Revenue",
+            "expense": "Expense",
+            "retained_earnings": "Retained Earnings"
+        },
+        "step2Title": "Options",
+        "step2Desc": "Configure closing options",
+        "carryForward": "Carry Forward to New Year",
+        "carryForwardDesc": "Transfer balances to the next fiscal year",
+        "newFiscalYear": "New Fiscal Year",
+        "selectNewYear": "Select new fiscal year",
+        "carryForwardHint": "Balances will be transferred as opening balances",
+        "cannotExecute": "Cannot Execute",
+        "unbalancedDesc": "Trial balance must be balanced before closing",
+        "alreadyClosed": "Already Closed",
+        "alreadyClosedDesc": "This fiscal year has already been closed",
+        "step3Title": "Execute Closing",
+        "step3Desc": "Finalize and close the fiscal year",
+        "closingYear": "Closing Year",
+        "retainedAccount": "Retained Account",
+        "execute": "Execute",
+        "confirmTitle": "Confirm Closing",
+        "confirmMessage": "Are you sure you want to close fiscal year {name}?",
+        "executeSuccess": "Year closed successfully",
+        "executeSuccessDesc": "Fiscal year {name} has been closed successfully",
+        "closingEntry": "Closing Entry",
+        "carriedAccounts": "Carried Accounts",
+        "accounts": "accounts",
+        "selectToPreview": "Select data to preview",
+        "selectToPreviewDesc": "Choose fiscal year and account to generate preview"
     }
 }

@@ -99,9 +99,9 @@
     <div v-if="selected.length > 0"
       class="bulk-bar d-flex justify-content-between align-items-center mb-3 p-2 px-3 rounded-3">
       <div class="small">
-        {{ selected.length }} selected
+        {{ selected.length }} {{ t('common.selected') }}
       </div>
-      <div class="d-flex gap-2">
+      <div class="d-flex gap-2 align-items-center">
         <BaseSvg name="trash" :size="20" class="icon-action text-danger" @click="bulkDelete" />
         <BaseSvg name="lock" :size="20" class="icon-action text-warning" @click="bulkClose" />
         <BaseSvg name="lock-open" :size="20" class="icon-action text-success" @click="bulkReopen" />
@@ -125,15 +125,16 @@
                 <MDBCheckbox :checked="selected.length === store.years.length && store.years.length > 0"
                   @change="toggleSelectAll" />
               </th>
-              <th class="text-center" style="width:48px;">#</th>
-              <th class="text-center" style="width:100px;">ULID</th>
-              <th>{{ t('fiscalYears.name') }}</th>
-              <th>{{ t('fiscalYears.period') }}</th>
-              <th>{{ t('fiscalYears.duration') }}</th>
-              <th style="min-width:150px;">{{ t('fiscalYears.progress') }}</th>
-              <th>{{ t('fiscalYears.status.label') }}</th>
-              <th class="text-center" style="width:60px;">{{ t('fiscalYears.default') }}</th>
-              <th class="text-center" style="width:170px;">{{ t('common.actions') }}</th>
+              <th class="text-center fw-bold" style="width:48px;">#</th>
+              <th class="text-center fw-bold" style="width:100px;">ULID</th>
+              <th class="text-center fw-bold">{{ t('fiscalYears.name') }}</th>
+              <th class="text-center fw-bold">{{ t('fiscalYears.period') }}</th>
+              <th class="text-center fw-bold">{{ t('fiscalYears.duration') }}</th>
+              <th class="text-center fw-bold" style="min-width:150px;">{{ t('fiscalYears.progress') }}</th>
+              <th class="text-center fw-bold">{{ t('fiscalYears.status.label') }}</th>
+              <!-- ★ النجمة قابلة للنقر الآن -->
+              <th class="text-center fw-bold" style="width:60px;">{{ t('fiscalYears.default') }}</th>
+              <th class="text-center fw-bold" style="min-width:210px;">{{ t('common.actions') }}</th>
             </tr>
           </thead>
 
@@ -256,24 +257,51 @@
                   </MDBBadge>
                 </td>
 
-                <!-- Default -->
+                <!-- ★ Default — قابل للنقر لتعيين السنة الافتراضية -->
                 <td class="text-center">
-                  <MDBIcon icon="star" :icon-style="year.is_default ? 'fas' : 'far'"
-                    :class="year.is_default ? 'text-warning' : 'text-muted opacity-25'" size="lg" />
+                  <MDBIcon icon="star" :icon-style="year.is_default ? 'fas' : 'far'" :class="[
+                    year.is_default ? 'text-warning' : 'text-muted opacity-25 star-clickable',
+                    actionLoading === year.ulid + '_default' ? 'opacity-50' : ''
+                  ]" size="lg" :title="year.is_default ? t('fiscalYears.isDefault') : t('fiscalYears.setAsDefault')"
+                    @click="!year.is_default && onSetDefault(year)" />
                 </td>
 
-                <!-- Actions -->
+                <!-- ══ Actions ══
+                     open   → switch | view | edit | close(lock) | delete
+                     closed → switch | view |       reopen | lock-permanent | delete
+                     locked → switch | view |                                       (no delete)
+                -->
                 <td class="text-center">
-                  <div class="d-flex justify-content-center gap-2 action-icons">
-                    <BaseSvg v-if="!year.is_current" name="exchange-alt" :size="24" class="icon-action text-primary"
-                      @click="onSwitch(year)" />
-                    <BaseSvg name="eye" :size="24" class="icon-action text-info" @click="openShow(year)" />
-                    <BaseSvg v-if="year.is_editable" name="edit" :size="24" class="icon-action text-dark"
-                      @click="openEdit(year)" />
-                    <BaseSvg v-if="year.is_closed" name="lock" :size="24" class="icon-action text-warning"
-                      @click="confirmLock(year)" />
-                    <BaseSvg v-if="!year.is_locked" name="trash" :size="24" class="icon-action text-danger"
-                      @click="confirmDelete(year)" />
+                  <div class="d-flex justify-content-center align-items-center gap-1 action-icons flex-wrap">
+
+                    <!-- Switch to this year -->
+                    <BaseSvg v-if="!year.is_current" name="exchange-alt" :size="22" class="icon-action text-primary"
+                      :title="t('fiscalYears.actions.switch')" @click="onSwitch(year)" />
+
+                    <!-- View details -->
+                    <BaseSvg name="eye" :size="22" class="icon-action text-info" :title="t('common.view')"
+                      @click="openShow(year)" />
+
+                    <!-- Edit — only when editable -->
+                    <BaseSvg v-if="year.is_editable" name="edit" :size="22" class="icon-action text-dark"
+                      :title="t('common.edit')" @click="openEdit(year)" />
+
+                    <!-- ★ NEW — Close (soft) — only when open -->
+                    <BaseSvg v-if="year.is_open" name="lock" :size="22" class="icon-action text-warning"
+                      :title="t('fiscalYears.actions.close')" @click="confirmClose(year)" />
+
+                    <!-- ★ NEW — Reopen — only when closed (not permanently locked) -->
+                    <BaseSvg v-if="year.is_closed" name="lock-open" :size="22" class="icon-action text-success"
+                      :title="t('fiscalYears.actions.reopen')" @click="confirmReopen(year)" />
+
+                    <!-- Lock permanently — only when closed -->
+                    <BaseSvg v-if="year.is_closed" name="ban" :size="22" class="icon-action text-danger"
+                      :title="t('fiscalYears.actions.lock')" @click="confirmLock(year)" />
+
+                    <!-- Delete — not allowed when locked -->
+                    <BaseSvg v-if="!year.is_locked" name="trash" :size="22" class="icon-action text-danger"
+                      :title="t('common.delete')" @click="confirmDelete(year)" />
+
                   </div>
                 </td>
 
@@ -307,10 +335,22 @@
     <FiscalYearFormModal v-model:show="showFormModal" :year="editingYear" @saved="onSaved" />
     <FiscalYearShowModal v-model:show="showDetailsModal" :ulid="showingUlid" />
 
+    <!-- Delete -->
     <ConfirmModal v-model:show="showDeleteModal" type="danger" icon="trash-alt" :title="t('fiscalYears.deleteTitle')"
       :message="t('fiscalYears.deleteMessage', { name: confirmTarget?.name })" :confirm-label="t('common.delete')"
       :loading="actionLoading !== null" @confirm="onDeleteConfirmed" />
 
+    <!-- ★ NEW — Close (soft) -->
+    <ConfirmModal v-model:show="showCloseModal" type="warning" icon="lock" :title="t('fiscalYears.closeTitle')"
+      :message="t('fiscalYears.closeMessage', { name: confirmTarget?.name })"
+      :confirm-label="t('fiscalYears.actions.close')" :loading="actionLoading !== null" @confirm="onCloseConfirmed" />
+
+    <!-- ★ NEW — Reopen -->
+    <ConfirmModal v-model:show="showReopenModal" type="success" icon="lock-open" :title="t('fiscalYears.reopenTitle')"
+      :message="t('fiscalYears.reopenMessage', { name: confirmTarget?.name })"
+      :confirm-label="t('fiscalYears.actions.reopen')" :loading="actionLoading !== null" @confirm="onReopenConfirmed" />
+
+    <!-- Lock permanently -->
     <ConfirmModal v-model:show="showLockModal" type="danger" icon="ban" :title="t('fiscalYears.lockTitle')"
       :message="t('fiscalYears.lockMessage', { name: confirmTarget?.name })"
       :confirm-label="t('fiscalYears.actions.lock')" :loading="actionLoading !== null" @confirm="onLockConfirmed" />
@@ -347,14 +387,18 @@ const { t, locale } = useI18n()
 const store = useFiscalYearStore()
 const toast = ref<InstanceType<typeof ToastNotification> | null>(null)
 
-// ── Fiscal Year Pill state ─────────────────────────────────────────
+// ── Misc state ─────────────────────────────────────────────────────
 const showSwitcher = ref(false)
 
-// ── Modal state ───────────────────────────────────────────────────
+// ── Modal visibility ──────────────────────────────────────────────
 const showFormModal = ref(false)
 const showDetailsModal = ref(false)
 const showDeleteModal = ref(false)
+const showCloseModal = ref(false)   // ★ NEW
+const showReopenModal = ref(false)   // ★ NEW
 const showLockModal = ref(false)
+
+// ── Shared action state ───────────────────────────────────────────
 const editingYear = ref<FiscalYear | null>(null)
 const showingUlid = ref('')
 const confirmTarget = ref<FiscalYear | null>(null)
@@ -432,28 +476,29 @@ function copyUlid(ulid: string) {
 
 // ── Selection ─────────────────────────────────────────────────────
 function toggleSelect(ulid: string) {
-  if (selected.value.includes(ulid)) {
-    selected.value = selected.value.filter(id => id !== ulid)
-  } else {
-    selected.value.push(ulid)
-  }
+  selected.value = selected.value.includes(ulid)
+    ? selected.value.filter(id => id !== ulid)
+    : [...selected.value, ulid]
 }
 function isSelected(ulid: string) {
   return selected.value.includes(ulid)
 }
 function toggleSelectAll() {
-  if (selected.value.length === store.years.length) {
-    selected.value = []
-  } else {
-    selected.value = store.years.map(y => y.ulid)
-  }
+  selected.value = selected.value.length === store.years.length
+    ? []
+    : store.years.map(y => y.ulid)
 }
 
-// ── Methods ───────────────────────────────────────────────────────
+// ── Search ────────────────────────────────────────────────────────
 function onSearch() {
   clearTimeout(searchTimeout)
-  searchTimeout = setTimeout(() => { store.meta.current_page = 1; store.fetchAll() }, 400)
+  searchTimeout = setTimeout(() => {
+    store.meta.current_page = 1
+    store.fetchAll()
+  }, 400)
 }
+
+// ── CRUD helpers ──────────────────────────────────────────────────
 function openCreate() { editingYear.value = null; showFormModal.value = true }
 function openEdit(y: FiscalYear) { editingYear.value = y; showFormModal.value = true }
 function openShow(y: FiscalYear) { showingUlid.value = y.ulid; showDetailsModal.value = true }
@@ -463,6 +508,7 @@ function onSaved(updated: FiscalYear, isNew: boolean) {
   toast.value?.show(t('common.savedSuccess'), 'success')
 }
 
+// ── Switch ────────────────────────────────────────────────────────
 async function onSwitch(year: FiscalYear) {
   actionLoading.value = year.ulid
   try {
@@ -473,7 +519,23 @@ async function onSwitch(year: FiscalYear) {
   } finally { actionLoading.value = null }
 }
 
+// ── ★ NEW — Set Default ───────────────────────────────────────────
+async function onSetDefault(year: FiscalYear) {
+  if (year.is_default) return
+  actionLoading.value = year.ulid + '_default'
+  try {
+    const res = await fiscalYearService.setDefault(year.ulid)
+    // fetchAll to reset is_default on all rows correctly
+    await store.fetchAll()
+    toast.value?.show(res.message, 'success')
+  } catch (e: unknown) {
+    toast.value?.show((e as any)?.response?.data?.message ?? t('common.error'), 'danger')
+  } finally { actionLoading.value = null }
+}
+
+// ── Delete ────────────────────────────────────────────────────────
 function confirmDelete(y: FiscalYear) { confirmTarget.value = y; showDeleteModal.value = true }
+
 async function onDeleteConfirmed() {
   if (!confirmTarget.value) return
   actionLoading.value = confirmTarget.value.ulid
@@ -487,7 +549,41 @@ async function onDeleteConfirmed() {
   } finally { actionLoading.value = null }
 }
 
+// ── ★ NEW — Close (soft) ──────────────────────────────────────────
+function confirmClose(y: FiscalYear) { confirmTarget.value = y; showCloseModal.value = true }
+
+async function onCloseConfirmed() {
+  if (!confirmTarget.value) return
+  actionLoading.value = confirmTarget.value.ulid
+  try {
+    const res = await fiscalYearService.close(confirmTarget.value.ulid)
+    store.updateYearInList(res.data)
+    showCloseModal.value = false
+    toast.value?.show(res.message, 'success')
+  } catch (e: unknown) {
+    toast.value?.show((e as any)?.response?.data?.message ?? t('common.error'), 'danger')
+  } finally { actionLoading.value = null }
+}
+
+// ── ★ NEW — Reopen ────────────────────────────────────────────────
+function confirmReopen(y: FiscalYear) { confirmTarget.value = y; showReopenModal.value = true }
+
+async function onReopenConfirmed() {
+  if (!confirmTarget.value) return
+  actionLoading.value = confirmTarget.value.ulid
+  try {
+    const res = await fiscalYearService.reopen(confirmTarget.value.ulid)
+    store.updateYearInList(res.data)
+    showReopenModal.value = false
+    toast.value?.show(res.message, 'success')
+  } catch (e: unknown) {
+    toast.value?.show((e as any)?.response?.data?.message ?? t('common.error'), 'danger')
+  } finally { actionLoading.value = null }
+}
+
+// ── Lock permanently ──────────────────────────────────────────────
 function confirmLock(y: FiscalYear) { confirmTarget.value = y; showLockModal.value = true }
+
 async function onLockConfirmed() {
   if (!confirmTarget.value) return
   actionLoading.value = confirmTarget.value.ulid
@@ -509,33 +605,35 @@ async function bulkDelete() {
     await Promise.all(selected.value.map(id => fiscalYearService.destroy(id)))
     selected.value.forEach(id => store.removeYearFromList(id))
     selected.value = []
-    toast.value?.show('Deleted successfully', 'success')
+    toast.value?.show(t('common.deletedSuccess'), 'success')
   } catch {
-    toast.value?.show('Error deleting', 'danger')
+    toast.value?.show(t('common.error'), 'danger')
   } finally { actionLoading.value = null }
 }
 
 async function bulkClose() {
+  if (!selected.value.length) return
   actionLoading.value = 'bulk'
   try {
     const results = await Promise.all(selected.value.map(id => fiscalYearService.close(id)))
     results.forEach(res => store.updateYearInList(res.data))
     selected.value = []
-    toast.value?.show('Closed successfully', 'success')
+    toast.value?.show(t('fiscalYears.closedSuccess'), 'success')
   } catch {
-    toast.value?.show('Error', 'danger')
+    toast.value?.show(t('common.error'), 'danger')
   } finally { actionLoading.value = null }
 }
 
 async function bulkReopen() {
+  if (!selected.value.length) return
   actionLoading.value = 'bulk'
   try {
     const results = await Promise.all(selected.value.map(id => fiscalYearService.reopen(id)))
     results.forEach(res => store.updateYearInList(res.data))
     selected.value = []
-    toast.value?.show('Reopened successfully', 'success')
+    toast.value?.show(t('fiscalYears.reopenedSuccess'), 'success')
   } catch {
-    toast.value?.show('Error', 'danger')
+    toast.value?.show(t('common.error'), 'danger')
   } finally { actionLoading.value = null }
 }
 </script>
@@ -574,6 +672,18 @@ async function bulkReopen() {
   opacity: 1;
 }
 
+/* ── Star (set-default) ── */
+.star-clickable {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.star-clickable:hover {
+  opacity: 0.7 !important;
+  color: #ffc107 !important;
+  transform: scale(1.2);
+}
+
 /* ── ULID ── */
 .ulid-short {
   font-family: monospace;
@@ -606,195 +716,10 @@ async function bulkReopen() {
   border: 1px solid #e5e7eb;
 }
 
-/* ══ Info Pills ══ */
-.info-pill {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 10px;
-  padding: 0.35rem 0.75rem;
-  transition: background 0.2s, border-color 0.2s;
-}
-
-.fiscal-pill:hover {
-  background: rgba(255, 255, 255, 0.18);
-  border-color: rgba(255, 255, 255, 0.3);
-}
-
-.fiscal-pill--empty {
-  border-color: rgba(255, 193, 7, 0.4);
-  background: rgba(255, 193, 7, 0.08);
-}
-
-.pill-icon {
-  width: 26px;
-  height: 26px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.7rem;
-  color: #fff;
-  flex-shrink: 0;
-}
-
-.pill-body {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.2;
-}
-
-.pill-label {
-  font-size: 0.6rem;
-  opacity: 0.65;
-  color: #fff;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.pill-value {
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: #fff;
-  max-width: 140px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.pill-chevron {
-  font-size: 0.6rem;
-  color: rgba(255, 255, 255, 0.6);
-  margin-inline-start: 0.25rem;
-}
-
-.pill-divider {
-  width: 1px;
-  height: 28px;
-  background: rgba(255, 255, 255, 0.2);
-}
-
-/* ── Status dots ── */
-.fiscal-status-dot,
-.switcher-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  display: inline-block;
-}
-
-.dot-open {
-  background: #4ade80;
-  box-shadow: 0 0 6px #4ade80;
-}
-
-.dot-closed {
-  background: #fbbf24;
-  box-shadow: 0 0 6px #fbbf24;
-}
-
-.dot-locked {
-  background: #f87171;
-  box-shadow: 0 0 6px #f87171;
-}
-
 /* ── Fiscal Switcher Panel ── */
-.fiscal-switcher {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%);
-  width: 320px;
-  background: #0f3d24;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 14px;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
-  z-index: 2000;
-  overflow: hidden;
-}
-
-.switcher-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.75rem 1rem;
-  background: rgba(255, 255, 255, 0.05);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  color: #fff;
-}
-
-.switcher-list {
-  max-height: 260px;
-  overflow-y: auto;
-  padding: 0.4rem;
-}
-
-.switcher-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.6rem 0.75rem;
-  border-radius: 8px;
-  cursor: pointer;
-  color: rgba(255, 255, 255, 0.85);
-  transition: background 0.15s;
-  gap: 0.5rem;
-}
-
-.switcher-item:hover {
-  background: rgba(255, 255, 255, 0.07);
-}
-
-.switcher-item--active {
-  background: rgba(29, 115, 66, 0.4) !important;
-  border: 1px solid rgba(74, 222, 128, 0.3);
-}
-
-.switcher-badge {
-  font-size: 0.65rem;
-  padding: 2px 8px;
-  border-radius: 20px;
-  font-weight: 600;
-}
-
-.badge-open {
-  background: rgba(74, 222, 128, 0.15);
-  color: #4ade80;
-  border: 1px solid rgba(74, 222, 128, 0.3);
-}
-
-.badge-closed {
-  background: rgba(251, 191, 36, 0.15);
-  color: #fbbf24;
-  border: 1px solid rgba(251, 191, 36, 0.3);
-}
-
-.badge-locked {
-  background: rgba(248, 113, 113, 0.15);
-  color: #f87171;
-  border: 1px solid rgba(248, 113, 113, 0.3);
-}
-
-/* ── Backdrop ── */
 .switcher-backdrop {
   position: fixed;
   inset: 0;
   z-index: 1999;
-}
-
-/* ── Transitions ── */
-.switcher-slide-enter-active,
-.switcher-slide-leave-active {
-  transition: opacity 0.2s, transform 0.2s;
-}
-
-.switcher-slide-enter-from,
-.switcher-slide-leave-to {
-  opacity: 0;
-  transform: translateX(-50%) translateY(-8px);
 }
 </style>
