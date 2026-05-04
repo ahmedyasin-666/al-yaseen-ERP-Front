@@ -43,12 +43,12 @@
 
             <!-- Phone — يبقى LTR لأن أرقام الهاتف دائماً LTR -->
             <MDBCol md="12">
-                <div class="d-flex gap-2 align-items-start" dir="ltr">
+                <div class="d-flex gap-2 align-items-start">
                     <!-- Country code selector -->
                     <MDBSelect v-model="form.country" :options="countries" height="44.63px" width="200px" filter
                         class="flex-shrink-0" />
                     <!-- Phone number -->
-                    <div class="flex-grow-1" dir="rtl">
+                    <div class="flex-grow-1">
                         <MDBInput v-model="form.phone" :label="$t('register.phone')" type="tel" outline size="lg"
                             class="form-icon-trailing">
                             <MDBIcon icon="phone" class="trailing text-muted" />

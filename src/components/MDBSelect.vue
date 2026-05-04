@@ -78,7 +78,7 @@
 
             <!-- قائمة الخيارات -->
             <div class="select-options-wrapper">
-              <ul ref="listRef" class="select-options-list" role="listbox" :aria-multiselectable="multiple">
+              <ul class="select-options-list" role="listbox" :aria-multiselectable="multiple">
                 <!-- مجموعات -->
                 <template v-if="grouped">
                   <template v-for="grp in groupedOpts" :key="grp.label">
@@ -217,7 +217,6 @@ const searchQuery = ref('')
 const wrapperRef = ref<HTMLElement | null>(null)
 const fieldRef = ref<HTMLInputElement | null>(null)
 const searchRef = ref<HTMLInputElement | null>(null)
-const listRef = ref<HTMLElement | null>(null)
 const optRefs = ref<(HTMLElement | null)[]>([])
 const dropId = `mdb-sel-${Math.random().toString(36).slice(2, 8)}`
 const dropPos = ref({ top: 0, left: 0, width: 0 })

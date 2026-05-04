@@ -73,32 +73,32 @@ export const currencyService = {
     // ── COMPANY ENDPOINTS (موجودة) ─────────────────────────────────
 
     async list(params: Record<string, unknown> = {}): Promise<CurrencyListResponse> {
-        const { data } = await api.get('core/currencies', { params })
+        const { data } = await api.get('financial/currencies', { params })
         return data as CurrencyListResponse
     },
 
     async dropdown(): Promise<{ data: Currency[] }> {
-        const { data } = await api.get('core/currencies/dropdown')
+        const { data } = await api.get('financial/currencies/dropdown')
         return data as { data: Currency[] }
     },
 
     async base(): Promise<{ data: Currency | null }> {
-        const { data } = await api.get('core/currencies/base')
+        const { data } = await api.get('financial/currencies/base')
         return data as { data: Currency | null }
     },
 
     async getRate(ulid: string): Promise<{ data: CurrencyRate }> {
-        const { data } = await api.get(`core/currencies/${ulid}/rate`)
+        const { data } = await api.get(`financial/currencies/${ulid}/rate`)
         return data as { data: CurrencyRate }
     },
 
     async setRate(ulid: string, rate: number): Promise<{ message: string; data: CurrencyRate }> {
-        const { data } = await api.post(`core/currencies/${ulid}/rate`, { rate })
+        const { data } = await api.post(`financial/currencies/${ulid}/rate`, { rate })
         return data as { message: string; data: CurrencyRate }
     },
 
     async resetRate(ulid: string): Promise<{ message: string; data: CurrencyRate }> {
-        const { data } = await api.delete(`core/currencies/${ulid}/rate`)
+        const { data } = await api.delete(`financial/currencies/${ulid}/rate`)
         return data as { message: string; data: CurrencyRate }
     },
 
@@ -109,7 +109,7 @@ export const currencyService = {
      * المصدر الحالي للشركة
      */
     async getSource(): Promise<{ data: RateSourceInfo }> {
-        const { data } = await api.get('core/currencies/source')
+        const { data } = await api.get('financial/currencies/source')
         return data as { data: RateSourceInfo }
     },
 
@@ -118,7 +118,7 @@ export const currencyService = {
      * تغيير مصدر سعر الصرف
      */
     async setSource(source: RateSource): Promise<{ message: string; data: RateSourceInfo }> {
-        const { data } = await api.put('core/currencies/source', { source })
+        const { data } = await api.put('financial/currencies/source', { source })
         return data as { message: string; data: RateSourceInfo }
     },
 
@@ -127,7 +127,7 @@ export const currencyService = {
      * مزامنة يدوية من Open Exchange Rates
      */
     async syncMarket(): Promise<{ message: string; data: SyncResult }> {
-        const { data } = await api.post('core/currencies/sync')
+        const { data } = await api.post('financial/currencies/sync')
         return data as { message: string; data: SyncResult }
     },
 

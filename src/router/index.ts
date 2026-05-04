@@ -1,19 +1,19 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import MainLayout from '@/layouts/MainLayout.vue'
-import Dashboard from '@/views/Dashboard.vue'
-import Login from '@/views/auth/Login.vue'
-import Register from '@/views/auth/Register.vue'
-import CompanySetup from '@/views/company/CompanySetup.vue'
-import ProfileView from '@/views/profile/ProfileView.vue'
-import SettingsView from '@/views/settings/SettingsView.vue'
-import FiscalYearsView from '@/views/fiscal-years/FiscalYearsView.vue'
-import Accounts from '@/views/financial/accounts/Accounts.vue'
-import Journals from '@/views/financial/Journals/Journals.vue'
-import Entries from '@/views/financial/entries/Entries.vue'
-import CostCenters from '@/views/financial/CostCenters/CostCenters.vue'
-import Reports from '@/views/financial/reports/Reports.vue'
-import OpeningBalance from '@/views/financial/OpeningBalance.vue'
-import YearEndClosing from '@/views/financial/YearEndClosing.vue'
+const MainLayout = () => import('@/layouts/MainLayout.vue')
+const Dashboard = () => import('@/views/Dashboard.vue')
+const Login = () => import('@/views/auth/Login.vue')
+const Register = () => import('@/views/auth/Register.vue')
+const CompanySetup = () => import('@/views/company/CompanySetup.vue')
+const ProfileView = () => import('@/views/profile/ProfileView.vue')
+const SettingsView = () => import('@/views/settings/SettingsView.vue')
+const FiscalYearsView = () => import('@/views/fiscal-years/FiscalYearsView.vue')
+const Accounts = () => import('@/views/financial/accounts/Accounts.vue')
+const Journals = () => import('@/views/financial/Journals/Journals.vue')
+const Entries = () => import('@/views/financial/entries/Entries.vue')
+const CostCenters = () => import('@/views/financial/CostCenters/CostCenters.vue')
+const Reports = () => import('@/views/financial/reports/Reports.vue')
+const OpeningBalance = () => import('@/views/financial/OpeningBalance.vue')
+const YearEndClosing = () => import('@/views/financial/YearEndClosing.vue')
 
 const routes = [
     // ─── صفحات الزوار فقط ──────────────────────────────

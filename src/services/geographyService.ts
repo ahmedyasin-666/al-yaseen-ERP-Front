@@ -123,6 +123,7 @@ export const geographyService = {
                 text: pick(c, lang),
                 secondary: c.symbol || c.code,
             })),
+            currenciesRaw: data.currencies,
             industries: data.industries.map((i: any): SelectOption => ({
                 value: i.ulid,
                 text: pick(i, lang),

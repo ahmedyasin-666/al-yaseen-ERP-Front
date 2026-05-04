@@ -48,12 +48,12 @@ export const profileService = {
                     form.append(key, value as string | Blob)
                 }
             })
-            const { data } = await api.post(`core/companies/${ulid}`, form, {
+            const { data } = await api.post(`core/companies/${ulid}/update`, form, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             })
             return data
         }
-        const { data } = await api.put(`core/companies/${ulid}`, payload)
+        const { data } = await api.put(`core/companies/${ulid}/update`, payload)
         return data
     },
     

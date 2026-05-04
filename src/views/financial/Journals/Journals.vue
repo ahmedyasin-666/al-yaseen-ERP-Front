@@ -346,7 +346,7 @@ import {
     MDBRow, MDBCol, MDBCard, MDBCardBody, MDBBtn, MDBIcon, MDBInput,
     MDBProgress, MDBProgressBar, MDBSpinner, MDBBreadcrumb, MDBBreadcrumbItem,
     MDBPagination, MDBPageNav, MDBPageItem, MDBModal, MDBModalHeader,
-    MDBModalTitle, MDBModalBody, MDBModalFooter, MDBTextarea,
+    MDBModalTitle, MDBModalBody, MDBModalFooter,
 } from 'mdb-vue-ui-kit'
 import MDBSelect from '@/components/MDBSelect.vue'
 import { journalService } from '@/services/financialService'

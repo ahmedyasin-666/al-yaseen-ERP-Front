@@ -86,7 +86,7 @@
         </MDBCard>
 
         <!-- ══ Report Content ══ -->
-        <div v-if="reportData" class="report-wrapper" ref="printArea">
+        <div v-if="reportData" class="report-wrapper">
 
             <!-- ── Header ── -->
             <div class="report-header rounded-4 p-4 mb-4"
@@ -545,7 +545,7 @@ const { t } = useI18n()
 const langStore = useLangStore()
 const fyStore = useFiscalYearStore()
 const toast = ref<InstanceType<typeof ToastNotification> | null>(null)
-const printArea = ref<HTMLElement | null>(null)
+
 
 type ReportTab = 'trial_balance' | 'general_ledger' | 'income_statement' | 'balance_sheet'
 const activeTab = ref<ReportTab>('trial_balance')

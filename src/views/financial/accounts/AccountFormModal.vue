@@ -261,7 +261,7 @@ watch(() => props.account, (acc) => {
             allow_posting: acc.allow_posting,
             is_cash_account: acc.is_cash_account,
             is_bank_account: acc.is_bank_account,
-            opening_balance: parseFloat(acc.opening_balance) || 0,
+            opening_balance: Number(acc.opening_balance) || 0,
             opening_balance_side: acc.opening_balance_side,
             opening_balance_date: acc.opening_balance_date ?? '',
             status: acc.status,
