@@ -17,18 +17,24 @@ export interface Account {
     is_parent: boolean
     is_cash_account: boolean
     is_bank_account: boolean
-    opening_balance: string
+    opening_balance: number
     opening_balance_side: 'debit' | 'credit'
     opening_balance_date: string | null
     status: 'active' | 'inactive'
     notes: string | null
-    parent: { ulid: string; code: string; name: string } | null
+    parent: { ulid: string; code: string; name: string, name_en: string | null } | null
     children?: Account[]
     children_recursive?: Account[]
     children_count?: number
     is_deletable?: boolean
     created_at: string
     updated_at: string
+
+    // ── رصيد الحساب من القيود المرحَّلة (null إذا لم تُحدد السنة المالية) ──
+    balance_debit?: number | null   // إجمالي المدين
+    balance_credit?: number | null  // إجمالي الدائن
+    balance?: number | null         // الرصيد الصافي (abs)
+    balance_side?: 'debit' | 'credit' | null  // جانب الرصيد الصافي
 }
 
 export interface AccountForm {

@@ -272,6 +272,8 @@
         "empty": "No accounts found",
         "deleteTitle": "Delete Account",
         "deleteMessage": "Are you sure you want to delete {name}?",
+        "balance": "Balance",
+        "balancesFor": "Balances for:",
         "types": {
             "asset": "Assets",
             "liability": "Liabilities",
@@ -577,5 +579,113 @@
         "accounts": "accounts",
         "selectToPreview": "Select data to preview",
         "selectToPreviewDesc": "Choose fiscal year and account to generate preview"
+    },
+    "settings": {
+        "eyebrow": "Account Settings",
+        "title": "Settings",
+        "subtitle": "Manage your preferences and account settings",
+        "sections": "Sections",
+        "tabs": {
+            "general": "General",
+            "generalSub": "Language & Date",
+            "notifications": "Notifications",
+            "notificationsSub": "Alerts & Messages",
+            "currencies": "Currencies",
+            "danger": "Danger Zone",
+            "dangerSub": "Delete & Deactivate"
+        },
+        "language": {
+            "title": "Language & Interface",
+            "sub": "Choose the default system language",
+            "changed": "Language changed successfully"
+        },
+        "datetime": {
+            "title": "Date & Time",
+            "sub": "Customize date display and timezone",
+            "timezone": "Timezone",
+            "timezoneNote": "Affects time display in journals and reports",
+            "dateFormat": "Date Format",
+            "preview": "Preview",
+            "save": "Save Settings",
+            "saved": "Settings saved successfully"
+        },
+        "notifications": {
+            "title": "Notification Settings",
+            "sub": "Control which notifications you receive",
+            "enableAll": "Enable All",
+            "email": "Email Notifications",
+            "emailDesc": "Receive updates via email",
+            "system": "System Notifications",
+            "systemDesc": "System alerts and internal operations",
+            "security": "Security Alerts",
+            "securityDesc": "New device logins and security changes",
+            "reports": "Report Notifications",
+            "reportsDesc": "When reports are ready and scheduled processing",
+            "updates": "System Updates",
+            "updatesDesc": "Release notes and new feature announcements"
+        },
+        "danger": {
+            "sessions": "Login Sessions",
+            "sessionsSub": "Manage devices connected to your account",
+            "sessionsDesc": "Sign out of all other devices currently connected to your account",
+            "logoutAll": "Logout All Devices",
+            "logoutAllError": "Failed to logout from other devices",
+            "deactivate": "Deactivate Account",
+            "deactivateSub": "Temporarily disable your account",
+            "deactivateDesc": "Your account will be temporarily disabled and inaccessible until reactivated",
+            "deactivateRequested": "Account deactivation request submitted",
+            "deleteAccount": "Delete Account",
+            "deleteAccountSub": "This action cannot be undone",
+            "deleteAccountDesc": "Your account and all associated data will be permanently deleted and cannot be recovered",
+            "deleteRequested": "Account deletion request submitted",
+            "cancel": "Cancel",
+            "typeToConfirm": "Type to confirm",
+            "confirmDeleteTitle": "Delete your account?",
+            "confirmDeleteText": "This action is permanent and cannot be reversed. All your data will be deleted.",
+            "confirmDelete": "Yes, Delete Account",
+            "confirmDeactivateTitle": "Temporarily Deactivate Account",
+            "confirmDeactivateText": "You can reactivate your account later by contacting support.",
+            "confirmDeactivate": "Yes, Deactivate"
+        },
+        "errors": {
+            "noCompany": "Company not identified"
+        }
+    },
+    "currencies": {
+        "sourceTitle": "Exchange Rate Source",
+        "sourceSub": "Choose how rates are managed",
+        "source": {
+            "manualLabel": "Manual",
+            "manualDesc": "Set rates manually",
+            "systemLabel": "System",
+            "systemDesc": "Managed by admin",
+            "marketLabel": "Market",
+            "marketDesc": "Auto-updated from market",
+            "manualShort": "Manual",
+            "systemShort": "System",
+            "marketShort": "Market"
+        },
+        "sourceChanged": "Rate source updated",
+        "syncNow": "Sync Now",
+        "syncing": "Syncing...",
+        "syncSuccess": "{count} currencies updated",
+        "lastSync": "{count} currencies updated from {base}",
+        "baseCurrency": "Base Currency",
+        "base": "Base",
+        "baseHint": "Used as reference for all conversions",
+        "systemRate": "System Rate",
+        "marketRate": "Market Rate",
+        "effectiveRate": "Effective Rate",
+        "rate": "Rate",
+        "adminManaged": "Admin Managed",
+        "autoSync": "Auto Sync",
+        "noMarketRateYet": "No market rate yet",
+        "customRate": "Custom Rate",
+        "globalRate": "Global Rate",
+        "newRate": "New Rate",
+        "rateHint": "Enter value per 1 {base}",
+        "rateSaved": "Rate saved",
+        "rateReset": "Rate reset",
+        "empty": "No currencies found"
     }
 }

@@ -292,7 +292,8 @@
                                         <span class="input-group-text"><i class="fas fa-map-marked-alt" /></span>
                                         <MDBSelect v-model="companyForm.region_id" :options="filteredRegions"
                                             :placeholder="$t('setup.fields.region')" :dir="langStore.dir"
-                                            :disabled="!companyForm.country_id" height="44px" filter @change="onRegionChange" />
+                                            :disabled="!companyForm.country_id" height="44px" filter
+                                            @change="onRegionChange" />
                                     </div>
                                 </MDBCol>
 
@@ -320,8 +321,8 @@
                                     <div class="input-group input-group-lg">
                                         <span class="input-group-text"><i class="fas fa-industry" /></span>
                                         <MDBSelect v-model="companyForm.industry_id" :options="industries"
-                                            :placeholder="$t('setup.fields.industry')" height="44px" :dir="langStore.dir" filter
-                                            @change="onIndustryChange" />
+                                            :placeholder="$t('setup.fields.industry')" height="44px"
+                                            :dir="langStore.dir" filter @change="onIndustryChange" />
                                     </div>
                                     <div v-if="companyErrors.industry_id" class="invalid-feedback d-block mt-1">
                                         {{ companyErrors.industry_id }}
@@ -333,8 +334,9 @@
                                     <div class="input-group input-group-lg">
                                         <span class="input-group-text"><i class="fas fa-briefcase" /></span>
                                         <MDBSelect v-model="companyForm.business_type_id"
-                                            :options="filteredBusinessTypes" :placeholder="$t('setup.fields.businessType')"
-                                            :dir="langStore.dir" :disabled="!companyForm.industry_id" height="44px" filter />
+                                            :options="filteredBusinessTypes"
+                                            :placeholder="$t('setup.fields.businessType')" :dir="langStore.dir"
+                                            :disabled="!companyForm.industry_id" height="44px" filter />
                                     </div>
                                 </MDBCol>
 
@@ -343,7 +345,8 @@
                                     <div class="input-group input-group-lg">
                                         <span class="input-group-text"><i class="fas fa-coins" /></span>
                                         <MDBSelect v-model="companyForm.default_currency_id" :options="currencies"
-                                            :placeholder="$t('setup.fields.currency')" :dir="langStore.dir" height="44px" filter />
+                                            :placeholder="$t('setup.fields.currency')" :dir="langStore.dir"
+                                            height="44px" filter />
                                     </div>
                                 </MDBCol>
 
@@ -352,7 +355,8 @@
                                     <div class="input-group input-group-lg">
                                         <span class="input-group-text"><i class="fas fa-clock" /></span>
                                         <MDBSelect v-model="companyForm.timezone" :options="timezones"
-                                            :placeholder="$t('setup.fields.timezone')" :dir="langStore.dir" height="44px" />
+                                            :placeholder="$t('setup.fields.timezone')" :dir="langStore.dir"
+                                            height="44px" />
                                     </div>
                                 </MDBCol>
 
@@ -515,6 +519,13 @@
     </section>
 </template>
 
+<!-- ================================================================
+  ProfileView.vue — الجزء المُصحَّح فقط (script setup)
+  التغييرات:
+  1. استخدام companyService.update() بدل profileService.updateCompany()
+  2. الـ ulid يأتي من authStore.user.company.ulid (لا id)
+  3. تحديث authStore.user.company بعد الحفظ
+================================================================ -->
 <script setup lang="ts">
 import { ref, reactive, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -523,6 +534,7 @@ import MDBSelect from '@/components/MDBSelect.vue'
 import { useAuthStore } from '@/stores/authStore'
 import { useLangStore } from '@/stores/langStore'
 import { profileService } from '@/services/profileService'
+import { companyService } from '@/services/companyService'       // ✅ مُضاف
 import { geographyService } from '@/services/geographyService'
 import type { SelectOption, RegionOption, CityOption, BusinessTypeOption } from '@/types/company'
 
@@ -538,9 +550,7 @@ function showToast(msg: string, type: 'success' | 'error' = 'success') {
     clearTimeout(toastTimer)
     toast.show = false
     setTimeout(() => {
-        toast.message = msg
-        toast.type = type
-        toast.show = true
+        toast.message = msg; toast.type = type; toast.show = true
         toastTimer = setTimeout(() => { toast.show = false }, 4000)
     }, 60)
 }
@@ -555,7 +565,6 @@ const tabs = computed(() => [
     { key: 'security' as Tab, label: t('profile.tabs.security'), icon: 'fas fa-shield-alt' },
 ])
 
-// ════ Helpers ═════════════════════════════
 function formatDate(d?: string | null) {
     if (!d) return '—'
     return new Intl.DateTimeFormat(langStore.lang === 'ar' ? 'ar-EG' : 'en-US', {
@@ -569,9 +578,7 @@ const avatarInputRef = ref<HTMLInputElement>()
 const avatarPreview = ref<string | null>(null)
 const avatarUploading = ref(false)
 
-function triggerAvatarUpload() {
-    avatarInputRef.value?.click()
-}
+function triggerAvatarUpload() { avatarInputRef.value?.click() }
 
 async function onAvatarChange(e: Event) {
     const file = (e.target as HTMLInputElement).files?.[0]
@@ -590,11 +597,25 @@ async function onAvatarChange(e: Event) {
     }
 }
 
+// ✅ استبدل التهيئة الثابتة
 const personalForm = reactive({
-    first_name: authStore.user?.first_name ?? '',
-    last_name: authStore.user?.last_name ?? '',
-    phone: authStore.user?.phone ?? '',
+    first_name: '',
+    last_name: '',
+    phone: '',
 })
+
+watch(
+    () => authStore.user,
+    (user) => {
+        if (!user) return
+        personalForm.first_name = user.first_name ?? ''
+        personalForm.last_name = user.last_name ?? ''
+        personalForm.phone = user.phone ?? ''
+    },
+    { immediate: true }
+)
+
+
 const personalErrors = reactive<Record<string, string>>({})
 const personalSaving = ref(false)
 
@@ -632,15 +653,9 @@ const allRegions = ref<RegionOption[]>([])
 const allCities = ref<CityOption[]>([])
 const allBusinessTypes = ref<BusinessTypeOption[]>([])
 
-const filteredRegions = computed(() =>
-    allRegions.value.filter(r => r.countryUlid === companyForm.country_id)
-)
-const filteredCities = computed(() =>
-    allCities.value.filter(c => c.regionUlid === companyForm.region_id)
-)
-const filteredBusinessTypes = computed(() =>
-    allBusinessTypes.value.filter(b => b.industryUlid === companyForm.industry_id)
-)
+const filteredRegions = computed(() => allRegions.value.filter(r => r.countryUlid === companyForm.country_id))
+const filteredCities = computed(() => allCities.value.filter(c => c.regionUlid === companyForm.region_id))
+const filteredBusinessTypes = computed(() => allBusinessTypes.value.filter(b => b.industryUlid === companyForm.industry_id))
 
 const timezones = computed<SelectOption[]>(() => [
     { value: 'Asia/Jerusalem', text: t('setup.timezones.jerusalem') },
@@ -652,7 +667,6 @@ const timezones = computed<SelectOption[]>(() => [
     { value: 'UTC', text: 'UTC' },
 ])
 
-// تحميل بيانات الـ Setup عند فتح التاب لأول مرة
 watch(activeTab, async (tab) => {
     if (tab !== 'company' || countries.value.length > 0) return
     setupLoading.value = true
@@ -671,29 +685,57 @@ watch(activeTab, async (tab) => {
     }
 })
 
+// ✅ الجديد
 const co = computed(() => authStore.user?.company)
 
 const companyForm = reactive({
-    title: co.value?.title ?? '',
-    commercial_registeration_number: co.value?.commercial_registeration_number ?? '',
-    email: co.value?.email ?? '',
-    mobile: co.value?.mobile ?? '',
-    landline: co.value?.landline ?? '',
-    address: co.value?.address ?? '',
-    country_id: co.value?.country?.ulid ?? null as string | null,
-    region_id: co.value?.region?.ulid ?? null as string | null,
-    city_id: co.value?.city?.ulid ?? null as string | null,
-    industry_id: co.value?.industry?.ulid ?? null as string | null,
-    business_type_id: co.value?.business_type?.ulid ?? null as string | null,
-    default_currency_id: co.value?.currency?.ulid ?? null as string | null,
-    vat_rate: parseFloat(co.value?.vat_rate ?? '0'),
-    income_tax_rate: parseFloat(co.value?.income_tax_rate ?? '0'),
-    timezone: co.value?.timezone ?? 'Asia/Jerusalem',
-    date_format: co.value?.date_format ?? 'Y-m-d',
+    title: '',
+    commercial_registeration_number: '',
+    email: '',
+    mobile: '',
+    landline: '',
+    address: '',
+    country_id: null as string | null,
+    region_id: null as string | null,
+    city_id: null as string | null,
+    industry_id: null as string | null,
+    business_type_id: null as string | null,
+    default_currency_id: null as string | null,
+    vat_rate: 0,
+    income_tax_rate: 0,
+    timezone: 'Asia/Jerusalem',
+    date_format: 'Y-m-d',
     logo: null as File | null,
 })
 
-const companyLogoPreview = ref<string | null>(co.value?.logo ?? null)
+const companyLogoPreview = ref<string | null>(null)
+
+// ✅ مزامنة الـ form مع authStore عند أي تغيير
+watch(
+    co,
+    (company) => {
+        if (!company) return
+        companyForm.title = company.title ?? ''
+        companyForm.commercial_registeration_number = company.commercial_registeration_number ?? ''
+        companyForm.email = company.email ?? ''
+        companyForm.mobile = company.mobile ?? ''
+        companyForm.landline = company.landline ?? ''
+        companyForm.address = company.address ?? ''
+        companyForm.country_id = company.country?.ulid ?? null
+        companyForm.region_id = company.region?.ulid ?? null
+        companyForm.city_id = company.city?.ulid ?? null
+        companyForm.industry_id = company.industry?.ulid ?? null
+        companyForm.business_type_id = company.business_type?.ulid ?? null
+        companyForm.default_currency_id = company.currency?.ulid ?? null
+        companyForm.vat_rate = parseFloat(company.vat_rate ?? '0')
+        companyForm.income_tax_rate = parseFloat(company.income_tax_rate ?? '0')
+        companyForm.timezone = company.timezone ?? 'Asia/Jerusalem'
+        companyForm.date_format = company.date_format ?? 'Y-m-d'
+        companyLogoPreview.value = company.logo ?? null
+    },
+    { immediate: true }
+)
+
 const companyErrors = reactive<Record<string, string>>({})
 const companySaving = ref(false)
 const companyLogoRef = ref<HTMLInputElement>()
@@ -724,38 +766,49 @@ function onCountryChange() { companyForm.region_id = null; companyForm.city_id =
 function onRegionChange() { companyForm.city_id = null }
 function onIndustryChange() { companyForm.business_type_id = null }
 
+/**
+ * ✅ حفظ بيانات الشركة
+ * 
+ * يستدعي PUT /core/companies/{ulid}/update
+ */
+
 async function saveCompany() {
     Object.keys(companyErrors).forEach(k => delete companyErrors[k])
     if (!companyForm.title.trim()) companyErrors.title = t('setup.validation.companyNameRequired')
     if (!companyForm.email.trim()) companyErrors.email = t('setup.validation.emailRequired')
     if (Object.keys(companyErrors).length) return
 
+    const companyUlid = co.value?.ulid
+    if (!companyUlid) {
+        showToast(t('common.error'), 'error')
+        return
+    }
+
     companySaving.value = true
     try {
-        const ulid = co.value?.ulid ?? ''
-        const payload: Record<string, unknown> = { ...companyForm }
-        if (!companyForm.logo) delete payload.logo
+        // ✅ companyService.update() يتعامل مع FormData و JSON تلقائياً
+        const res = await companyService.update(companyUlid, companyForm)
 
-        const res = await profileService.updateCompany(ulid, payload)
-        if (authStore.user?.company && res?.company) {
-            Object.assign(authStore.user.company, res.company)
+        // ✅ تحديث authStore بالبيانات الجديدة من الباك اند
+        if (authStore.user && res.company) {
+            Object.assign(authStore.user.company!, res.company)
         }
+
         showToast(t('profile.companySaved'))
     } catch (err: any) {
         const errs = err?.response?.data?.errors ?? {}
-        Object.entries(errs).forEach(([k, v]) => { companyErrors[k] = (v as string[])[0] ?? '' })
+        Object.entries(errs).forEach(([k, v]) => {
+            companyErrors[k] = (v as string[])[0] ?? ''
+        })
         showToast(err?.response?.data?.message ?? t('profile.saveError'), 'error')
     } finally {
         companySaving.value = false
     }
 }
 
+
 // ════ Tab 3: Security ═════════════════════
-const passwordForm = reactive({
-    current_password: '',
-    password: '',
-    password_confirmation: '',
-})
+const passwordForm = reactive({ current_password: '', password: '', password_confirmation: '' })
 const passwordErrors = reactive<Record<string, string>>({})
 const passwordSaving = ref(false)
 const showPwd = reactive({ current: false, new: false, confirm: false })
@@ -807,6 +860,8 @@ async function savePassword() {
     }
 }
 </script>
+
+
 
 <style scoped>
 /* ══ Toast ══ */

@@ -1,6 +1,6 @@
-// ═══════════════════════════════════════════════
-//  src/services/financialService.ts
-// ═══════════════════════════════════════════════
+// ================================================================
+//  src/services/financialService.ts — مُحدَّث (accountService)
+// ================================================================
 import api from './api'
 import type {
     Account, AccountForm, AccountDropdown,
@@ -13,34 +13,67 @@ import type {
 
 const BASE = '/financial'
 
+// ── شكل استجابة الشجرة (مُحدَّث) ────────────────────────────────
+export interface AccountTreeResponse {
+    data: Account[]
+    fiscal_year: { ulid: string; name: string } | null
+}
+
+// ── شكل استجابة القائمة (مُحدَّث) ────────────────────────────────
+export interface AccountListResponse {
+    data: Account[]
+    meta: PaginationMeta
+    fiscal_year: { ulid: string; name: string } | null
+}
+
 // ════════════════════════════════════════════════════════════════
 // ACCOUNTS
 // ════════════════════════════════════════════════════════════════
 export const accountService = {
 
-    async getAll(params: Record<string, unknown> = {}) {
+    /**
+     * قائمة الحسابات مع الأرصدة (إذا كانت X-Fiscal-Year-Id في الـ header)
+     * يُرجع fiscal_year لمعرفة السنة المالية المستخدمة
+     */
+    async getAll(params: Record<string, unknown> = {}): Promise<AccountListResponse> {
         const { data } = await api.get(`${BASE}/accounts`, { params })
-        return data as { data: Account[]; meta: PaginationMeta }
+        return data as AccountListResponse
     },
 
-    async getTree(params: Record<string, unknown> = {}) {
+    /**
+     * شجرة الحسابات مع الأرصدة المجمعة
+     * الحسابات التجميعية تعرض مجموع أرصدة أبنائها
+     * يُرجع fiscal_year لمعرفة السنة المالية المستخدمة
+     */
+    // async getTree(params: Record<string, unknown> = {}): Promise<AccountTreeResponse> {
+    //     const { data } = await api.get(`${BASE}/accounts/tree`, { params })
+    //     return data as AccountTreeResponse
+    // },
+
+    // بعد:
+    async getTree(params = {}) {
         const { data } = await api.get(`${BASE}/accounts/tree`, { params })
-        return data.data as Account[]
+        return data as { data: Account[]; fiscal_year: { ulid: string; name: string } | null }
     },
 
     async getDropdown(params: Record<string, unknown> = {}) {
         const { data } = await api.get(`${BASE}/accounts/dropdown`, { params })
-        return data.data as AccountDropdown[]
+        return data as AccountDropdown[]
     },
 
     async search(q: string) {
         const { data } = await api.get(`${BASE}/accounts/search`, { params: { q } })
-        return data as Account[]
+        return data as { data: Account[] }
     },
 
     async show(ulid: string) {
         const { data } = await api.get(`${BASE}/accounts/${ulid}/show`)
-        return data as { data: Account; stats: { children_count: number; has_entries: boolean; is_deletable: boolean } }
+        return data as {
+            data: Account
+            stats: { children_count: number; has_entries: boolean; is_deletable: boolean }
+            balance: Record<string, unknown> | null
+            fiscal_year: { ulid: string; name: string } | null
+        }
     },
 
     async store(payload: AccountForm) {
@@ -101,7 +134,7 @@ export const journalService = {
 
     async getDropdown() {
         const { data } = await api.get(`${BASE}/journals/dropdown`)
-        return data.data as FinancialJournal[]
+        return data as FinancialJournal[]
     },
 
     async show(ulid: string) {
@@ -183,7 +216,7 @@ export const costCenterService = {
 
     async getDropdown(params: Record<string, unknown> = {}) {
         const { data } = await api.get(`${BASE}/cost-centers/dropdown`, { params })
-        return data.data as CostCenter[]
+        return data as CostCenter[]
     },
 
     async show(ulid: string) {
@@ -277,7 +310,10 @@ export const yearEndService = {
 
     async preview(fiscalYearId: string, retainedEarningsUlid: string) {
         const { data } = await api.get(`${BASE}/year-end/preview`, {
-            params: { fiscal_year_id: fiscalYearId, retained_earnings_account_ulid: retainedEarningsUlid },
+            params: {
+                fiscal_year_id: fiscalYearId,
+                retained_earnings_account_ulid: retainedEarningsUlid,
+            },
         })
         return data as { data: Record<string, unknown> }
     },
@@ -290,7 +326,12 @@ export const yearEndService = {
         const { data } = await api.post(`${BASE}/year-end/execute`, payload, {
             params: { fiscal_year_id: fiscalYearId },
         })
-        return data as { message: string; closing_entry: JournalEntry; fiscal_year: Record<string, unknown>; carry_forward: Record<string, unknown> | null }
+        return data as {
+            message: string
+            closing_entry: JournalEntry
+            fiscal_year: Record<string, unknown>
+            carry_forward: Record<string, unknown> | null
+        }
     },
 
     async carryForward(fiscalYearId: string, newFiscalYearUlid: string) {

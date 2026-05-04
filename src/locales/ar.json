@@ -284,7 +284,11 @@
         "optional": "اختياري",
         "actionCannotBeUndone": "لا يمكن التراجع عن هذا الإجراء!",
         "yes": "نعم",
-        "no": "لا"
+        "no": "لا",
+        "confirm": "تأكيد",
+        "back": "رجوع",
+        "next": "التالي",
+        "prev": "السابق"
     },
     "accounts": {
         "title": "دليل الحسابات",
@@ -322,6 +326,8 @@
         "empty": "لا توجد حسابات",
         "deleteTitle": "حذف الحساب",
         "deleteMessage": "هل أنت متأكد من حذف الحساب {name}؟",
+        "balance": "الرصيد",
+        "balancesFor": "الأرصدة حتى:",
         "types": {
             "asset": "أصول",
             "liability": "خصوم",
@@ -577,5 +583,113 @@
             "special": "استخدم رموزاً خاصة مثل !@#$",
             "unique": "لا تعيد استخدام كلمة مرور سابقة"
         }
+    },
+    "settings": {
+        "eyebrow": "إعدادات الحساب",
+        "title": "الإعدادات",
+        "subtitle": "إدارة تفضيلاتك وإعدادات حسابك",
+        "sections": "الأقسام",
+        "tabs": {
+            "general": "عام",
+            "generalSub": "اللغة والتاريخ",
+            "notifications": "الإشعارات",
+            "notificationsSub": "التنبيهات والرسائل",
+            "danger": "منطقة الخطر",
+            "dangerSub": "حذف وتعطيل الحساب",
+            "currencies": "العملات"
+        },
+        "language": {
+            "title": "اللغة وواجهة المستخدم",
+            "sub": "اختر اللغة الافتراضية للنظام",
+            "changed": "تم تغيير اللغة بنجاح"
+        },
+        "datetime": {
+            "title": "التاريخ والوقت",
+            "sub": "تخصيص عرض التواريخ والمنطقة الزمنية",
+            "timezone": "المنطقة الزمنية",
+            "timezoneNote": "تؤثر على عرض الأوقات في القيود والتقارير",
+            "dateFormat": "صيغة التاريخ",
+            "preview": "معاينة",
+            "save": "حفظ الإعدادات",
+            "saved": "تم حفظ الإعدادات بنجاح"
+        },
+        "notifications": {
+            "title": "إعدادات الإشعارات",
+            "sub": "تحكم في الإشعارات التي تتلقاها",
+            "enableAll": "تفعيل الكل",
+            "email": "إشعارات البريد الإلكتروني",
+            "emailDesc": "تلقي التحديثات عبر البريد الإلكتروني",
+            "system": "إشعارات النظام",
+            "systemDesc": "تنبيهات النظام والعمليات الداخلية",
+            "security": "تنبيهات الأمان",
+            "securityDesc": "تسجيل الدخول من أجهزة جديدة والتغييرات الأمنية",
+            "reports": "إشعارات التقارير",
+            "reportsDesc": "عند اكتمال التقارير والمعالجة الدورية",
+            "updates": "تحديثات النظام",
+            "updatesDesc": "إشعارات الإصدارات والميزات الجديدة"
+        },
+        "danger": {
+            "sessions": "جلسات الدخول",
+            "sessionsSub": "إدارة الأجهزة المتصلة بحسابك",
+            "sessionsDesc": "تسجيل الخروج من جميع الأجهزة الأخرى المتصلة بحسابك حالياً",
+            "logoutAll": "تسجيل الخروج من الكل",
+            "logoutAllError": "فشل تسجيل الخروج من الأجهزة الأخرى",
+            "deactivate": "تعطيل الحساب",
+            "deactivateSub": "تعطيل مؤقت لحسابك",
+            "deactivateDesc": "سيتم إيقاف حسابك مؤقتاً ولن تتمكن من الوصول حتى يتم إعادة تفعيله",
+            "deactivateRequested": "تم إرسال طلب تعطيل الحساب",
+            "deleteAccount": "حذف الحساب",
+            "deleteAccountSub": "إجراء لا يمكن التراجع عنه",
+            "deleteAccountDesc": "سيتم حذف حسابك وجميع بياناتك بشكل نهائي ولا يمكن استرجاعها",
+            "deleteRequested": "تم إرسال طلب حذف الحساب",
+            "cancel": "إلغاء",
+            "typeToConfirm": "اكتب للتأكيد",
+            "confirmDeleteTitle": "هل أنت متأكد من حذف الحساب؟",
+            "confirmDeleteText": "هذا الإجراء نهائي ولا يمكن التراجع عنه. سيتم حذف جميع بياناتك.",
+            "confirmDelete": "نعم، احذف الحساب",
+            "confirmDeactivateTitle": "تعطيل الحساب مؤقتاً",
+            "confirmDeactivateText": "يمكنك إعادة تفعيل حسابك لاحقاً عن طريق التواصل مع الدعم.",
+            "confirmDeactivate": "نعم، عطّل الحساب"
+        },
+        "errors": {
+            "noCompany": "لم يتم تحديد الشركة"
+        }
+    },
+    "currencies": {
+        "sourceTitle": "مصدر سعر الصرف",
+        "sourceSub": "اختر كيف يتم تحديد أسعار العملات",
+        "source": {
+            "manualLabel": "يدوي",
+            "manualDesc": "إدخال السعر يدويًا",
+            "systemLabel": "النظام",
+            "systemDesc": "إدارة من قبل الإدارة",
+            "marketLabel": "السوق",
+            "marketDesc": "تحديث تلقائي من السوق",
+            "manualShort": "يدوي",
+            "systemShort": "نظام",
+            "marketShort": "سوق"
+        },
+        "sourceChanged": "تم تغيير مصدر الأسعار",
+        "syncNow": "مزامنة الآن",
+        "syncing": "جارٍ المزامنة...",
+        "syncSuccess": "تم تحديث {count} عملة",
+        "lastSync": "تم تحديث {count} عملة من {base}",
+        "baseCurrency": "العملة الأساسية",
+        "base": "أساسي",
+        "baseHint": "تستخدم كأساس لكل التحويلات",
+        "systemRate": "سعر النظام",
+        "marketRate": "سعر السوق",
+        "effectiveRate": "السعر الفعلي",
+        "rate": "السعر",
+        "adminManaged": "مدار من الإدارة",
+        "autoSync": "تحديث تلقائي",
+        "noMarketRateYet": "لم يتم جلب سعر السوق بعد",
+        "customRate": "سعر مخصص",
+        "globalRate": "السعر العام",
+        "newRate": "السعر الجديد",
+        "rateHint": "أدخل قيمة مقابل 1 {base}",
+        "rateSaved": "تم حفظ السعر",
+        "rateReset": "تم إعادة تعيين السعر",
+        "empty": "لا توجد عملات"
     }
 }

@@ -134,6 +134,7 @@ export const useAuthStore = defineStore('auth', {
             }
         },
 
+
         // ════ Private Helpers ═════════════════════════════════════════
 
         /**

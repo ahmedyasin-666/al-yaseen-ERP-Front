@@ -4,6 +4,7 @@ import type {
     RegionOption,
     CityOption,
     BusinessTypeOption,
+    Currency,
 } from '@/types/company'
 
 // ── مساعد لاختيار الاسم حسب اللغة ──
@@ -16,6 +17,7 @@ export interface SetupData {
     allRegions: RegionOption[]
     allCities: CityOption[]
     currencies: SelectOption[]
+    currenciesRaw?: Currency[]          // ← جديد: البيانات الكاملة للعملات (للاستخدام الداخلي فقط)
     industries: SelectOption[]
     allBusinessTypes: BusinessTypeOption[]
 }

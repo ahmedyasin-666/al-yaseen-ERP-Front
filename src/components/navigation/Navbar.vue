@@ -97,7 +97,7 @@ const toggleIcon = computed(() => {
 })
 
 const textAlignClass = computed(() =>
-    langStore.dir === 'rtl' ? 'text-end' : 'text-start'
+    langStore.dir === 'rtl' ? '' : 'text-start'
 )
 </script>
 

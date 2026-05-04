@@ -24,18 +24,11 @@
                     {{ $t('setup.greeting', { name: authStore.user?.first_name }) }} 👋
                 </p>
                 <button class="sidebar-ctrl-btn mb-2" @click="toggleLang">
-                    <i :class="[
-                        'fas fa-language',
-                        langStore.lang === 'en' ? 'me-2' : 'ms-2'
-                    ]"></i>
+                    <i :class="['fas fa-language', langStore.lang === 'en' ? 'me-2' : 'ms-2']"></i>
                     {{ langStore.lang === 'ar' ? 'English' : 'عربي' }}
                 </button>
-
                 <button class="sidebar-ctrl-btn logout-btn" @click="handleLogout">
-                    <i :class="[
-                        'fas fa-sign-out-alt',
-                        langStore.lang === 'en' ? 'me-2' : 'ms-2'
-                    ]"></i>
+                    <i :class="['fas fa-sign-out-alt', langStore.lang === 'en' ? 'me-2' : 'ms-2']"></i>
                     {{ $t('setup.logout') }}
                 </button>
             </div>
@@ -44,25 +37,18 @@
         <!-- ══ Main Content ══ -->
         <div class="setup-content flex-grow-1 d-flex flex-column mt-5">
 
-            <!-- شريط التقدم للموبايل -->
             <div class="progress-bar-mobile d-lg-none">
                 <div class="progress-fill" :style="{ width: progressPercent + '%' }" />
             </div>
 
-            <!-- شريط علوي للموبايل -->
             <div class="mobile-topbar d-flex d-lg-none align-items-center justify-content-between px-3 py-2">
                 <img src="@/assets/images/logo-brand.png" alt="Logo" height="32" />
                 <div class="d-flex gap-2">
-                    <button class="mobile-ctrl-btn" @click="toggleLang">
-                        <i class="fas fa-language"></i>
-                    </button>
-                    <button class="mobile-ctrl-btn" @click="handleLogout">
-                        <i class="fas fa-sign-out-alt"></i>
-                    </button>
+                    <button class="mobile-ctrl-btn" @click="toggleLang"><i class="fas fa-language"></i></button>
+                    <button class="mobile-ctrl-btn" @click="handleLogout"><i class="fas fa-sign-out-alt"></i></button>
                 </div>
             </div>
 
-            <!-- ══ بطاقة الفورم ══ -->
             <div class="setup-form-wrapper flex-grow-1 d-flex align-items-start justify-content-center p-4">
                 <div class="setup-card bg-white rounded-4 w-100">
 
@@ -89,13 +75,9 @@
                     <!-- جسم البطاقة -->
                     <div class="card-body-section">
 
-                        <!-- Loading Overlay -->
                         <div v-if="initialLoading" class="loading-overlay">
                             <div class="d-flex flex-column align-items-center gap-3">
-                                <div class="spinner-border text-success" role="status"
-                                    style="width: 2.5rem; height: 2.5rem;">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
+                                <div class="spinner-border text-success" style="width:2.5rem;height:2.5rem;"></div>
                                 <span class="text-muted small">{{ $t('setup.loading') }}</span>
                             </div>
                         </div>
@@ -105,35 +87,26 @@
                             <div v-if="currentStep === 1" key="step1">
                                 <MDBRow class="g-4">
 
-                                    <!-- اسم الشركة -->
                                     <MDBCol md="12">
                                         <label class="form-label fw-semibold">
-                                            {{ $t('setup.fields.companyName') }}
-                                            <span class="text-danger ms-1">*</span>
+                                            {{ $t('setup.fields.companyName') }}<span class="text-danger ms-1">*</span>
                                         </label>
                                         <div class="input-group input-group-lg">
-                                            <span class="input-group-text">
-                                                <i class="fas fa-building"></i>
-                                            </span>
+                                            <span class="input-group-text"><i class="fas fa-building"></i></span>
                                             <input v-model="form.title" type="text" class="form-control"
                                                 :class="{ 'is-invalid': errors.title }"
                                                 :placeholder="$t('setup.placeholders.companyName')" />
-                                            <div v-if="errors.title" class="invalid-feedback">
-                                                {{ errors.title }}
-                                            </div>
+                                            <div v-if="errors.title" class="invalid-feedback">{{ errors.title }}</div>
                                         </div>
                                     </MDBCol>
 
-                                    <!-- رقم السجل التجاري -->
                                     <MDBCol md="12">
                                         <label class="form-label fw-semibold">
-                                            {{ $t('setup.fields.commercialReg') }}
-                                            <span class="text-danger ms-1">*</span>
+                                            {{ $t('setup.fields.commercialReg') }}<span
+                                                class="text-danger ms-1">*</span>
                                         </label>
                                         <div class="input-group input-group-lg">
-                                            <span class="input-group-text">
-                                                <i class="fas fa-hashtag"></i>
-                                            </span>
+                                            <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
                                             <input v-model="form.commercial_registeration_number" type="text"
                                                 class="form-control"
                                                 :class="{ 'is-invalid': errors.commercial_registeration_number }"
@@ -144,37 +117,23 @@
                                         </div>
                                     </MDBCol>
 
-                                    <!-- البريد الإلكتروني -->
                                     <MDBCol md="12">
                                         <label class="form-label fw-semibold">
-                                            {{ $t('setup.fields.companyEmail') }}
-                                            <span class="text-danger ms-1">*</span>
+                                            {{ $t('setup.fields.companyEmail') }}<span class="text-danger ms-1">*</span>
                                         </label>
                                         <div class="input-group input-group-lg">
-                                            <span class="input-group-text">
-                                                <i class="fas fa-envelope"></i>
-                                            </span>
+                                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                                             <input v-model="form.email" type="email" class="form-control"
                                                 :class="{ 'is-invalid': errors.email }"
                                                 :placeholder="$t('setup.placeholders.companyEmail')" dir="ltr" />
-                                            <div v-if="errors.email" class="invalid-feedback">
-                                                {{ errors.email }}
-                                            </div>
+                                            <div v-if="errors.email" class="invalid-feedback">{{ errors.email }}</div>
                                         </div>
                                     </MDBCol>
 
-                                    <!-- رقم الجوال — مربوط مع phone_code -->
                                     <MDBCol md="6">
-                                        <label class="form-label fw-semibold">
-                                            {{ $t('setup.fields.mobile') }}
-                                        </label>
+                                        <label class="form-label fw-semibold">{{ $t('setup.fields.mobile') }}</label>
                                         <div class="input-group input-group-lg">
-
-
-                                            <span class="input-group-text input-group-lg">
-                                                <i class="fas fa-phone"></i>
-                                            </span>
-                                            <!-- حقل رقم الجوال (بدون الكود) -->
+                                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
                                             <input v-model="form.mobile_number" type="tel" class="form-control"
                                                 :class="{ 'is-invalid': errors.mobile_number }"
                                                 :placeholder="mobilePlaceholder" dir="ltr" inputmode="numeric"
@@ -186,57 +145,36 @@
                                                 {{ errors.mobile_number }}
                                             </div>
                                         </div>
-                                        <!-- عرض الرقم الكامل للتأكيد -->
                                         <div v-if="form.mobile_number" class="mt-1 d-flex align-items-center gap-1">
                                             <i class="fas fa-check-circle text-success" style="font-size:12px"></i>
-                                            <small class="text-success fw-semibold" dir="ltr">
-                                                {{ fullMobileNumber }}
-                                            </small>
+                                            <small class="text-success fw-semibold" dir="ltr">{{ fullMobileNumber
+                                                }}</small>
                                         </div>
                                     </MDBCol>
 
-                                    <!-- الهاتف الأرضي -->
                                     <MDBCol md="6">
-                                        <label class="form-label fw-semibold">
-                                            {{ $t('setup.fields.landline') }}
-                                        </label>
+                                        <label class="form-label fw-semibold">{{ $t('setup.fields.landline') }}</label>
                                         <div class="input-group input-group-lg">
-
-                                            <span v-if="langStore.lang === 'ar'" class="input-group-text">
-                                                <i class="fas fa-phone-alt"></i>
-                                            </span>
-
-                                            <span v-if="langStore.lang === 'en'" class="input-group-text"
-                                                dir="ltr">+20</span>
-
-                                            <input v-model="form.landline" type="tel" class="form-control rounded-0"
+                                            <span class="input-group-text"><i class="fas fa-phone-alt"></i></span>
+                                            <input v-model="form.landline" type="tel" class="form-control"
                                                 :class="{ 'is-invalid': errors.landline }" placeholder="022xxxxxx"
                                                 dir="ltr" inputmode="numeric" maxlength="12"
                                                 @input="sanitizeLandline" />
-                                            <span v-if="langStore.lang === 'ar'" class="input-group-text"
-                                                dir="ltr">+970</span>
-                                            <span v-if="langStore.lang === 'en'" class="input-group-text">
-                                                <i class="fas fa-phone-alt"></i>
-                                            </span>
-                                            <div v-if="errors.landline" class="invalid-feedback">
-                                                {{ errors.landline }}
+                                            <div v-if="errors.landline" class="invalid-feedback">{{ errors.landline }}
                                             </div>
                                         </div>
                                     </MDBCol>
 
-                                    <!-- ════ حقل الشعار ════ -->
+                                    <!-- الشعار -->
                                     <MDBCol md="12">
                                         <label class="form-label fw-semibold">
                                             {{ $t('setup.fields.logo') }}
                                             <span class="text-muted small ms-1">({{ $t('setup.fields.logoHint')
                                                 }})</span>
                                         </label>
-
-                                        <!-- منطقة الرفع -->
                                         <div class="logo-upload-zone" :class="{ 'has-logo': logoPreview }"
                                             @click="!logoPreview && ($refs.logoInput as HTMLInputElement).click()"
                                             @dragover.prevent @drop.prevent="onLogoDrop">
-                                            <!-- حالة: لا يوجد صورة -->
                                             <template v-if="!logoPreview">
                                                 <div class="upload-placeholder">
                                                     <i class="fas fa-cloud-upload-alt upload-icon"></i>
@@ -245,8 +183,6 @@
                                                         $t('setup.fields.logoMaxSize') }}</p>
                                                 </div>
                                             </template>
-
-                                            <!-- حالة: يوجد صورة -->
                                             <template v-else>
                                                 <img :src="logoPreview" alt="Logo Preview" class="logo-preview-img" />
                                                 <div class="logo-overlay">
@@ -261,14 +197,10 @@
                                                 </div>
                                             </template>
                                         </div>
-
-                                        <!-- Input مخفي -->
                                         <input ref="logoInput" id="logo-input" type="file"
                                             accept="image/png,image/jpeg,image/svg+xml,image/webp" class="d-none"
                                             @change="onLogoChange" />
-
-                                        <div v-if="errors.logo" class="invalid-feedback d-block mt-1">
-                                            {{ errors.logo }}
+                                        <div v-if="errors.logo" class="invalid-feedback d-block mt-1">{{ errors.logo }}
                                         </div>
                                     </MDBCol>
 
@@ -283,13 +215,11 @@
 
                                     <MDBCol md="12">
                                         <div class="input-group input-group-lg">
-                                            <span class="input-group-text">
-                                                <i class="fas fa-globe"></i>
-                                            </span>
+                                            <span class="input-group-text"><i class="fas fa-globe"></i></span>
                                             <MDBSelect v-model="form.country_id" :options="countries"
                                                 :dir="langStore.dir" :placeholder="$t('setup.fields.selectCountry')"
-                                                :disabled="initialLoading" filter :feedback="errors.country_id"
-                                                @change="onCountryChange" height="44.63px" />
+                                                :disabled="initialLoading" filter @change="onCountryChange"
+                                                height="44.63px" />
                                         </div>
                                         <div v-if="errors.country_id" class="invalid-feedback d-block mt-1">
                                             {{ errors.country_id }}
@@ -298,9 +228,7 @@
 
                                     <MDBCol md="6">
                                         <div class="input-group input-group-lg">
-                                            <span class="input-group-text">
-                                                <i class="fas fa-map-marked-alt"></i>
-                                            </span>
+                                            <span class="input-group-text"><i class="fas fa-map-marked-alt"></i></span>
                                             <MDBSelect v-model="form.region_id" :options="filteredRegions"
                                                 :placeholder="$t('setup.fields.selectRegion')" :dir="langStore.dir"
                                                 :disabled="!form.country_id || initialLoading" filter
@@ -310,9 +238,7 @@
 
                                     <MDBCol md="6">
                                         <div class="input-group input-group-lg">
-                                            <span class="input-group-text">
-                                                <i class="fas fa-city"></i>
-                                            </span>
+                                            <span class="input-group-text"><i class="fas fa-city"></i></span>
                                             <MDBSelect v-model="form.city_id" :options="filteredCities"
                                                 :placeholder="$t('setup.fields.selectCity')" :dir="langStore.dir"
                                                 :disabled="!form.region_id || initialLoading" filter height="44.63px" />
@@ -320,27 +246,20 @@
                                     </MDBCol>
 
                                     <MDBCol md="12">
-                                        <label class="form-label fw-semibold">
-                                            {{ $t('setup.fields.address') }}
-                                        </label>
+                                        <label class="form-label fw-semibold">{{ $t('setup.fields.address') }}</label>
                                         <div class="input-group input-group-lg">
-                                            <span class="input-group-text">
-                                                <i class="fas fa-map-pin"></i>
-                                            </span>
+                                            <span class="input-group-text"><i class="fas fa-map-pin"></i></span>
                                             <input v-model="form.address" type="text" class="form-control"
                                                 :class="{ 'is-invalid': errors.address }"
                                                 :placeholder="$t('setup.placeholders.address')" />
-                                            <div v-if="errors.address" class="invalid-feedback">
-                                                {{ errors.address }}
+                                            <div v-if="errors.address" class="invalid-feedback">{{ errors.address }}
                                             </div>
                                         </div>
                                     </MDBCol>
 
                                     <MDBCol md="12">
                                         <div class="input-group input-group-lg">
-                                            <span class="input-group-text">
-                                                <i class="fas fa-clock"></i>
-                                            </span>
+                                            <span class="input-group-text"><i class="fas fa-clock"></i></span>
                                             <MDBSelect v-model="form.timezone" :options="timezones"
                                                 :placeholder="$t('setup.fields.selectTimezone')" :dir="langStore.dir"
                                                 :disabled="initialLoading" height="44.63px" />
@@ -358,14 +277,10 @@
 
                                     <MDBCol md="12">
                                         <div class="input-group input-group-lg">
-                                            <span class="input-group-text">
-                                                <i class="fas fa-industry"></i>
-                                            </span>
+                                            <span class="input-group-text"><i class="fas fa-industry"></i></span>
                                             <MDBSelect v-model="form.industry_id" :options="industries"
                                                 :placeholder="$t('setup.fields.selectIndustry')" :dir="langStore.dir"
-                                                :disabled="initialLoading" filter
-                                                :valid-state="errors.industry_id ? 'invalid' : ''"
-                                                :feedback="errors.industry_id" @change="onIndustryChange"
+                                                :disabled="initialLoading" filter @change="onIndustryChange"
                                                 height="44.63px" />
                                         </div>
                                         <div v-if="errors.industry_id" class="invalid-feedback d-block mt-1">
@@ -375,33 +290,127 @@
 
                                     <MDBCol md="12">
                                         <div class="input-group input-group-lg">
-                                            <span class="input-group-text">
-                                                <i class="fas fa-briefcase"></i>
-                                            </span>
+                                            <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
                                             <MDBSelect v-model="form.business_type_id" :options="filteredBusinessTypes"
                                                 :placeholder="$t('setup.fields.selectBusinessType')"
                                                 :dir="langStore.dir" :disabled="!form.industry_id || initialLoading"
-                                                :valid-state="errors.business_type_id ? 'invalid' : ''"
-                                                :feedback="errors.business_type_id" height="44.63px" />
+                                                height="44.63px" />
                                         </div>
                                         <div v-if="errors.business_type_id" class="invalid-feedback d-block mt-1">
                                             {{ errors.business_type_id }}
                                         </div>
                                     </MDBCol>
 
+                                    <!-- ── اختيار العملة الأساسية ────────────────────────── -->
                                     <MDBCol md="12">
+                                        <label class="form-label fw-semibold">
+                                            {{ $t('setup.fields.selectCurrency') }}
+                                            <span class="text-danger ms-1">*</span>
+                                        </label>
                                         <div class="input-group input-group-lg">
-                                            <span class="input-group-text">
-                                                <i class="fas fa-coins"></i>
-                                            </span>
+                                            <span class="input-group-text"><i class="fas fa-coins"></i></span>
                                             <MDBSelect v-model="form.default_currency_id" :options="currencies"
                                                 :placeholder="$t('setup.fields.selectCurrency')" :dir="langStore.dir"
-                                                :disabled="initialLoading" filter
-                                                :valid-state="errors.default_currency_id ? 'invalid' : ''"
-                                                :feedback="errors.default_currency_id" height="44.63px" />
+                                                :disabled="initialLoading" filter height="44.63px"
+                                                @change="onCurrencyChange" />
                                         </div>
                                         <div v-if="errors.default_currency_id" class="invalid-feedback d-block mt-1">
                                             {{ errors.default_currency_id }}
+                                        </div>
+                                        <!-- معلومات العملة المختارة -->
+                                        <div v-if="selectedCurrencyInfo" class="currency-info-box mt-2">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <div class="currency-symbol-preview">
+                                                    {{ selectedCurrencyInfo.symbol || selectedCurrencyInfo.code }}
+                                                </div>
+                                                <div>
+                                                    <div class="fw-semibold small">{{ selectedCurrencyInfo.name }}</div>
+                                                    <div class="text-muted" style="font-size:.78rem">
+                                                        {{ $t('setup.fields.currencyHint') }}
+                                                    </div>
+                                                </div>
+                                                <div class="ms-auto badge bg-success bg-opacity-10 text-success">
+                                                    <i class="fas fa-star me-1" style="font-size:10px" />
+                                                    {{ $t('currencies.base') }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </MDBCol>
+
+                                    <!-- ── مصدر سعر الصرف ────────────────────────────────── -->
+                                    <MDBCol md="12">
+                                        <label class="form-label fw-semibold">
+                                            {{ $t('setup.fields.exchangeRateSource') }}
+                                        </label>
+                                        <div class="source-grid-setup">
+
+                                            <button type="button" class="source-option-card"
+                                                :class="{ selected: form.exchange_rate_source === 'system' }"
+                                                @click="form.exchange_rate_source = 'system'">
+                                                <div class="source-icon-wrap system">
+                                                    <i class="fas fa-server" />
+                                                </div>
+                                                <div class="source-card-body">
+                                                    <div class="fw-bold small">{{ $t('currencies.source.systemLabel') }}
+                                                    </div>
+                                                    <div class="text-muted" style="font-size:.72rem">
+                                                        {{ $t('currencies.source.systemDesc') }}
+                                                    </div>
+                                                </div>
+                                                <div class="source-check">
+                                                    <i v-if="form.exchange_rate_source === 'system'"
+                                                        class="fas fa-check-circle text-success" />
+                                                    <div v-else class="source-check-empty" />
+                                                </div>
+                                            </button>
+
+                                            <button type="button" class="source-option-card"
+                                                :class="{ selected: form.exchange_rate_source === 'manual' }"
+                                                @click="form.exchange_rate_source = 'manual'">
+                                                <div class="source-icon-wrap manual">
+                                                    <i class="fas fa-pencil-alt" />
+                                                </div>
+                                                <div class="source-card-body">
+                                                    <div class="fw-bold small">{{ $t('currencies.source.manualLabel') }}
+                                                    </div>
+                                                    <div class="text-muted" style="font-size:.72rem">
+                                                        {{ $t('currencies.source.manualDesc') }}
+                                                    </div>
+                                                </div>
+                                                <div class="source-check">
+                                                    <i v-if="form.exchange_rate_source === 'manual'"
+                                                        class="fas fa-check-circle text-primary" />
+                                                    <div v-else class="source-check-empty" />
+                                                </div>
+                                            </button>
+
+                                            <button type="button" class="source-option-card"
+                                                :class="{ selected: form.exchange_rate_source === 'market' }"
+                                                @click="form.exchange_rate_source = 'market'">
+                                                <div class="source-icon-wrap market">
+                                                    <i class="fas fa-chart-line" />
+                                                </div>
+                                                <div class="source-card-body">
+                                                    <div class="fw-bold small">{{ $t('currencies.source.marketLabel') }}
+                                                    </div>
+                                                    <div class="text-muted" style="font-size:.72rem">
+                                                        {{ $t('currencies.source.marketDesc') }}
+                                                    </div>
+                                                </div>
+                                                <div class="source-check">
+                                                    <i v-if="form.exchange_rate_source === 'market'"
+                                                        class="fas fa-check-circle text-purple" />
+                                                    <div v-else class="source-check-empty" />
+                                                </div>
+                                            </button>
+
+                                        </div>
+                                        <!-- تلميح للمصدر المختار -->
+                                        <div class="source-hint-box mt-2" v-if="form.exchange_rate_source">
+                                            <i class="fas fa-info-circle me-2 text-muted" />
+                                            <span class="text-muted small">
+                                                {{ sourceHintText }}
+                                            </span>
                                         </div>
                                     </MDBCol>
 
@@ -414,69 +423,49 @@
                             <div v-if="currentStep === 4" key="step4">
                                 <MDBRow class="g-4">
 
-                                    <!-- ضريبة القيمة المضافة -->
                                     <MDBCol md="6">
-                                        <label class="form-label fw-semibold">
-                                            {{ $t('setup.fields.vatRate') }}
-                                        </label>
+                                        <label class="form-label fw-semibold">{{ $t('setup.fields.vatRate') }}</label>
                                         <div class="input-group input-group-lg">
-                                            <span class="input-group-text">
-                                                <i class="fas fa-file-invoice-dollar"></i>
-                                            </span>
+                                            <span class="input-group-text"><i
+                                                    class="fas fa-file-invoice-dollar"></i></span>
                                             <input v-model.number="form.vat_rate" type="number" class="form-control"
                                                 :class="{ 'is-invalid': errors.vat_rate }" placeholder="0.00" min="0"
-                                                max="100" step="0.01" dir="ltr" height="44.63px" />
-                                            <span class="input-group-text">
-                                                <i class="fas fa-percent"></i>
-                                            </span>
-                                            <div v-if="errors.vat_rate" class="invalid-feedback">
-                                                {{ errors.vat_rate }}
+                                                max="100" step="0.01" dir="ltr" />
+                                            <span class="input-group-text"><i class="fas fa-percent"></i></span>
+                                            <div v-if="errors.vat_rate" class="invalid-feedback">{{ errors.vat_rate }}
                                             </div>
                                         </div>
-                                        <div class="form-text text-muted small mt-1">
-                                            {{ $t('setup.hints.vatRate') }}
+                                        <div class="form-text text-muted small mt-1">{{ $t('setup.hints.vatRate') }}
                                         </div>
                                     </MDBCol>
 
-                                    <!-- ضريبة الدخل -->
                                     <MDBCol md="6">
-                                        <label class="form-label fw-semibold">
-                                            {{ $t('setup.fields.incomeTax') }}
-                                        </label>
+                                        <label class="form-label fw-semibold">{{ $t('setup.fields.incomeTax') }}</label>
                                         <div class="input-group input-group-lg">
-                                            <span class="input-group-text">
-                                                <i class="fas fa-file-invoice-dollar"></i>
-                                            </span>
+                                            <span class="input-group-text"><i
+                                                    class="fas fa-file-invoice-dollar"></i></span>
                                             <input v-model.number="form.income_tax_rate" type="number"
                                                 class="form-control" :class="{ 'is-invalid': errors.income_tax_rate }"
                                                 placeholder="0.00" min="0" max="100" step="0.01" dir="ltr" />
-                                            <span class="input-group-text">
-                                                <i class="fas fa-percent"></i>
-                                            </span>
+                                            <span class="input-group-text"><i class="fas fa-percent"></i></span>
                                             <div v-if="errors.income_tax_rate" class="invalid-feedback">
                                                 {{ errors.income_tax_rate }}
                                             </div>
                                         </div>
-                                        <div class="form-text text-muted small mt-1">
-                                            {{ $t('setup.hints.incomeTax') }}
+                                        <div class="form-text text-muted small mt-1">{{ $t('setup.hints.incomeTax') }}
                                         </div>
                                     </MDBCol>
 
-                                    <!-- صيغة التاريخ -->
                                     <MDBCol md="12">
                                         <div class="input-group input-group-lg">
-                                            <span class="input-group-text">
-                                                <i class="fas fa-calendar-alt"></i>
-                                            </span>
+                                            <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                                             <MDBSelect v-model="form.date_format" :options="dateFormats"
                                                 :placeholder="$t('setup.fields.selectDateFormat')" :dir="langStore.dir"
-                                                :disabled="initialLoading"
-                                                :valid-state="errors.date_format ? 'invalid' : ''"
-                                                :feedback="errors.date_format" height="44.63px" />
+                                                :disabled="initialLoading" height="44.63px" />
                                         </div>
                                     </MDBCol>
 
-                                    <!-- ملخص -->
+                                    <!-- ── ملخص شامل ──────────────────────────────────────── -->
                                     <MDBCol md="12">
                                         <div class="summary-card rounded-3 p-4">
                                             <h6 class="fw-bold mb-3 d-flex align-items-center gap-2">
@@ -488,75 +477,70 @@
                                             <MDBRow class="g-3">
                                                 <MDBCol md="6">
                                                     <div class="summary-item">
-                                                        <span class="summary-label">
-                                                            <i class="fas fa-building me-1"></i>
-                                                            {{ $t('setup.summary.name') }}
-                                                        </span>
+                                                        <span class="summary-label"><i class="fas fa-building me-1" />{{
+                                                            $t('setup.summary.name') }}</span>
                                                         <strong>{{ form.title || '—' }}</strong>
                                                     </div>
                                                 </MDBCol>
                                                 <MDBCol md="6">
                                                     <div class="summary-item">
-                                                        <span class="summary-label">
-                                                            <i class="fas fa-envelope me-1"></i>
-                                                            {{ $t('setup.summary.email') }}
-                                                        </span>
+                                                        <span class="summary-label"><i class="fas fa-envelope me-1" />{{
+                                                            $t('setup.summary.email') }}</span>
                                                         <strong dir="ltr">{{ form.email || '—' }}</strong>
                                                     </div>
                                                 </MDBCol>
                                                 <MDBCol md="6">
                                                     <div class="summary-item">
-                                                        <span class="summary-label">
-                                                            <i class="fas fa-hashtag me-1"></i>
-                                                            {{ $t('setup.summary.reg') }}
-                                                        </span>
+                                                        <span class="summary-label"><i class="fas fa-hashtag me-1" />{{
+                                                            $t('setup.summary.reg')
+                                                            }}</span>
                                                         <strong>{{ form.commercial_registeration_number || '—'
-                                                        }}</strong>
+                                                            }}</strong>
                                                     </div>
                                                 </MDBCol>
                                                 <MDBCol md="6">
                                                     <div class="summary-item">
-                                                        <span class="summary-label">
-                                                            <i class="fas fa-mobile-alt me-1"></i>
-                                                            {{ $t('setup.summary.mobile') }}
-                                                        </span>
+                                                        <span class="summary-label"><i
+                                                                class="fas fa-mobile-alt me-1" />{{
+                                                            $t('setup.summary.mobile') }}</span>
                                                         <strong dir="ltr">{{ fullMobileNumber || '—' }}</strong>
                                                     </div>
                                                 </MDBCol>
                                                 <MDBCol md="6">
                                                     <div class="summary-item">
-                                                        <span class="summary-label">
-                                                            <i class="fas fa-clock me-1"></i>
-                                                            {{ $t('setup.summary.timezone') }}
-                                                        </span>
-                                                        <strong>{{ form.timezone || '—' }}</strong>
-                                                    </div>
-                                                </MDBCol>
-                                                <MDBCol md="6">
-                                                    <div class="summary-item">
-                                                        <span class="summary-label">
-                                                            <i class="fas fa-globe me-1"></i>
-                                                            {{ $t('setup.summary.country') }}
-                                                        </span>
+                                                        <span class="summary-label"><i class="fas fa-globe me-1" />{{
+                                                            $t('setup.summary.country') }}</span>
                                                         <strong>{{ selectedCountryName || '—' }}</strong>
                                                     </div>
                                                 </MDBCol>
                                                 <MDBCol md="6">
                                                     <div class="summary-item">
-                                                        <span class="summary-label">
-                                                            <i class="fas fa-industry me-1"></i>
-                                                            {{ $t('setup.summary.industry') }}
-                                                        </span>
+                                                        <span class="summary-label"><i class="fas fa-clock me-1" />{{
+                                                            $t('setup.summary.timezone') }}</span>
+                                                        <strong>{{ form.timezone || '—' }}</strong>
+                                                    </div>
+                                                </MDBCol>
+                                                <MDBCol md="6">
+                                                    <div class="summary-item">
+                                                        <span class="summary-label"><i class="fas fa-industry me-1" />{{
+                                                            $t('setup.summary.industry') }}</span>
                                                         <strong>{{ selectedIndustryName || '—' }}</strong>
                                                     </div>
                                                 </MDBCol>
                                                 <MDBCol md="6">
                                                     <div class="summary-item">
-                                                        <span class="summary-label">
-                                                            <i class="fas fa-coins me-1"></i>
-                                                            {{ $t('setup.summary.currency') }}
-                                                        </span>
+                                                        <span class="summary-label"><i class="fas fa-coins me-1" />{{
+                                                            $t('setup.summary.currency') }}</span>
                                                         <strong>{{ selectedCurrencyName || '—' }}</strong>
+                                                    </div>
+                                                </MDBCol>
+                                                <!-- مصدر سعر الصرف في الملخص -->
+                                                <MDBCol md="6">
+                                                    <div class="summary-item">
+                                                        <span class="summary-label"><i
+                                                                class="fas fa-exchange-alt me-1" />{{
+                                                            $t('setup.summary.exchangeSource') }}</span>
+                                                        <strong>{{ selectedSourceLabel }}</strong>
                                                     </div>
                                                 </MDBCol>
                                             </MDBRow>
@@ -625,6 +609,7 @@ import type {
     CityOption,
     BusinessTypeOption,
     CompanySetupForm,
+    Currency,
 } from '@/types/company'
 import PhoneCodeSelect from '@/components/PhoneCodeSelect.vue'
 
@@ -637,7 +622,6 @@ function toggleLang() {
     const lang = langStore.lang === 'ar' ? 'en' : 'ar'
     langStore.switchLang(lang)
     locale.value = lang
-    console.log(authStore.permissions);
 }
 
 async function handleLogout() {
@@ -660,6 +644,7 @@ const generalError = ref('')
 // ── بيانات ثابتة ───────────────────────────
 const countries = ref<SelectOption[]>([])
 const currencies = ref<SelectOption[]>([])
+const currencyRawList = ref<Currency[]>([])   // ← للحصول على symbol/name كاملاً
 const industries = ref<SelectOption[]>([])
 
 const allRegions = ref<RegionOption[]>([])
@@ -682,6 +667,12 @@ const filteredBusinessTypes = computed<SelectOption[]>(() => {
     return allBusinessTypes.value.filter(b => b.industryUlid === form.industry_id)
 })
 
+// ── معلومات العملة المختارة ─────────────────
+const selectedCurrencyInfo = computed<Currency | null>(() => {
+    if (!form.default_currency_id) return null
+    return currencyRawList.value.find(c => c.ulid === form.default_currency_id) ?? null
+})
+
 // ── Computed: أسماء للملخص ──────────────────
 const selectedCountryName = computed(() =>
     countries.value.find(c => c.value === form.country_id)?.text ?? ''
@@ -692,42 +683,47 @@ const selectedIndustryName = computed(() =>
 const selectedCurrencyName = computed(() =>
     currencies.value.find(c => c.value === form.default_currency_id)?.text ?? ''
 )
+const selectedSourceLabel = computed(() => {
+    const map: Record<string, string> = {
+        system: t('currencies.source.systemLabel'),
+        manual: t('currencies.source.manualLabel'),
+        market: t('currencies.source.marketLabel'),
+    }
+    return map[form.exchange_rate_source] ?? '—'
+})
 
-// ── رقم الجوال الكامل مع الكود ─────────────
-// يُنتج: +970599916672
+// ── تلميح المصدر ────────────────────────────
+const sourceHintText = computed(() => {
+    const map: Record<string, string> = {
+        system: t('currencies.source.systemDesc'),
+        manual: t('currencies.source.manualDesc'),
+        market: t('currencies.source.marketDesc'),
+    }
+    return map[form.exchange_rate_source] ?? ''
+})
+
+// ── رقم الجوال ──────────────────────────────
 const fullMobileNumber = computed(() => {
     if (!form.mobile_number) return ''
-    // إزالة الصفر البادئ من رقم الجوال إن وُجد
     const local = form.mobile_number.replace(/^0+/, '')
     return `${form.phone_code}${local}`
 })
 
-// placeholder ديناميكي حسب الكود المختار
 const mobilePlaceholder = computed(() => {
     const map: Record<string, string> = {
-        '+970': '599916672',
-        '+972': '501234567',
-        '+962': '791234567',
-        '+966': '512345678',
-        '+971': '501234567',
-        '+20': '1012345678',
-        '+1': '2025551234',
-        '+44': '7911123456',
+        '+970': '599916672', '+972': '501234567', '+962': '791234567',
+        '+966': '512345678', '+971': '501234567', '+20': '1012345678',
+        '+1': '2025551234', '+44': '7911123456',
     }
     return map[form.phone_code] ?? '5xxxxxxxx'
 })
 
-// تنظيف: أرقام فقط
 function sanitizeMobile() {
-    form.mobile_number = form.mobile_number
-        .replace(/\D/g, '')   // أرقام فقط
-        .slice(0, 9)
+    form.mobile_number = form.mobile_number.replace(/\D/g, '').slice(0, 9)
 }
 
 function sanitizeLandline() {
-    form.landline = form.landline
-        .replace(/\D/g, '')
-        .slice(0, 12)
+    form.landline = form.landline.replace(/\D/g, '').slice(0, 12)
 }
 
 // ── القوائم الثابتة ─────────────────────────
@@ -748,54 +744,6 @@ const dateFormats = computed<SelectOption[]>(() => [
     { value: 'd-m-Y', text: `31-12-2025  ${t('setup.dateFormatHints.dmy2')}` },
 ])
 
-// ── الفورم ──────────────────────────────────
-const form = reactive<CompanySetupForm & { mobile_number: string }>({
-    title: '',
-    logo: null,
-    commercial_registeration_number: '',
-    email: '',
-    phone_code: '+970',
-    mobile_number: '',     // رقم الجوال بدون الكود
-    mobile: '',            // يُحسب عند الإرسال: phone_code + mobile_number
-    landline: '',
-    country_id: null,
-    region_id: null,
-    city_id: null,
-    address: '',
-    timezone: 'Asia/Jerusalem',
-    industry_id: null,
-    business_type_id: null,
-    default_currency_id: null,
-    vat_rate: 0,
-    income_tax_rate: 0,
-    date_format: 'Y-m-d',
-})
-
-// ✅ للـ preview
-const logoPreview = ref<string | null>(null)
-
-function onLogoChange(event: Event) {
-    const file = (event.target as HTMLInputElement).files?.[0]
-    if (!file) return
-    form.logo = file
-    logoPreview.value = URL.createObjectURL(file)
-}
-
-function removeLogo() {
-    form.logo = null
-    logoPreview.value = null
-    // إعادة تعيين الـ input
-    const input = document.getElementById('logo-input') as HTMLInputElement
-    if (input) input.value = ''
-}
-
-function onLogoDrop(event: DragEvent) {
-    const file = event.dataTransfer?.files?.[0]
-    if (!file || !file.type.startsWith('image/')) return
-    form.logo = file
-    logoPreview.value = URL.createObjectURL(file)
-}
-
 const countryCodes = [
     { value: '+970', text: '🇵🇸 +970' },
     { value: '+972', text: '🇮🇱 +972' },
@@ -807,7 +755,56 @@ const countryCodes = [
     { value: '+44', text: '🇬🇧 +44' },
 ]
 
+// ── الفورم ──────────────────────────────────
+const form = reactive<CompanySetupForm & {
+    mobile_number: string
+    exchange_rate_source: 'system' | 'manual' | 'market'
+}>({
+    title: '',
+    logo: null,
+    commercial_registeration_number: '',
+    email: '',
+    phone_code: '+970',
+    mobile_number: '',
+    mobile: '',
+    landline: '',
+    country_id: null,
+    region_id: null,
+    city_id: null,
+    address: '',
+    timezone: 'Asia/Jerusalem',
+    industry_id: null,
+    business_type_id: null,
+    default_currency_id: null,
+    exchange_rate_source: 'system',    // ← الجديد: الافتراضي = system
+    vat_rate: 0,
+    income_tax_rate: 0,
+    date_format: 'Y-m-d',
+})
+
+const logoPreview = ref<string | null>(null)
 const errors = reactive<Record<string, string>>({})
+
+function onLogoChange(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0]
+    if (!file) return
+    form.logo = file
+    logoPreview.value = URL.createObjectURL(file)
+}
+
+function removeLogo() {
+    form.logo = null
+    logoPreview.value = null
+    const input = document.getElementById('logo-input') as HTMLInputElement
+    if (input) input.value = ''
+}
+
+function onLogoDrop(event: DragEvent) {
+    const file = event.dataTransfer?.files?.[0]
+    if (!file || !file.type.startsWith('image/')) return
+    form.logo = file
+    logoPreview.value = URL.createObjectURL(file)
+}
 
 // ── Computed ────────────────────────────────
 const currentStepData = computed(
@@ -815,7 +812,7 @@ const currentStepData = computed(
 )
 const progressPercent = computed(() => (currentStep.value / steps.value.length) * 100)
 
-// ── تحميل كل البيانات دفعة واحدة ───────────
+// ── تحميل البيانات ──────────────────────────
 onMounted(async () => {
     const lang = langStore.lang
     try {
@@ -824,6 +821,7 @@ onMounted(async () => {
         allRegions.value = data.allRegions
         allCities.value = data.allCities
         currencies.value = data.currencies
+        currencyRawList.value = data.currenciesRaw ?? []
         industries.value = data.industries
         allBusinessTypes.value = data.allBusinessTypes
     } catch {
@@ -843,6 +841,9 @@ function onRegionChange() {
 }
 function onIndustryChange() {
     form.business_type_id = null
+}
+function onCurrencyChange() {
+    // يمكن إضافة منطق هنا لاحقاً مثل اقتراح مصدر السعر بحسب العملة
 }
 
 // ── التحقق ──────────────────────────────────
@@ -864,9 +865,8 @@ function validateStep(step: number): boolean {
             errors.email = t('setup.validation.emailInvalid')
         if (form.mobile_number && !/^\d{9}$/.test(form.mobile_number))
             errors.mobile_number = t('setup.validation.mobileInvalid')
-        if (form.landline && form.landline.length < 7) {
+        if (form.landline && form.landline.length < 7)
             errors.landline = t('setup.validation.landlineInvalid')
-        }
     }
 
     if (step === 2) {
@@ -881,6 +881,9 @@ function validateStep(step: number): boolean {
             errors.business_type_id = t('setup.validation.businessTypeRequired')
         if (!form.default_currency_id)
             errors.default_currency_id = t('setup.validation.currencyRequired')
+    }
+
+    if (step === 4) {
         if (form.vat_rate < 0 || form.vat_rate > 100)
             errors.vat_rate = 'Invalid VAT'
         if (form.income_tax_rate < 0 || form.income_tax_rate > 100)
@@ -904,14 +907,19 @@ async function submitSetup() {
     isSubmitting.value = true
     generalError.value = ''
 
-    // دمج phone_code مع mobile_number قبل الإرسال
     form.mobile = fullMobileNumber.value
 
     try {
-        const payload = { ...form }
-        delete (payload as Record<string, unknown>).mobile_number // لا نرسل الحقل المنفصل
+        const payload = { ...form, exchange_rate_source: form.exchange_rate_source }
+        delete (payload as Record<string, unknown>).mobile_number
         const response = await companyService.setup(payload)
-        authStore.setCompany(String(response.company.ulid ?? String(response.company.id)))
+
+        const companyUlid = response.company.ulid
+        if (!companyUlid) {
+            generalError.value = t('setup.errors.submitFailed')
+            return
+        }
+        authStore.setCompany(companyUlid)
         await router.push('/dashboard')
     } catch (err: unknown) {
         const axiosErr = err as {
@@ -923,7 +931,7 @@ async function submitSetup() {
             const stepMap: Record<string, number> = {
                 title: 1, commercial_registeration_number: 1, email: 1, mobile: 1, landline: 1,
                 country_id: 2, region_id: 2, city_id: 2, address: 2, timezone: 2,
-                industry_id: 3, business_type_id: 3, default_currency_id: 3,
+                industry_id: 3, business_type_id: 3, default_currency_id: 3, exchange_rate_source: 3,
             }
             const fields = Object.keys(data.errors)
             fields.forEach(field => { errors[field] = data.errors?.[field]?.[0] ?? '' })
@@ -944,7 +952,6 @@ async function submitSetup() {
     background-color: #f0f2f5;
 }
 
-/* ══ Sidebar ══ */
 .setup-sidebar {
     width: 280px;
     background: linear-gradient(160deg, #1d334f 0%, #1d7342 100%);
@@ -1092,8 +1099,8 @@ async function submitSetup() {
 
 .setup-card {
     max-width: 800px;
-    border: 1px solid rgba(0, 0, 0, 0.07);
-    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(0, 0, 0, .07);
+    box-shadow: 0 2px 16px rgba(0, 0, 0, .06);
 }
 
 .card-header-section {
@@ -1156,7 +1163,6 @@ async function submitSetup() {
     position: relative;
 }
 
-/* ══ Loading Overlay ══ */
 .loading-overlay {
     position: absolute;
     inset: 0;
@@ -1169,36 +1175,110 @@ async function submitSetup() {
     backdrop-filter: blur(2px);
 }
 
-/* ══ Form Labels ══ */
-.form-label.fw-semibold {
-    font-size: 0.875rem;
-    color: #344054;
-    margin-bottom: 0.4rem;
+/* ══ Currency Info Box ══ */
+.currency-info-box {
+    background: linear-gradient(135deg, #ecfdf5, #f0fdf4);
+    border: 1.5px solid #a7f3d0;
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
 }
 
-/* ══ Input Group RTL fixes ══ */
-.input-group>.input-group-text:first-child {
-    border-top-left-radius: 0.5rem;
-    border-bottom-left-radius: 0.5rem;
+.currency-symbol-preview {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: #d1fae5;
+    color: #059669;
+    font-size: 1.1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
 
-.input-group>.input-group-text:last-child {
-    border-top-right-radius: 0.5rem;
-    border-bottom-right-radius: 0.5rem;
+/* ══ Source Grid (Setup version — compact) ══ */
+.source-grid-setup {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: .75rem;
+    margin-top: .35rem;
 }
 
-[dir="rtl"] .input-group>.input-group-text:first-child {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    border-top-right-radius: 0.5rem;
-    border-bottom-right-radius: 0.5rem;
+.source-option-card {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .75rem .9rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    background: #f8fafb;
+    cursor: pointer;
+    text-align: start;
+    transition: all .2s;
 }
 
-[dir="rtl"] .input-group>.input-group-text:last-child {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    border-top-left-radius: 0.5rem;
-    border-bottom-left-radius: 0.5rem;
+.source-option-card:hover {
+    border-color: #94a3b8;
+    background: #f1f5f9;
+}
+
+.source-option-card.selected {
+    background: #fff;
+    border-color: #a5b4fc;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, .1);
+}
+
+.source-icon-wrap {
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .85rem;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.source-icon-wrap.manual {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+}
+
+.source-icon-wrap.system {
+    background: linear-gradient(135deg, #059669, #047857);
+}
+
+.source-icon-wrap.market {
+    background: linear-gradient(135deg, #7c3aed, #6d28d9);
+}
+
+.source-card-body {
+    flex: 1;
+}
+
+.source-check {
+    flex-shrink: 0;
+}
+
+.source-check-empty {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #d1d5db;
+    border-radius: 50%;
+}
+
+.source-hint-box {
+    background: #f8fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: .5rem .85rem;
+    display: flex;
+    align-items: center;
+}
+
+.text-purple {
+    color: #7c3aed !important;
 }
 
 /* ══ Summary ══ */
@@ -1224,17 +1304,17 @@ async function submitSetup() {
     background: #fff;
     border: 1px solid #eef0f3;
     border-radius: 8px;
-    padding: 0.6rem 0.85rem;
+    padding: .6rem .85rem;
 }
 
 .summary-label {
     color: #8d9aab;
-    font-size: 0.78rem;
+    font-size: .78rem;
     font-weight: 500;
 }
 
 .summary-item strong {
-    font-size: 0.9rem;
+    font-size: .9rem;
     color: #1a2a3a;
     word-break: break-all;
 }
@@ -1247,15 +1327,15 @@ async function submitSetup() {
 .nav-btn {
     height: 48px;
     min-width: 130px;
-    font-size: 0.95rem;
+    font-size: .95rem;
     font-weight: 600;
     border-radius: 10px !important;
-    transition: transform 0.15s, box-shadow 0.15s;
+    transition: transform .15s, box-shadow .15s;
 }
 
 .nav-btn:hover:not(:disabled) {
     transform: translateY(-1px);
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, .15);
 }
 
 :deep(.btn-primary) {
@@ -1276,10 +1356,97 @@ async function submitSetup() {
     background: #155e35 !important;
 }
 
+/* ══ Logo Upload ══ */
+.logo-upload-zone {
+    border: 2px dashed #c8d0db;
+    border-radius: 12px;
+    background: #f8fafb;
+    min-height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: border-color .25s, background .25s;
+    position: relative;
+    overflow: hidden;
+}
+
+.logo-upload-zone:hover {
+    border-color: #1d7342;
+    background: #f0faf5;
+}
+
+.logo-upload-zone.has-logo {
+    cursor: default;
+    border-style: solid;
+    border-color: #c3e6d0;
+}
+
+.upload-placeholder {
+    text-align: center;
+    padding: 1.5rem;
+    color: #6c757d;
+}
+
+.upload-icon {
+    font-size: 2.2rem;
+    color: #adb5bd;
+    display: block;
+    margin-bottom: .75rem;
+}
+
+.logo-preview-img {
+    max-height: 120px;
+    max-width: 100%;
+    object-fit: contain;
+    padding: .75rem;
+    border-radius: 10px;
+}
+
+.logo-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, .45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .75rem;
+    opacity: 0;
+    transition: opacity .2s;
+    border-radius: 10px;
+}
+
+.logo-upload-zone:hover .logo-overlay {
+    opacity: 1;
+}
+
+.logo-overlay-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    background: rgba(255, 255, 255, .2);
+    color: #fff;
+    font-size: .85rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .2s;
+}
+
+.logo-overlay-btn:hover {
+    background: rgba(255, 255, 255, .35);
+}
+
+.logo-overlay-btn.delete:hover {
+    background: rgba(220, 53, 69, .6);
+}
+
 /* ══ Transitions ══ */
 .fade-slide-enter-active,
 .fade-slide-leave-active {
-    transition: opacity 0.22s ease, transform 0.22s ease;
+    transition: opacity .22s ease, transform .22s ease;
 }
 
 [dir="ltr"] .fade-slide-enter-from {
@@ -1302,154 +1469,34 @@ async function submitSetup() {
     transform: translateX(18px);
 }
 
-[dir="rtl"] .input-group>.input-group-text:first-child {
-    border-radius: 0 0.375rem 0.375rem 0;
-}
-
-[dir="rtl"] .input-group>.form-control:last-child {
-    border-radius: 0.375rem 0 0 0.375rem;
-}
-
-[dir="rtl"] .input-group> :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
-    margin-left: calc(var(--mdb-border-width) * -1);
-    border-top-left-radius: 0.375rem;
-    border-bottom-left-radius: 0.375rem;
-}
-
-/* إخفاء السهم في حقول الأرقام */
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    appearance: none;
-}
-
-[dir="rtl"] .input-group> :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
-    margin-left: calc(var(--mdb-border-width) * -1);
-    border-top-left-radius: 0.375rem;
-    border-bottom-left-radius: 0.375rem;
-}
-
-[dir="rtl"] .input-group:not(.has-validation)> :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu):not(.form-floating),
-.input-group:not(.has-validation)>.dropdown-toggle:nth-last-child(n+3),
-.input-group:not(.has-validation)>.form-floating:not(:last-child)>.form-control,
-.input-group:not(.has-validation)>.form-floating:not(:last-child)>.form-select {
-    border-top-right-radius: 0.375rem;
-    border-bottom-right-radius: 0.375rem;
-}
-
-/* الوضع الافتراضي (LTR) */
+/* ══ Input RTL ══ */
 .input-group>.input-group-text:first-child {
-    border-top-left-radius: 0.5rem;
-    border-bottom-left-radius: 0.5rem;
+    border-top-left-radius: .5rem;
+    border-bottom-left-radius: .5rem;
 }
 
 .input-group>.input-group-text:last-child {
-    border-top-right-radius: 0.5rem;
-    border-bottom-right-radius: 0.5rem;
+    border-top-right-radius: .5rem;
+    border-bottom-right-radius: .5rem;
 }
 
-/* عند RTL نعكس */
 [dir="rtl"] .input-group>.input-group-text:first-child {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
-
-    border-top-right-radius: 0.5rem;
-    border-bottom-right-radius: 0.5rem;
+    border-top-right-radius: .5rem;
+    border-bottom-right-radius: .5rem;
 }
 
 [dir="rtl"] .input-group>.input-group-text:last-child {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
-
-    border-top-left-radius: 0.5rem;
-    border-bottom-left-radius: 0.5rem;
+    border-top-left-radius: .5rem;
+    border-bottom-left-radius: .5rem;
 }
 
-/* ══ Logo Upload ══ */
-.logo-upload-zone {
-    border: 2px dashed #c8d0db;
-    border-radius: 12px;
-    background: #f8fafb;
-    min-height: 140px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: border-color 0.25s, background 0.25s;
-    position: relative;
-    overflow: hidden;
-}
-
-.logo-upload-zone:hover {
-    border-color: #1d7342;
-    background: #f0faf5;
-}
-
-.logo-upload-zone.has-logo {
-    cursor: default;
-    border-style: solid;
-    border-color: #c3e6d0;
-    min-height: 140px;
-}
-
-.upload-placeholder {
-    text-align: center;
-    padding: 1.5rem;
-    color: #6c757d;
-}
-
-.upload-icon {
-    font-size: 2.2rem;
-    color: #adb5bd;
-    display: block;
-    margin-bottom: 0.75rem;
-}
-
-.logo-preview-img {
-    max-height: 120px;
-    max-width: 100%;
-    object-fit: contain;
-    padding: 0.75rem;
-    border-radius: 10px;
-}
-
-.logo-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.45);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    opacity: 0;
-    transition: opacity 0.2s;
-    border-radius: 10px;
-}
-
-.logo-upload-zone:hover .logo-overlay {
-    opacity: 1;
-}
-
-.logo-overlay-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 2px solid #fff;
-    background: rgba(255, 255, 255, 0.2);
-    color: #fff;
-    font-size: 0.85rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s;
-}
-
-.logo-overlay-btn:hover {
-    background: rgba(255, 255, 255, 0.35);
-}
-
-.logo-overlay-btn.delete:hover {
-    background: rgba(220, 53, 69, 0.6);
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    appearance: none;
 }
 </style>

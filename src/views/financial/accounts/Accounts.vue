@@ -1,10 +1,9 @@
 <template>
     <div class="container-fluid p-4" style="animation: pageIn 0.25s ease;">
 
-        <!-- ══ Toast ══════════════════════════════════════════════════ -->
         <ToastNotification ref="toast" />
 
-        <!-- ══ Page Header ══════════════════════════════════════════════ -->
+        <!-- ══ Page Header ══ -->
         <div class="rounded-4 px-4 py-3 mb-4 d-flex justify-content-between align-items-center flex-wrap gap-2"
             style="background: linear-gradient(135deg, #1d334f 0%, #1d7342 100%);">
             <div class="d-flex align-items-center gap-3">
@@ -24,16 +23,21 @@
                     </MDBBreadcrumb>
                 </div>
             </div>
-            <div class="d-flex gap-2 flex-wrap">
+            <div class="d-flex gap-2 flex-wrap align-items-center">
+                <!-- مؤشر السنة المالية النشطة -->
+                <div v-if="activeFiscalYear" class="fiscal-year-badge">
+                    <i class="fas fa-calendar-alt me-1"></i>
+                    {{ activeFiscalYear.name }}
+                </div>
                 <!-- View Toggle -->
                 <div class="btn-group">
                     <button class="btn btn-sm fw-semibold"
                         :class="viewMode === 'list' ? 'btn-light' : 'btn-outline-light'" @click="viewMode = 'list'">
-                        <i class="fas fa-list me-1"></i> {{ $t('common.list') }}
+                        <i class="fas fa-list me-1"></i>{{ $t('common.list') }}
                     </button>
                     <button class="btn btn-sm fw-semibold"
                         :class="viewMode === 'tree' ? 'btn-light' : 'btn-outline-light'" @click="switchToTree">
-                        <i class="fas fa-sitemap me-1"></i> {{ $t('accounts.tree') }}
+                        <i class="fas fa-sitemap me-1"></i>{{ $t('accounts.tree') }}
                     </button>
                 </div>
                 <MDBBtn color="light" size="sm" class="fw-semibold rounded-3" @click="openCreate">
@@ -42,7 +46,7 @@
             </div>
         </div>
 
-        <!-- ══ Stats ════════════════════════════════════════════════════ -->
+        <!-- ══ Stats Cards ══ -->
         <MDBRow class="g-3 mb-4">
             <MDBCol md="3" v-for="card in statCards" :key="card.key">
                 <MDBCard class="border-0 shadow-sm h-100 rounded-4">
@@ -50,6 +54,8 @@
                         <div>
                             <div class="text-muted small mb-1">{{ card.label }}</div>
                             <div class="fw-bold fs-3 lh-1">{{ card.value }}</div>
+                            <div v-if="card.sub" class="text-muted" style="font-size:0.72rem;margin-top:2px;">{{
+                                card.sub }}</div>
                         </div>
                         <div class="stat-icon-wrap rounded-3"
                             :class="`text-${card.color} bg-${card.color} bg-opacity-10`">
@@ -60,7 +66,7 @@
             </MDBCol>
         </MDBRow>
 
-        <!-- ══ Filters ══════════════════════════════════════════════════ -->
+        <!-- ══ Filters ══ -->
         <MDBCard class="border-0 shadow-sm rounded-4 mb-4">
             <MDBCardBody class="py-3 px-4">
                 <MDBRow class="g-2 align-items-end">
@@ -92,7 +98,7 @@
             </MDBCardBody>
         </MDBCard>
 
-        <!-- ══ Main Card ════════════════════════════════════════════════ -->
+        <!-- ══ Main Card ══ -->
         <MDBCard class="border-0 shadow-sm rounded-4 overflow-hidden">
             <MDBProgress v-if="loading" style="height:3px;border-radius:0;">
                 <MDBProgressBar striped animated :value="100" />
@@ -102,30 +108,37 @@
             <!-- ── LIST VIEW ─────────────────────────────────────────── -->
             <div v-if="viewMode === 'list'" class="table-responsive">
                 <table class="table table-bordered table-hover align-middle mb-0">
-                    <thead>
+                    <thead class="table-header">
                         <tr>
-                            <th class="fw-bold text-center" style="width:48px;">#</th>
-                            <th class="fw-bold" style="min-width:100px;">{{ $t('accounts.code') }}</th>
-                            <th class="fw-bold" style="min-width:200px;">{{ $t('accounts.name') }}</th>
-                            <th class="fw-bold text-center">{{ $t('accounts.type') }}</th>
-                            <th class="fw-bold text-center">{{ $t('accounts.normalSide') }}</th>
-                            <th class="fw-bold text-center" style="width:80px;">{{ $t('accounts.depth') }}</th>
-                            <th class="fw-bold text-center">{{ $t('accounts.posting') }}</th>
-                            <th class="fw-bold text-center">{{ $t('common.status') }}</th>
-                            <th class="fw-bold text-center" style="width:160px;">{{ $t('common.actions') }}</th>
+                            <th class="text-center" style="width:48px;">#</th>
+                            <th style="min-width:90px;">{{ $t('accounts.code') }}</th>
+                            <th style="min-width:220px;">{{ $t('accounts.name') }}</th>
+                            <th class="text-center" style="min-width:90px;">{{ $t('accounts.type') }}</th>
+                            <th class="text-center" style="min-width:80px;">{{ $t('accounts.normalSide') }}</th>
+                            <th class="text-center" style="width:70px;">{{ $t('accounts.depth') }}</th>
+                            <th class="text-center" style="min-width:90px;">{{ $t('accounts.posting') }}</th>
+                            <!-- عمود الرصيد — يظهر فقط إذا كانت السنة المالية متاحة -->
+                            <th v-if="activeFiscalYear" class="text-end" style="min-width:130px;">
+                                <div class="d-flex align-items-center justify-content-end gap-1">
+                                    <i class="fas fa-coins text-primary" style="font-size:11px;"></i>
+                                    {{ $t('accounts.balance') }}
+                                </div>
+                            </th>
+                            <th class="text-center" style="min-width:80px;">{{ $t('common.status') }}</th>
+                            <th class="text-center" style="width:150px;">{{ $t('common.actions') }}</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Loading skeleton -->
+                        <!-- Loading -->
                         <tr v-if="loading && !accounts.length">
-                            <td colspan="9" class="text-center py-5">
+                            <td :colspan="activeFiscalYear ? 10 : 9" class="text-center py-5">
                                 <MDBSpinner color="primary" class="mb-2" />
                                 <div class="text-muted small">{{ $t('common.loading') }}</div>
                             </td>
                         </tr>
                         <!-- Empty -->
                         <tr v-else-if="!accounts.length">
-                            <td colspan="9" class="text-center py-5">
+                            <td :colspan="activeFiscalYear ? 10 : 9" class="text-center py-5">
                                 <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mx-auto mb-3"
                                     style="width:60px;height:60px;">
                                     <i class="fas fa-sitemap fa-lg text-muted"></i>
@@ -137,50 +150,102 @@
                             </td>
                         </tr>
                         <!-- Rows -->
-                        <tr v-else v-for="(acc, idx) in accounts" :key="acc.ulid">
-                            <td class="text-center text-muted small fw-semibold">
+                        <tr v-else v-for="(acc, idx) in accounts" :key="acc.ulid"
+                            :class="{ 'row-parent': acc.is_parent, 'row-leaf': acc.is_leaf }">
+                            <td class="text-center text-muted small">
                                 {{ (meta.current_page - 1) * meta.per_page + idx + 1 }}
                             </td>
+                            <!-- Code -->
                             <td>
                                 <span class="font-monospace fw-bold text-primary small">{{ acc.code }}</span>
                             </td>
+                            <!-- Name + Parent info -->
                             <td>
-                                <div v-if="acc.name" class="text-muted">{{ acc.name }}</div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <i v-if="acc.is_parent" class="fas fa-folder text-warning flex-shrink-0"
+                                        style="font-size:12px;"></i>
+                                    <i v-else class="fas fa-file-invoice text-primary flex-shrink-0"
+                                        style="font-size:12px;"></i>
+                                    <div>
+
+                                        <div class="fw-semibold small">
+                                            {{ getAccountName(acc) }}
+                                        </div>
+
+                                        <!-- optional: تعرض اللغة الثانية بشكل خفيف -->
+                                        <div v-if="langStore.lang === 'en' && acc.name_en" class="text-muted"
+                                            style="font-size:0.71rem;">
+                                            {{ acc.name_en }}
+                                        </div>
+
+                                        <div v-if="langStore.lang === 'ar' && acc.name" class="text-muted"
+                                            style="font-size:0.71rem;">
+                                            {{ acc.name }}
+                                        </div>
+
+                                        <div v-if="acc.parent" class="text-muted d-flex align-items-center gap-1"
+                                            style="font-size:0.71rem;">
+                                            <i class="fas fa-level-up-alt text-muted" style="font-size:9px;"></i>
+                                            {{ acc.parent.code }} — {{ getAccountName(acc.parent) }}
+                                        </div>
+                                    </div>
+                                </div>
                             </td>
+                            <!-- Type -->
                             <td class="text-center">
-                                <span class="badge rounded-pill px-2" :class="typeClass(acc.type)">
+                                <span class="badge rounded-pill px-2 small" :class="typeClass(acc.type)">
                                     {{ $t(`accounts.types.${acc.type}`) }}
                                 </span>
                             </td>
+                            <!-- Normal Side -->
                             <td class="text-center">
-                                <span class="badge rounded-pill px-2"
+                                <span class="badge rounded-pill px-2 small"
                                     :class="acc.normal_balance_side === 'debit' ? 'bg-primary bg-opacity-10 text-primary' : 'bg-success bg-opacity-10 text-success'">
                                     {{ acc.normal_balance_side === 'debit' ? $t('accounts.debit') :
                                         $t('accounts.credit') }}
                                 </span>
                             </td>
+                            <!-- Depth -->
                             <td class="text-center">
-                                <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill">{{ acc.depth
-                                    }}</span>
+                                <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill small">{{
+                                    acc.depth }}</span>
                             </td>
+                            <!-- Posting -->
                             <td class="text-center">
                                 <span v-if="acc.allow_posting"
-                                    class="badge bg-success bg-opacity-10 text-success rounded-pill">
-                                    <i class="fas fa-check me-1" style="font-size:9px;"></i>{{ $t('accounts.postable')
+                                    class="badge bg-info bg-opacity-10 text-info rounded-pill small">
+                                    <i class="fas fa-check me-1" style="font-size:8px;"></i>{{ $t('accounts.postable')
                                     }}
                                 </span>
-                                <span v-else class="badge bg-warning bg-opacity-10 text-warning rounded-pill">
-                                    <i class="fas fa-layer-group me-1" style="font-size:9px;"></i>{{
+                                <span v-else class="badge bg-warning bg-opacity-10 text-warning rounded-pill small">
+                                    <i class="fas fa-layer-group me-1" style="font-size:8px;"></i>{{
                                         $t('accounts.grouping') }}
                                 </span>
                             </td>
+                            <!-- Balance -->
+                            <td v-if="activeFiscalYear" class="text-end">
+                                <template v-if="acc.balance !== null && acc.balance !== undefined">
+                                    <div class="fw-bold font-monospace small"
+                                        :class="acc.balance_side === 'debit' ? 'text-primary' : 'text-success'">
+                                        {{ formatAmount(acc.balance) }}
+                                    </div>
+                                    <div class="badge rounded-pill px-1 mt-1" style="font-size:0.65rem;"
+                                        :class="acc.balance_side === 'debit' ? 'bg-primary bg-opacity-10 text-primary' : 'bg-success bg-opacity-10 text-success'">
+                                        {{ acc.balance_side === 'debit' ? $t('accounts.debit') : $t('accounts.credit')
+                                        }}
+                                    </div>
+                                </template>
+                                <span v-else class="text-muted small">—</span>
+                            </td>
+                            <!-- Status -->
                             <td class="text-center">
-                                <span class="badge rounded-pill"
+                                <span class="badge rounded-pill small"
                                     :class="acc.status === 'active' ? 'bg-success bg-opacity-10 text-success' : 'bg-danger bg-opacity-10 text-danger'">
-                                    <i class="fas fa-circle me-1" style="font-size:7px;"></i>
+                                    <i class="fas fa-circle me-1" style="font-size:6px;"></i>
                                     {{ acc.status === 'active' ? $t('common.active') : $t('common.inactive') }}
                                 </span>
                             </td>
+                            <!-- Actions -->
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-2 action-icons">
                                     <i class="fas fa-eye icon-action text-info" :title="$t('common.view')"
@@ -200,7 +265,7 @@
             </div>
 
             <!-- ── TREE VIEW ─────────────────────────────────────────── -->
-            <div v-else class="p-3">
+            <div v-else class="p-3 p-lg-4">
                 <div v-if="treeLoading" class="text-center py-5">
                     <MDBSpinner color="primary" />
                     <div class="text-muted small mt-2">{{ $t('common.loading') }}</div>
@@ -209,12 +274,22 @@
                     {{ $t('accounts.empty') }}
                 </div>
                 <div v-else>
-                    <AccountTreeNode v-for="node in treeData" :key="node.ulid" :node="node" @edit="openEdit"
-                        @show="openShow" @delete="confirmDeleteItem" @toggle="toggleStatus" />
+                    <!-- رأس الشجرة مع اسم السنة المالية -->
+                    <div v-if="treeFiscalYear" class="tree-fiscal-header mb-3">
+                        <i class="fas fa-calendar-alt text-primary me-2"></i>
+                        <span class="fw-bold text-primary small">{{ $t('accounts.balancesFor') }}</span>
+                        <span class="ms-1 badge bg-primary bg-opacity-10 text-primary rounded-pill small">
+                            {{ treeFiscalYear.name }}
+                        </span>
+                    </div>
+                    <!-- شجرة الحسابات -->
+                    <AccountTreeNode v-for="node in treeData" :key="node.ulid" :node="node"
+                        :show-balance="!!treeFiscalYear" @edit="openEdit" @show="openShow" @delete="confirmDeleteItem"
+                        @toggle="toggleStatus" />
                 </div>
             </div>
 
-            <!-- ── Pagination ────────────────────────────────────────── -->
+            <!-- ── Pagination ── -->
             <MDBCardBody v-if="viewMode === 'list' && meta.last_page > 1"
                 class="d-flex justify-content-between align-items-center py-3 px-4 border-top">
                 <small class="text-muted">
@@ -232,14 +307,13 @@
             </MDBCardBody>
         </MDBCard>
 
-        <!-- ══ Modals ════════════════════════════════════════════════════ -->
+        <!-- ══ Modals ══ -->
         <AccountFormModal v-model:show="showFormModal" :account="editingAccount" @saved="onSaved" />
         <AccountShowModal v-model:show="showDetailsModal" :account="showingAccount" />
 
         <ConfirmModal v-model:show="showDeleteModal" type="danger" icon="trash-alt" :title="$t('accounts.deleteTitle')"
             :message="$t('accounts.deleteMessage', { name: confirmTarget?.name })" :confirm-label="$t('common.delete')"
             :loading="actionLoading" @confirm="onDeleteConfirmed" />
-
     </div>
 </template>
 
@@ -261,6 +335,8 @@ import ToastNotification from '@/components/shared/ToastNotification.vue'
 import AccountFormModal from './AccountFormModal.vue'
 import AccountShowModal from '@/components/financial/accounts/AccountShowModal.vue'
 import AccountTreeNode from '@/components/financial/accounts/AccountTreeNode.vue'
+import { useLangStore } from '@/stores/langStore'
+const langStore = useLangStore()
 
 const { t } = useI18n()
 const toast = ref<InstanceType<typeof ToastNotification> | null>(null)
@@ -273,6 +349,10 @@ const loading = ref(false)
 const treeLoading = ref(false)
 const viewMode = ref<'list' | 'tree'>('list')
 
+// السنة المالية المستخدمة في الأرصدة (من الاستجابة)
+const activeFiscalYear = ref<{ ulid: string; name: string } | null>(null)
+const treeFiscalYear = ref<{ ulid: string; name: string } | null>(null)
+
 const showFormModal = ref(false)
 const showDetailsModal = ref(false)
 const showDeleteModal = ref(false)
@@ -280,9 +360,9 @@ const editingAccount = ref<Account | null>(null)
 const showingAccount = ref<Account | null>(null)
 const confirmTarget = ref<Account | null>(null)
 const actionLoading = ref(false)
-let searchTimeout: ReturnType<typeof setTimeout>
 
 const filters = reactive({ search: '', type: '', status: '', per_page: 15 })
+let searchTimeout: ReturnType<typeof setTimeout>
 
 // ── Computed ────────────────────────────────────────────────────
 const paginationFrom = computed(() => (meta.value.current_page - 1) * meta.value.per_page + 1)
@@ -313,21 +393,25 @@ const statCards = computed(() => [
     {
         key: 'total', label: t('accounts.stats.total'), value: meta.value.total,
         icon: 'fas fa-sitemap', color: 'primary',
-    },
-    {
-        key: 'asset', label: t('accounts.types.asset'),
-        value: accounts.value.filter(a => a.type === 'asset').length,
-        icon: 'fas fa-coins', color: 'success',
+        sub: activeFiscalYear.value ? activeFiscalYear.value.name : undefined,
     },
     {
         key: 'posting', label: t('accounts.postable'),
         value: accounts.value.filter(a => a.allow_posting).length,
-        icon: 'fas fa-check-circle', color: 'info',
+        icon: 'fas fa-check-circle', color: 'success',
+        sub: undefined,
+    },
+    {
+        key: 'parent', label: t('accounts.grouping'),
+        value: accounts.value.filter(a => !a.allow_posting).length,
+        icon: 'fas fa-layer-group', color: 'warning',
+        sub: undefined,
     },
     {
         key: 'inactive', label: t('common.inactive'),
         value: accounts.value.filter(a => a.status === 'inactive').length,
         icon: 'fas fa-ban', color: 'danger',
+        sub: undefined,
     },
 ])
 
@@ -343,6 +427,17 @@ function typeClass(type: string) {
     return map[type] ?? 'bg-light text-dark'
 }
 
+function getAccountName(acc: any) {
+    return langStore.lang === 'ar'
+        ? acc.name
+        : (acc.name_en || acc.name)
+}
+
+function formatAmount(val: number | null | undefined): string {
+    if (val === null || val === undefined) return '—'
+    return (val || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+}
+
 // ── Data Fetching ────────────────────────────────────────────────
 async function fetchData() {
     loading.value = true
@@ -356,6 +451,7 @@ async function fetchData() {
         })
         accounts.value = res.data
         meta.value = res.meta
+        activeFiscalYear.value = res.fiscal_year
     } catch (e: any) {
         toast.value?.show(e?.response?.data?.message ?? t('common.error'), 'danger')
     } finally {
@@ -365,10 +461,13 @@ async function fetchData() {
 
 async function switchToTree() {
     viewMode.value = 'tree'
-    if (treeData.value.length) return
+    // دائماً نحدّث الشجرة عند التبديل (لضمان الأرصدة محدّثة)
     treeLoading.value = true
+    treeData.value = []
     try {
-        treeData.value = await accountService.getTree()
+        const res = await accountService.getTree()
+        treeData.value = res.data
+        treeFiscalYear.value = res.fiscal_year
     } catch (e: any) {
         toast.value?.show(e?.response?.data?.message ?? t('common.error'), 'danger')
     } finally {
@@ -399,7 +498,7 @@ function openShow(acc: Account) { showingAccount.value = acc; showDetailsModal.v
 function onSaved(updated: Account, isNew: boolean) {
     if (isNew) {
         fetchData()
-        treeData.value = [] // invalidate tree
+        treeData.value = []
     } else {
         const idx = accounts.value.findIndex(a => a.ulid === updated.ulid)
         if (idx !== -1) accounts.value[idx] = updated
@@ -413,16 +512,14 @@ async function toggleStatus(acc: Account) {
         const res = await accountService.toggleStatus(acc.ulid)
         const idx = accounts.value.findIndex(a => a.ulid === acc.ulid)
         if (idx !== -1) accounts.value[idx] = res.data
+        treeData.value = []
         toast.value?.show(res.message, 'success')
     } catch (e: any) {
         toast.value?.show(e?.response?.data?.message ?? t('common.error'), 'danger')
     }
 }
 
-function confirmDeleteItem(acc: Account) {
-    confirmTarget.value = acc
-    showDeleteModal.value = true
-}
+function confirmDeleteItem(acc: Account) { confirmTarget.value = acc; showDeleteModal.value = true }
 
 async function onDeleteConfirmed() {
     if (!confirmTarget.value) return
@@ -466,6 +563,16 @@ async function onDeleteConfirmed() {
     justify-content: center;
 }
 
+.fiscal-year-badge {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    color: #fff;
+    border-radius: 20px;
+    padding: 0.3rem 0.85rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
 .stat-icon-wrap {
     width: 50px;
     height: 50px;
@@ -476,6 +583,49 @@ async function onDeleteConfirmed() {
     flex-shrink: 0;
 }
 
+/* ── Table Header ── */
+.table-header th {
+    background: #f5f7fa;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #344054;
+    white-space: nowrap;
+    vertical-align: middle;
+    border-bottom: 2px solid #e3e8ef;
+}
+
+.table td {
+    font-size: 0.875rem;
+    vertical-align: middle;
+}
+
+/* ── Row types ── */
+:deep(.row-parent td) {
+    background: #fafbfc;
+}
+
+:deep(.row-leaf td) {
+    background: #ffffff;
+}
+
+:deep(.row-parent:hover td) {
+    background: #f0f4f8 !important;
+}
+
+/* ── Actions ── */
+.action-icons .icon-action {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 0.72;
+    font-size: 0.9rem;
+}
+
+.action-icons .icon-action:hover {
+    transform: scale(1.2);
+    opacity: 1;
+}
+
+/* ── Search trailing icon ── */
 :deep(.form-icon-trailing .trailing) {
     position: absolute;
     right: 10px;
@@ -485,29 +635,13 @@ async function onDeleteConfirmed() {
     pointer-events: none;
 }
 
-/* .table-custom th {
-    background: #f8f9fa;
-    font-size: 0.83rem;
-    font-weight: 700;
-    color: #344054;
-    white-space: nowrap;
-    vertical-align: middle;
-}
-
-.table-custom td {
-    font-size: 0.88rem;
-    vertical-align: middle;
-} */
-
-.action-icons .icon-action {
-    cursor: pointer;
-    transition: all 0.2s ease;
-    opacity: 0.75;
-    font-size: 0.95rem;
-}
-
-.action-icons .icon-action:hover {
-    transform: scale(1.2);
-    opacity: 1;
+/* ── Tree fiscal year header ── */
+.tree-fiscal-header {
+    display: flex;
+    align-items: center;
+    padding: 0.6rem 1rem;
+    background: #f0f7ff;
+    border: 1px solid #bee3f8;
+    border-radius: 8px;
 }
 </style>
