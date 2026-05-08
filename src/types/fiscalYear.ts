@@ -2,9 +2,12 @@
 export interface FiscalYear {
   ulid: string
   name: string
+  code: string | null
   start_date: string
   end_date: string
   status: 'open' | 'closed' | 'locked'
+  period_type: string
+  periods_count: number
   status_label: string
   status_color: 'success' | 'warning' | 'danger' | 'secondary'
   status_icon: string
@@ -39,8 +42,11 @@ export interface FiscalYearMeta {
  
 export interface FiscalYearForm {
   name: string
+  code?: string
   start_date: string
   end_date: string
+  period_type?: 'monthly' | 'quarterly' | 'custom'
+  periods_count?: number
   is_default: boolean
   notes: string
 }

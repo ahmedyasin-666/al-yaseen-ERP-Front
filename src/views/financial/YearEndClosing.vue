@@ -586,7 +586,7 @@ async function doExecute() {
             new_fiscal_year_ulid: form.value.new_fiscal_year_ulid || undefined,
         })
 
-        executeResult.value = res
+        executeResult.value = res.data
         showExecuteModal.value = false
         previewData.value = null
 

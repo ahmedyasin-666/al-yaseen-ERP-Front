@@ -278,6 +278,10 @@
                     <BaseSvg v-if="!year.is_current" name="exchange-alt" :size="22" class="icon-action text-primary"
                       :title="t('fiscalYears.actions.switch')" @click="onSwitch(year)" />
 
+                    <!-- View Periods -->
+                    <i class="fas fa-calendar-week icon-action text-primary" :title="t('accountingPeriods.view')"
+                      @click="viewPeriods(year)" />
+
                     <!-- View details -->
                     <BaseSvg name="eye" :size="22" class="icon-action text-info" :title="t('common.view')"
                       @click="openShow(year)" />
@@ -366,6 +370,7 @@ import { useI18n } from 'vue-i18n'
 import { useFiscalYearStore } from '@/stores/fiscalYearStore'
 import { fiscalYearService } from '@/services/fiscalYearService'
 import type { FiscalYear } from '@/types/fiscalYear'
+import { useRouter } from 'vue-router'
 import {
   MDBRow, MDBCol, MDBCard, MDBCardBody,
   MDBTable, MDBBadge, MDBBtn, MDBIcon,
@@ -386,6 +391,7 @@ import BaseSvg from '@/components/BaseSvg.vue'
 const { t, locale } = useI18n()
 const store = useFiscalYearStore()
 const toast = ref<InstanceType<typeof ToastNotification> | null>(null)
+const router = useRouter()
 
 // ── Misc state ─────────────────────────────────────────────────────
 const showSwitcher = ref(false)
@@ -502,6 +508,10 @@ function onSearch() {
 function openCreate() { editingYear.value = null; showFormModal.value = true }
 function openEdit(y: FiscalYear) { editingYear.value = y; showFormModal.value = true }
 function openShow(y: FiscalYear) { showingUlid.value = y.ulid; showDetailsModal.value = true }
+
+function viewPeriods(y: FiscalYear) {
+  router.push(`/settings/fiscal-years/${y.ulid}/periods`)
+}
 
 function onSaved(updated: FiscalYear, isNew: boolean) {
   isNew ? store.fetchAll() : store.updateYearInList(updated)

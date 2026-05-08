@@ -558,7 +558,7 @@
                             <span>{{ generalError }}</span>
                         </div>
 
-                        <!-- أزرار التنقل -->
+                        <!-- Navigation Buttons -->
                         <div class="nav-buttons-row d-flex justify-content-between align-items-center mt-5 pt-3">
                             <MDBBtn v-if="currentStep > 1" outline="secondary" class="px-4 nav-btn" @click="prevStep">
                                 <i :class="langStore.dir === 'rtl' ? 'fas fa-arrow-right' : 'fas fa-arrow-left'"
@@ -567,6 +567,7 @@
                             </MDBBtn>
                             <div v-else />
 
+                            <!-- Next button (steps 1-3) -->
                             <MDBBtn v-if="currentStep < steps.length" color="primary" class="px-5 nav-btn"
                                 :disabled="initialLoading" @click="nextStep">
                                 {{ $t('setup.next') }}
@@ -574,9 +575,9 @@
                                     class="ms-2"></i>
                             </MDBBtn>
 
+                            <!-- Submit button (last step) — always show, never gate by permission -->
                             <MDBBtn v-else color="success" class="px-5 nav-btn"
-                                :disabled="isSubmitting || initialLoading" @click="submitSetup"
-                                v-if="authStore.hasPermission('api.core.companies.store')">
+                                :disabled="isSubmitting || initialLoading" @click="submitSetup">
                                 <span v-if="isSubmitting">
                                     <i class="fas fa-spinner fa-spin me-2"></i>{{ $t('setup.creating') }}
                                 </span>
@@ -854,11 +855,11 @@ function validateStep(step: number): boolean {
         if (!form.title.trim())
             errors.title = t('setup.validation.companyNameRequired')
         if (form.title.length < 3)
-            errors.title = 'Too short'
+            errors.title = t('validation.tooShort')
         if (!form.commercial_registeration_number.trim())
             errors.commercial_registeration_number = t('setup.validation.commercialRegRequired')
         if (!/^[A-Za-z0-9\-]{5,20}$/.test(form.commercial_registeration_number))
-            errors.commercial_registeration_number = 'Invalid format'
+            errors.commercial_registeration_number = t('validation.invalidFormat')
         if (!form.email.trim())
             errors.email = t('setup.validation.emailRequired')
         else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
@@ -885,9 +886,9 @@ function validateStep(step: number): boolean {
 
     if (step === 4) {
         if (form.vat_rate < 0 || form.vat_rate > 100)
-            errors.vat_rate = 'Invalid VAT'
+            errors.vat_rate = t('validation.invalidVat')
         if (form.income_tax_rate < 0 || form.income_tax_rate > 100)
-            errors.income_tax_rate = 'Invalid tax'
+            errors.income_tax_rate = t('validation.invalidTax')
     }
 
     return Object.keys(errors).length === 0
@@ -914,13 +915,16 @@ async function submitSetup() {
         delete (payload as Record<string, unknown>).mobile_number
         const response = await companyService.setup(payload)
 
-        const companyUlid = response.company.ulid
+        const companyUlid = response.data.ulid
         if (!companyUlid) {
             generalError.value = t('setup.errors.submitFailed')
             return
         }
         authStore.setCompany(companyUlid)
-        await router.push('/dashboard')
+        authStore.companyStatus = 'pending'
+        authStore.isCompanyApproved = false
+        localStorage.setItem('company_status', 'pending')
+        await router.push('/pending-approval')
     } catch (err: unknown) {
         const axiosErr = err as {
             response?: { data?: { message?: string; errors?: Record<string, string[]> } }

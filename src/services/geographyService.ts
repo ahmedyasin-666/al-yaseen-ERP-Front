@@ -101,24 +101,25 @@ export const geographyService = {
     */
     async getSetupData(lang = 'ar'): Promise<SetupData> {
         const { data } = await api.get('core/setup-data')
+        const setup = data.data
         // lang يُرسل تلقائياً من الـ interceptor، لكن نحتاجه هنا للـ mapping
         return {
-            countries: data.countries.map((c: any): SelectOption => ({
+            countries: setup.countries.map((c: any): SelectOption => ({
                 value: c.ulid,
                 text: pick(c, lang),
                 secondary: c.code,
             })),
-            allRegions: data.regions.map((r: any): RegionOption => ({
+            allRegions: setup.regions.map((r: any): RegionOption => ({
                 value: r.ulid,
                 text: pick(r, lang),
                 countryUlid: r.country?.ulid ?? '',
             })),
-            allCities: data.cities.map((c: any): CityOption => ({
+            allCities: setup.cities.map((c: any): CityOption => ({
                 value: c.ulid,
                 text: pick(c, lang),
                 regionUlid: c.region?.ulid ?? '',   // ← تأكد أن الـ Resource يُرجع region.ulid
             })),
-            currencies: data.currencies.map((c: any): SelectOption => ({
+            currencies: setup.currencies.map((c: any): SelectOption => ({
                 value: c.ulid,
                 text: pick(c, lang),
                 secondary: c.symbol || c.code,
@@ -128,7 +129,7 @@ export const geographyService = {
                 value: i.ulid,
                 text: pick(i, lang),
             })),
-            allBusinessTypes: data.business_types.map((b: any): BusinessTypeOption => ({
+            allBusinessTypes: setup.business_types.map((b: any): BusinessTypeOption => ({
                 value: b.ulid,
                 text: pick(b, lang),
                 industryUlid: b.industry?.ulid ?? '',

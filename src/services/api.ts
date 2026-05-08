@@ -67,7 +67,14 @@ api.interceptors.response.use(
 
         // 403: ممنوع الوصول
         if (status === 403) {
-            console.warn('Access Denied:', error.response?.data?.message)
+            const data = error.response?.data
+            if (data?.requires_approval) {
+                if (router.currentRoute.value.name !== 'PendingApproval') {
+                    router.push({ name: 'PendingApproval' })
+                }
+            } else {
+                console.warn('Access Denied:', data?.message)
+            }
         }
 
         // 500: خطأ في السيرفر

@@ -24,6 +24,7 @@ export interface UserCompany {
     region: { ulid: string; name: string; name_en: string; status: string; country_id: number } | null
     city: { ulid: string; name: string; name_en: string; status: string; country_id: number; region_id: number } | null
     currency: { ulid: string; code: string; name: string; name_en: string; symbol: string; decimal_places: number; exchange_rate: string; is_base_currency: boolean; status: string } | null
+    rejection_reason?: string | null
     created_at: string
 }
 
@@ -76,6 +77,8 @@ export interface AuthResponse {
     token_type: 'Bearer'
     user: AuthUser
     company_id: string | null
+    company_status: string | null
+    is_company_approved: boolean
     /**
      * ULID السنة المالية الافتراضية للشركة
      * - يُرجعها الباك اند من company.defaultFiscalYear
@@ -92,6 +95,8 @@ export interface AuthResponse {
 export interface MeResponse {
     user: AuthUser
     company_id: string | null
+    company_status: string | null
+    is_company_approved: boolean
     fiscal_year_id: string | null
     roles: string[]
     permissions: string[]

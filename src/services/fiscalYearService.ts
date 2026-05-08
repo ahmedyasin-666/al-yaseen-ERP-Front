@@ -15,7 +15,7 @@ export const fiscalYearService = {
   // ── GET /core/fiscal-years/switcher ─────────────────────────
   async getSwitcher() {
     const { data } = await api.get(`${BASE}/switcher`)
-    return data as { years: FiscalYear[]; current_id: string | null }
+    return data as { data: { years: FiscalYear[]; current_id: string | null } }
   },
  
   // ── POST /core/fiscal-years ──────────────────────────────────
@@ -65,6 +65,6 @@ export const fiscalYearService = {
  
   async switchYear(ulid: string) {
     const { data } = await api.post(`${BASE}/${ulid}/switch`)
-    return data as { message: string; current_year: Record<string, unknown> }
+    return data as { message: string; data: Record<string, unknown> }
   },
 }

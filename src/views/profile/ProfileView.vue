@@ -790,8 +790,8 @@ async function saveCompany() {
         const res = await companyService.update(companyUlid, companyForm)
 
         // ✅ تحديث authStore بالبيانات الجديدة من الباك اند
-        if (authStore.user && res.company) {
-            Object.assign(authStore.user.company!, res.company)
+        if (authStore.user && res.data) {
+            Object.assign(authStore.user.company!, res.data)
         }
 
         showToast(t('profile.companySaved'))

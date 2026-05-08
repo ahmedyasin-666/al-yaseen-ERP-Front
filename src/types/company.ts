@@ -122,7 +122,7 @@ export type CompanySetupPayload = CompanySetupForm & { logo?: File | string | nu
 
 export interface CompanySetupResponse {
     message?: string
-    company: {
+    data: {
         id: number | string
         ulid?: string
         title: string

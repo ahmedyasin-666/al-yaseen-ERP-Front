@@ -3,9 +3,9 @@
 
         <!-- Page Header -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="fw-bold mb-0">📊 Dashboard Overview</h3>
+            <h3 class="fw-bold mb-0">{{ $t('dashboard.title') }}</h3>
             <MDBBtn color="primary" size="sm" @click="refreshData">
-                <i class="fas fa-sync-alt me-2"></i> Refresh
+                <i class="fas fa-sync-alt me-2"></i> {{ $t('common.refresh') }}
             </MDBBtn>
         </div>
 
@@ -28,7 +28,7 @@
             <MDBCard>
                 <MDBCardBody>
                     <h5 class="fw-bold mb-3">
-                        <i class="fas fa-history me-2 text-primary"></i> Recent Activity
+                        <i class="fas fa-history me-2 text-primary"></i> {{ $t('dashboard.recentActivity') }}
                     </h5>
 
                     <ul class="list-group list-group-flush">
@@ -47,19 +47,22 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { MDBCard, MDBCardBody, MDBBtn } from 'mdb-vue-ui-kit'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const statsCards = ref([
-    { title: 'Users', value: 1245, icon: 'fas fa-users', color: 'primary', subtitle: 'Total Active' },
-    { title: 'Companies', value: 87, icon: 'far fa-building', color: 'success', subtitle: 'Registered' },
-    { title: 'Revenue', value: '$52K', icon: 'fas fa-dollar-sign', color: 'warning', subtitle: 'This Month' },
-    { title: 'Errors', value: 3, icon: 'fas fa-exclamation-circle', color: 'danger', subtitle: 'System Alerts' },
+    { title: t('dashboard.cards.totalUsers'), value: 1245, icon: 'fas fa-users', color: 'primary', subtitle: t('dashboard.cards.totalUsersSub') },
+    { title: t('dashboard.cards.totalCompanies'), value: 87, icon: 'far fa-building', color: 'success', subtitle: t('dashboard.cards.totalCompaniesSub') },
+    { title: t('dashboard.cards.totalRevenue'), value: '$52K', icon: 'fas fa-dollar-sign', color: 'warning', subtitle: t('dashboard.cards.totalRevenueSub') },
+    { title: t('dashboard.cards.totalErrors'), value: 3, icon: 'fas fa-exclamation-circle', color: 'danger', subtitle: t('dashboard.cards.totalErrorsSub') },
 ])
 
 const activities = ref([
-    { text: 'New user registered', time: '2 mins ago' },
-    { text: 'Company profile updated', time: '10 mins ago' },
-    { text: 'System backup completed', time: '1 hr ago' },
-    { text: 'New branch created', time: '3 hrs ago' },
+    { text: t('dashboard.activities.userRegistered'), time: t('dashboard.activities.times.twoMins') },
+    { text: t('dashboard.activities.companyUpdated'), time: t('dashboard.activities.times.tenMins') },
+    { text: t('dashboard.activities.backupCompleted'), time: t('dashboard.activities.times.oneHour') },
+    { text: t('dashboard.activities.branchCreated'), time: t('dashboard.activities.times.threeHours') },
 ])
 
 const refreshData = () => {

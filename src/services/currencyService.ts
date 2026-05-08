@@ -105,7 +105,7 @@ export const currencyService = {
     // ── SOURCE MANAGEMENT (جديد) ───────────────────────────────────
 
     /**
-     * GET /core/currencies/source
+     * GET /financial/currencies/source
      * المصدر الحالي للشركة
      */
     async getSource(): Promise<{ data: RateSourceInfo }> {
@@ -114,7 +114,7 @@ export const currencyService = {
     },
 
     /**
-     * PUT /core/currencies/source
+     * PUT /financial/currencies/source
      * تغيير مصدر سعر الصرف
      */
     async setSource(source: RateSource): Promise<{ message: string; data: RateSourceInfo }> {
@@ -123,19 +123,12 @@ export const currencyService = {
     },
 
     /**
-     * POST /core/currencies/sync
+     * POST /financial/currencies/sync
      * مزامنة يدوية من Open Exchange Rates
      */
     async syncMarket(): Promise<{ message: string; data: SyncResult }> {
         const { data } = await api.post('financial/currencies/sync')
         return data as { message: string; data: SyncResult }
-    },
-
-    // ── LEGACY / SETUP (موجود — لا يتغير) ─────────────────────────
-
-    async getForSetup(params: Record<string, unknown> = {}): Promise<Currency[]> {
-        const { data } = await api.get('core/geography/currencies', { params })
-        return data as Currency[]
     },
 }
 

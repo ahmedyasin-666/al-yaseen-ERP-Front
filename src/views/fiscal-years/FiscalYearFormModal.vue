@@ -1,4 +1,3 @@
-```vue
 <template>
   <MDBModal v-model="isOpen" tabindex="-1" centered size="lg" @hide="onHide">
 
@@ -82,6 +81,60 @@
           </div>
           <div v-if="errors.name" class="invalid-feedback d-block mt-1 small">
             {{ errors.name }}
+          </div>
+        </MDBCol>
+
+        <!-- Code -->
+        <MDBCol md="6">
+          <label class="form-label fw-semibold small mb-1">
+            {{ t('fiscalYears.code') }}
+          </label>
+          <div class="input-group">
+            <span class="input-group-text">
+              <MDBIcon icon="hashtag" class="text-muted" />
+            </span>
+            <input v-model="form.code" type="text" class="form-control" dir="ltr"
+              :class="{ 'is-invalid': errors.code }" :placeholder="t('fiscalYears.codeHint')" />
+          </div>
+          <div v-if="errors.code" class="invalid-feedback d-block mt-1 small">
+            {{ errors.code }}
+          </div>
+        </MDBCol>
+
+        <!-- Period Type -->
+        <MDBCol md="6">
+          <label class="form-label fw-semibold small mb-1">
+            {{ t('fiscalYears.periodType') }}
+          </label>
+          <div class="input-group">
+            <span class="input-group-text">
+              <MDBIcon icon="sliders-h" class="text-muted" />
+            </span>
+            <select v-model="form.period_type" class="form-select" :class="{ 'is-invalid': errors.period_type }">
+              <option value="monthly">{{ t('fiscalYears.periodTypes.monthly') }}</option>
+              <option value="quarterly">{{ t('fiscalYears.periodTypes.quarterly') }}</option>
+              <option value="custom">{{ t('fiscalYears.periodTypes.custom') }}</option>
+            </select>
+          </div>
+          <div v-if="errors.period_type" class="invalid-feedback d-block mt-1 small">
+            {{ errors.period_type }}
+          </div>
+        </MDBCol>
+
+        <!-- Periods Count (custom) -->
+        <MDBCol md="6" v-if="form.period_type === 'custom'">
+          <label class="form-label fw-semibold small mb-1">
+            {{ t('fiscalYears.periodsCount') }}
+          </label>
+          <div class="input-group">
+            <span class="input-group-text">
+              <MDBIcon icon="list-ol" class="text-muted" />
+            </span>
+            <input v-model.number="form.periods_count" type="number" min="1" step="1" class="form-control" dir="ltr"
+              :class="{ 'is-invalid': errors.periods_count }" />
+          </div>
+          <div v-if="errors.periods_count" class="invalid-feedback d-block mt-1 small">
+            {{ errors.periods_count }}
           </div>
         </MDBCol>
 
@@ -188,8 +241,11 @@ const isEdit = computed(() => !!props.year)
 
 const defaultForm = (): FiscalYearForm => ({
   name: '',
+  code: '',
   start_date: '',
   end_date: '',
+  period_type: 'monthly',
+  periods_count: undefined,
   is_default: false,
   notes: '',
 })
@@ -200,8 +256,11 @@ watch(() => props.year, (y) => {
   if (y) {
     form.value = {
       name: y.name,
+      code: (y as any).code ?? '',
       start_date: y.start_date,
       end_date: y.end_date,
+      period_type: ((y as any).period_type as any) ?? 'monthly',
+      periods_count: (y as any).periods_count ?? undefined,
       is_default: y.is_default,
       notes: y.notes ?? '',
     }
@@ -321,4 +380,3 @@ async function onSubmit() {
   border-color: #1d334f !important;
 }
 </style>
-```

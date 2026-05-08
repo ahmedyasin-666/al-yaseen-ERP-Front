@@ -25,7 +25,7 @@ export interface CompanyUpdatePayload {
 
 export interface CompanyResponse {
     message?: string
-    company: {
+    data: {
         ulid: string
         title: string
         email: string

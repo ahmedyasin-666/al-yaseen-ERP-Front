@@ -79,6 +79,8 @@
                 :routes="['/settings']">
                 <SidenavLink to="/settings/fiscal-years" icon="fas fa-calendar-alt" :label="$t('sidebar.fiscalYears')"
                     sub />
+                <SidenavLink to="/settings/fiscal-years" icon="fas fa-calendar-week"
+                    :label="$t('sidebar.accountingPeriods')" sub />
             </SidenavCollapse>
 
             <!-- ══ FINANCIAL ══ -->
@@ -94,6 +96,8 @@
                 <SidenavLink to="/financial/entries" icon="fas fa-receipt" :label="$t('sidebar.entries')" sub />
                 <SidenavLink to="/financial/cost-centers" icon="fas fa-project-diagram"
                     :label="$t('sidebar.costCenters')" sub />
+                <SidenavLink to="/financial/tax-rates" icon="fas fa-percentage" :label="$t('sidebar.taxRates')" sub />
+                <SidenavLink to="/financial/tax-groups" icon="fas fa-layer-group" :label="$t('sidebar.taxGroups')" sub />
             </SidenavCollapse>
 
             <SidenavCollapse id="collapse-reports" icon="fas fa-chart-bar" :label="$t('sidebar.reportsSection')"
@@ -101,6 +105,13 @@
                 <SidenavLink to="/financial/reports" icon="fas fa-chart-pie" :label="$t('sidebar.financialReports')"
                     sub />
                 <SidenavLink to="/financial/opening-balance" icon="fas fa-flag" :label="$t('sidebar.openingBalance')"
+                    sub />
+            </SidenavCollapse>
+
+            <SidenavCollapse :label="$t('sidebar.partners')" icon="fas fa-handshake">
+                <SidenavLink to="/partners/customers" icon="fas fa-users" :label="$t('sidebar.customers')" sub />
+                <SidenavLink to="/partners/suppliers" icon="fas fa-truck" :label="$t('sidebar.suppliers')" sub />
+                <SidenavLink to="/partners/payment-terms" icon="fas fa-file-contract" :label="$t('sidebar.paymentTerms')"
                     sub />
             </SidenavCollapse>
 

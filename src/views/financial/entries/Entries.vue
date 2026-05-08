@@ -161,6 +161,10 @@
                                     <i v-if="entry.status === 'posted' && !entry.is_auto"
                                         class="fas fa-ban icon-action text-warning" :title="$t('entries.cancel')"
                                         @click="confirmCancel(entry)"></i>
+                                    <!-- Reverse -->
+                                    <i v-if="entry.status === 'posted' && entry.can_be_reversed"
+                                        class="fas fa-undo icon-action text-primary" :title="$t('entries.reverse')"
+                                        @click="openReverse(entry)"></i>
                                     <!-- Edit -->
                                     <i v-if="entry.is_editable && !entry.is_auto"
                                         class="fas fa-edit icon-action text-dark" :title="$t('common.edit')"
@@ -283,6 +287,62 @@
         <ConfirmModal v-model:show="showDeleteModal" type="danger" icon="trash-alt" :title="$t('entries.deleteTitle')"
             :message="$t('entries.deleteMessage', { number: confirmTarget?.number })"
             :confirm-label="$t('common.delete')" :loading="actionLoading" @confirm="onDeleteConfirmed" />
+
+        <!-- ══ Reverse Modal ══ -->
+        <MDBModal v-model="showReverseModal" tabindex="-1" centered size="lg" @hide="onHideReverse">
+            <MDBModalHeader class="border-0 pb-0" style="padding:1.5rem 1.5rem 1rem;">
+                <div class="d-flex align-items-center gap-3">
+                    <div
+                        style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#1d334f,#0d6efd);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.2rem;">
+                        <i class="fas fa-undo"></i>
+                    </div>
+                    <div>
+                        <MDBModalTitle class="fw-bold mb-0">{{ $t('entries.reverseTitle') }}</MDBModalTitle>
+                        <p class="text-muted small mb-0 mt-1">
+                            {{ $t('entries.reverseSubtitle', { number: reverseTarget?.number }) }}
+                        </p>
+                    </div>
+                </div>
+            </MDBModalHeader>
+
+            <MDBModalBody class="px-4 pt-3 pb-2">
+                <MDBRow class="g-3">
+                    <MDBCol md="6">
+                        <label class="form-label fw-semibold small">{{ $t('entries.reversalDate') }}</label>
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                            <input v-model="reverseForm.reversal_date" type="date" class="form-control" dir="ltr" />
+                        </div>
+                        <div class="text-muted small mt-1">{{ $t('entries.reversalDateHint') }}</div>
+                    </MDBCol>
+
+                    <MDBCol md="12">
+                        <label class="form-label fw-semibold small">{{ $t('entries.reversalReason') }}</label>
+                        <div class="input-group">
+                            <span class="input-group-text align-items-start pt-2"><i class="fas fa-sticky-note"></i></span>
+                            <textarea v-model="reverseForm.reason" class="form-control" rows="2"
+                                :placeholder="$t('entries.reversalReasonPlaceholder')" />
+                        </div>
+                    </MDBCol>
+                </MDBRow>
+            </MDBModalBody>
+
+            <MDBModalFooter class="border-0 px-4 pt-0 pb-4 gap-2">
+                <MDBBtn outline="secondary" size="sm" class="px-4" @click="showReverseModal = false" :disabled="actionLoading">
+                    {{ $t('common.cancel') }}
+                </MDBBtn>
+                <MDBBtn color="primary" size="sm" class="px-4 fw-semibold" @click="onReverseConfirmed" :disabled="actionLoading">
+                    <span v-if="actionLoading" class="d-flex align-items-center gap-2">
+                        <MDBSpinner size="sm" />
+                        {{ $t('common.processing') }}
+                    </span>
+                    <span v-else class="d-flex align-items-center gap-1">
+                        <i class="fas fa-undo"></i>
+                        {{ $t('entries.reverse') }}
+                    </span>
+                </MDBBtn>
+            </MDBModalFooter>
+        </MDBModal>
     </div>
 </template>
 
@@ -315,12 +375,15 @@ const showFormModal = ref(false)
 const showPostModal = ref(false)
 const showCancelModal = ref(false)
 const showDeleteModal = ref(false)
+const showReverseModal = ref(false)
 const showingEntry = ref<JournalEntry | null>(null)
 const editingEntry = ref<JournalEntry | null>(null)
 const confirmTarget = ref<JournalEntry | null>(null)
+const reverseTarget = ref<JournalEntry | null>(null)
 let searchTimeout: ReturnType<typeof setTimeout>
 
 const filters = reactive({ search: '', status: '', date_from: '', date_to: '' })
+const reverseForm = reactive<{ reversal_date: string; reason: string }>({ reversal_date: '', reason: '' })
 
 const statCards = computed(() => [
     { key: 'total', label: t('entries.stats.total'), value: meta.value.total, icon: 'fas fa-receipt', color: 'primary' },
@@ -448,6 +511,41 @@ async function onDeleteConfirmed() {
     } catch (e: any) {
         toast.value?.show(e?.response?.data?.message ?? t('common.error'), 'danger')
     } finally { actionLoading.value = false }
+}
+
+function openReverse(e: JournalEntry) {
+    reverseTarget.value = e
+    reverseForm.reversal_date = ''
+    reverseForm.reason = ''
+    showReverseModal.value = true
+}
+
+function onHideReverse() {
+    reverseTarget.value = null
+    reverseForm.reversal_date = ''
+    reverseForm.reason = ''
+}
+
+async function onReverseConfirmed() {
+    if (!reverseTarget.value) return
+    actionLoading.value = true
+    try {
+        const res = await entryService.reverse(reverseTarget.value.ulid, {
+            reversal_date: reverseForm.reversal_date || undefined,
+            reason: reverseForm.reason || undefined,
+        })
+        const updated = (res as any)?.data
+        if (updated) {
+            const i = entries.value.findIndex(e => e.ulid === reverseTarget.value!.ulid)
+            if (i !== -1) entries.value[i] = updated
+        }
+        showReverseModal.value = false
+        toast.value?.show((res as any)?.message ?? t('entries.reversedSuccess'), 'success')
+    } catch (e: any) {
+        toast.value?.show(e?.response?.data?.message ?? t('common.error'), 'danger')
+    } finally {
+        actionLoading.value = false
+    }
 }
 </script>
 

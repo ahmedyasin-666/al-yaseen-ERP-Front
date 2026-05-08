@@ -119,6 +119,14 @@ export interface JournalEntry {
     reference: string | null
     posted_at: string | null
     cancelled_at: string | null
+    reversed_entry_id: string | null
+    reversal_entry_id: string | null
+    reversed_at: string | null
+    reversal_reason: string | null
+    can_be_cancelled: boolean
+    can_be_reversed: boolean
+    reversed_entry?: { ulid: string; number: string } | null
+    reversal_entry?: { ulid: string; number: string } | null
     lines_count?: number
     financial_journal: { ulid: string; code: string; name: string; type: string; prefix: string | null } | null
     fiscal_year: { ulid: string; name: string } | null
@@ -271,4 +279,108 @@ export interface OpeningBalancePreview {
     difference: number
     is_balanced: boolean
     already_exists: boolean
+}
+
+// ═══════════════════════════════════════════════
+//  Accounting Periods
+// ═══════════════════════════════════════════════
+export interface AccountingPeriod {
+  ulid: string
+  name: string
+  code: string | null
+  period_number: number
+  start_date: string
+  end_date: string
+  status: 'open' | 'closed' | 'locked'
+  is_open: boolean
+  is_closed: boolean
+  is_locked: boolean
+  is_current: boolean
+  allow_adjustments: boolean
+  can_post: boolean
+  display_name: string
+  closed_at: string | null
+  closed_by: { ulid: string; name: string } | null
+  notes: string | null
+  created_at: string
+}
+
+export interface AccountingPeriodForm {
+  name: string
+  code?: string
+  period_number: number
+  start_date: string
+  end_date: string
+  allow_adjustments: boolean
+  notes?: string
+}
+
+// ═══════════════════════════════════════════════
+//  Tax
+// ═══════════════════════════════════════════════
+export interface TaxRate {
+  ulid: string
+  code: string
+  name: string
+  name_en: string | null
+  description: string | null
+  type: 'percentage' | 'fixed'
+  rate: number
+  display_rate: string
+  scope: 'sales' | 'purchases' | 'both'
+  is_compound: boolean
+  compound_order: number
+  is_inclusive: boolean
+  effective_from: string
+  effective_to: string | null
+  is_currently_valid: boolean
+  is_default: boolean
+  is_active: boolean
+  tax_group?: { ulid: string; code: string; name: string } | null
+  tax_payable_account?: { ulid: string; code: string; name: string } | null
+  tax_receivable_account?: { ulid: string; code: string; name: string } | null
+  created_at: string
+}
+
+export interface TaxRateForm {
+  tax_group_id?: string
+  tax_payable_account_id: string
+  tax_receivable_account_id: string
+  code: string
+  name: string
+  name_en?: string
+  description?: string
+  type: 'percentage' | 'fixed'
+  rate: number
+  scope: 'sales' | 'purchases' | 'both'
+  is_compound: boolean
+  compound_order: number
+  is_inclusive: boolean
+  effective_from: string
+  effective_to?: string
+  is_default: boolean
+  is_active: boolean
+}
+
+export interface TaxGroup {
+  ulid: string
+  code: string
+  name: string
+  name_en: string | null
+  description: string | null
+  scope: 'sales' | 'purchases' | 'both'
+  is_default: boolean
+  is_active: boolean
+  tax_rates_count?: number
+  created_at: string
+}
+
+export interface TaxGroupForm {
+  code: string
+  name: string
+  name_en?: string
+  description?: string
+  scope: 'sales' | 'purchases' | 'both'
+  is_default: boolean
+  is_active: boolean
 }

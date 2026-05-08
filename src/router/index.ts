@@ -41,6 +41,13 @@ const routes = [
         },
     },
 
+    {
+        path: '/pending-approval',
+        name: 'PendingApproval',
+        component: () => import('@/views/company/PendingApproval.vue'),
+        meta: { requiresAuth: true },
+    },
+
     // ─── صفحات محمية (تتطلب تسجيل دخول + شركة) ────────
     {
         path: '/',
@@ -70,6 +77,13 @@ const routes = [
                 component: FiscalYearsView,
                 meta: { requiresAuth: true, requiresCompany: true },
             },
+            // Accounting Periods (nested under fiscal years settings)
+            {
+                path: '/settings/fiscal-years/:fiscalYearUlid/periods',
+                name: 'AccountingPeriods',
+                component: () => import('@/views/fiscal-years/AccountingPeriodsView.vue'),
+                meta: { requiresAuth: true, requiresCompany: true },
+            },
 
             // ─── Financial Module ─────────────────────────────────────
             {
@@ -88,6 +102,19 @@ const routes = [
                 path: 'financial/entries',
                 name: 'Entries',
                 component: Entries,
+                meta: { requiresAuth: true, requiresCompany: true },
+            },
+            // Tax Management
+            {
+                path: '/financial/tax-rates',
+                name: 'TaxRates',
+                component: () => import('@/views/financial/tax/TaxRates.vue'),
+                meta: { requiresAuth: true, requiresCompany: true },
+            },
+            {
+                path: '/financial/tax-groups',
+                name: 'TaxGroups',
+                component: () => import('@/views/financial/tax/TaxGroups.vue'),
                 meta: { requiresAuth: true, requiresCompany: true },
             },
             {
@@ -113,7 +140,38 @@ const routes = [
                 name: 'YearEndClosing',
                 component: YearEndClosing,
                 meta: { requiresAuth: true, requiresCompany: true },
-            }
+            },
+            // ── Business Partners ──
+            {
+                path: '/partners/customers',
+                name: 'Customers',
+                component: () => import('@/views/partners/customers/Customers.vue'),
+                meta: { requiresAuth: true, requiresCompany: true },
+            },
+            {
+                path: '/partners/customers/:ulid',
+                name: 'CustomerDetail',
+                component: () => import('@/views/partners/customers/CustomerDetail.vue'),
+                meta: { requiresAuth: true, requiresCompany: true },
+            },
+            {
+                path: '/partners/suppliers',
+                name: 'Suppliers',
+                component: () => import('@/views/partners/suppliers/Suppliers.vue'),
+                meta: { requiresAuth: true, requiresCompany: true },
+            },
+            {
+                path: '/partners/suppliers/:ulid',
+                name: 'SupplierDetail',
+                component: () => import('@/views/partners/suppliers/SupplierDetail.vue'),
+                meta: { requiresAuth: true, requiresCompany: true },
+            },
+            {
+                path: '/partners/payment-terms',
+                name: 'PaymentTerms',
+                component: () => import('@/views/partners/PaymentTerms.vue'),
+                meta: { requiresAuth: true, requiresCompany: true },
+            },
 
         ],
     },
@@ -143,7 +201,10 @@ router.beforeEach((to, _from, next) => {
 
     // 2️⃣ صفحة الزوار والمستخدم مسجل بالفعل
     if (to.meta.guest && isAuthenticated) {
-        return next(hasCompany ? { name: 'Dashboard' } : { name: 'CompanySetup' })
+        if (!hasCompany) return next({ name: 'CompanySetup' })
+        const companyStatus = localStorage.getItem('company_status')
+        if (companyStatus !== 'active') return next({ name: 'PendingApproval' })
+        return next({ name: 'Dashboard' })
     }
 
     // 3️⃣ صفحة تحتاج شركة والمستخدم ليس لديه شركة
@@ -151,7 +212,22 @@ router.beforeEach((to, _from, next) => {
         return next({ name: 'CompanySetup' })
     }
 
-    // 4️⃣ صفحة setup والمستخدم لديه شركة بالفعل
+    // 4️⃣ لديه شركة لكن غير معتمدة → pending-approval
+    const companyStatus = localStorage.getItem('company_status')
+    const isApproved = companyStatus === 'active'
+
+    if (to.meta.requiresCompany && isAuthenticated && hasCompany && !isApproved) {
+        if (to.name !== 'PendingApproval') {
+            return next({ name: 'PendingApproval' })
+        }
+    }
+
+    // 5️⃣ الشركة معتمدة ويحاول الوصول لصفحة pending → dashboard
+    if (to.name === 'PendingApproval' && isAuthenticated && hasCompany && isApproved) {
+        return next({ name: 'Dashboard' })
+    }
+
+    // 6️⃣ صفحة setup والمستخدم لديه شركة بالفعل
     if (to.meta.requiresNoCompany && isAuthenticated && hasCompany) {
         return next({ name: 'Dashboard' })
     }

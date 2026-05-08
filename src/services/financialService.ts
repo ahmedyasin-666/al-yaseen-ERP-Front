@@ -58,7 +58,7 @@ export const accountService = {
 
     async getDropdown(params: Record<string, unknown> = {}) {
         const { data } = await api.get(`${BASE}/accounts/dropdown`, { params })
-        return data as AccountDropdown[]
+        return (data as { data: AccountDropdown[] }).data
     },
 
     async search(q: string) {
@@ -118,7 +118,7 @@ export const accountService = {
 
     async getChildren(ulid: string) {
         const { data } = await api.get(`${BASE}/accounts/${ulid}/children`)
-        return data as Account[]
+        return (data as { data: Account[] }).data
     },
 }
 
@@ -134,7 +134,7 @@ export const journalService = {
 
     async getDropdown() {
         const { data } = await api.get(`${BASE}/journals/dropdown`)
-        return data as FinancialJournal[]
+        return (data as { data: FinancialJournal[] }).data
     },
 
     async show(ulid: string) {
@@ -197,6 +197,14 @@ export const entryService = {
         const { data } = await api.post(`${BASE}/entries/${ulid}/cancel`)
         return data as { message: string; data: JournalEntry }
     },
+
+    async reverse(
+        ulid: string,
+        payload: { reversal_date?: string; description?: string; reason?: string } = {}
+    ) {
+        const { data } = await api.post(`${BASE}/entries/${ulid}/reverse`, payload)
+        return data as { message: string; data: JournalEntry }
+    },
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -211,12 +219,12 @@ export const costCenterService = {
 
     async getTree(params: Record<string, unknown> = {}) {
         const { data } = await api.get(`${BASE}/cost-centers/tree`, { params })
-        return data as CostCenter[]
+        return (data as { data: CostCenter[] }).data
     },
 
     async getDropdown(params: Record<string, unknown> = {}) {
         const { data } = await api.get(`${BASE}/cost-centers/dropdown`, { params })
-        return data as CostCenter[]
+        return (data as { data: CostCenter[] }).data
     },
 
     async show(ulid: string) {
@@ -328,9 +336,11 @@ export const yearEndService = {
         })
         return data as {
             message: string
-            closing_entry: JournalEntry
-            fiscal_year: Record<string, unknown>
-            carry_forward: Record<string, unknown> | null
+            data: {
+                closing_entry: JournalEntry
+                fiscal_year: Record<string, unknown>
+                carry_forward: Record<string, unknown> | null
+            }
         }
     },
 

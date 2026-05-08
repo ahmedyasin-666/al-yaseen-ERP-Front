@@ -54,19 +54,19 @@ export const useFiscalYearStore = defineStore('fiscalYear', () => {
     loading.value = true
     try {
       const res = await fiscalYearService.getSwitcher()
-      years.value = res.years
+      years.value = res.data.years
 
       const saved = localStorage.getItem(STORAGE_KEY)
-      const savedStillValid = saved && res.years.some(y => y.ulid === saved)
+      const savedStillValid = saved && res.data.years.some(y => y.ulid === saved)
 
       if (savedStillValid) {
         // ✅ استخدم الاختيار المحفوظ
         currentId.value = saved
       } else {
         // 🔄 fallback: استخدم اختيار السيرفر (السنة الافتراضية/الحالية)
-        currentId.value = res.current_id
-        if (res.current_id) {
-          localStorage.setItem(STORAGE_KEY, res.current_id)
+        currentId.value = res.data.current_id
+        if (res.data.current_id) {
+          localStorage.setItem(STORAGE_KEY, res.data.current_id)
         } else {
           localStorage.removeItem(STORAGE_KEY)
         }

@@ -1,4 +1,3 @@
-```vue
 <template>
     <MDBModal v-model="isOpen" tabindex="-1" centered size="lg" @hide="onHide">
         <MDBModalHeader class="modal-header-custom border-0 pb-0">
@@ -213,6 +212,7 @@ const loading = ref(false)
 const errors = ref<Record<string, string>>({})
 const generalError = ref('')
 const parentOptions = ref<SelectOption[]>([])
+const parentsLoaded = ref(false)
 
 const isOpen = computed({ get: () => props.show, set: v => emit('update:show', v) })
 const isEdit = computed(() => !!props.account)
@@ -240,14 +240,28 @@ const sideOptions = computed(() => [
     { value: 'credit', text: t('accounts.credit') },
 ])
 
-onMounted(async () => {
+async function loadParentOptions() {
     try {
         const res = await accountService.getDropdown()
         parentOptions.value = [
             { value: '', text: `— ${t('accounts.noParent')} —` },
-            ...res.map(a => ({ value: a.ulid, text: `${a.code} — ${a.name}` })),
+            ...res.map(a => ({ value: a.ulid, text: `${a.code} - ${a.name}` })),
         ]
-    } catch { /* silent */ }
+        parentsLoaded.value = true
+    } catch {
+        parentOptions.value = [{ value: '', text: `— ${t('accounts.noParent')} —` }]
+        parentsLoaded.value = false
+    }
+}
+
+onMounted(async () => {
+    await loadParentOptions()
+})
+
+watch(isOpen, async (open) => {
+    if (open && !parentsLoaded.value) {
+        await loadParentOptions()
+    }
 })
 
 watch(() => props.account, (acc) => {
@@ -356,4 +370,3 @@ async function onSubmit() {
     border-color: #1d334f !important;
 }
 </style>
-```

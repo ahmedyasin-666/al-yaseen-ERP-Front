@@ -672,8 +672,8 @@ async function saveSettings() {
             date_format: settingsForm.date_format,
         })
         if (authStore.user?.company) {
-            authStore.user.company.timezone = res.company.timezone as string
-            authStore.user.company.date_format = res.company.date_format as string
+            authStore.user.company.timezone = res.data.timezone as string
+            authStore.user.company.date_format = res.data.date_format as string
         }
         showToast(t('settings.datetime.saved'))
     } catch (err: any) {

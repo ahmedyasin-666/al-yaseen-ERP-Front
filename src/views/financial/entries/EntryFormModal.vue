@@ -241,11 +241,11 @@ onMounted(async () => {
         accountService.getDropdown({ allow_posting: true }),
         costCenterService.getDropdown(),
     ])
-    journalOptions.value = journals.map(j => ({ value: j.ulid, text: `${j.code} — ${j.name}` }))
+    journalOptions.value = journals.map(j => ({ value: j.ulid, text: `${j.code} - ${j.name}` }))
     
     accountOptions.value = [
         { value: '', text: `— ${t('entries.lines.selectAccount')} —` },
-        ...accounts.map(a => ({ value: a.ulid, text: `${a.code} — ${a.name}` })),
+        ...accounts.map(a => ({ value: a.ulid, text: `${a.code} - ${a.name}` })),
     ]
     costCenterOptions.value = [
         { value: '', text: `— ${t('entries.lines.noCostCenter')} —` },

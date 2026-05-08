@@ -17,20 +17,20 @@ export const profileService = {
 
     /** تحديث البيانات الشخصية */
     async updateProfile(payload: UpdateProfilePayload): Promise<AuthUser> {
-        const { data } = await api.put<{ user: AuthUser; message: string }>('auth/profile', payload)
-        return data.user
+        const { data } = await api.put<{ message: string; data: AuthUser }>('auth/profile', payload)
+        return data.data
     },
 
     /** رفع صورة البروفايل */
     async updateAvatar(file: File): Promise<string> {
         const form = new FormData()
         form.append('avatar', file)
-        const { data } = await api.post<{ avatar: string; message: string }>(
+        const { data } = await api.post<{ message: string; data: string }>(
             'auth/profile/avatar',
             form,
             { headers: { 'Content-Type': 'multipart/form-data' } }
         )
-        return data.avatar
+        return data.data
     },
 
     /** تغيير كلمة المرور */

@@ -42,19 +42,22 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, type PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { MDBModal, MDBModalHeader, MDBModalTitle, MDBModalBody, MDBModalFooter } from 'mdb-vue-ui-kit'
 
-const props = defineProps<{
-  show: boolean
-  type: string
-  icon: string
-  title: string
-  message: string
-  confirmLabel: string
-  loading: boolean
-}>()
+const props = defineProps({
+  show: { type: Boolean, required: true },
+  type: {
+    type: String as PropType<'danger' | 'warning' | 'success' | 'primary' | 'info'>,
+    default: 'danger',
+  },
+  icon: { type: String, required: true },
+  title: { type: String, required: true },
+  message: { type: String, required: true },
+  confirmLabel: { type: String, required: true },
+  loading: { type: Boolean, required: true },
+})
 
 const emit = defineEmits<{ 'update:show': [v: boolean]; confirm: [] }>()
 const { t } = useI18n()

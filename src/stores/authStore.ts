@@ -7,13 +7,17 @@ import router from '@/router'
 const TOKEN_KEY = 'token'
 const COMPANY_KEY = 'company_id'
 const FISCAL_YEAR_KEY = 'fiscal_year_id'
+const COMPANY_STATUS_KEY = 'company_status'
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
         user: null as AuthUser | null,
         token: localStorage.getItem(TOKEN_KEY) ?? '',
         companyId: localStorage.getItem(COMPANY_KEY) ?? null as string | null,
+        companyStatus: (localStorage.getItem(COMPANY_STATUS_KEY) ?? null) as string | null,
+        isCompanyApproved: localStorage.getItem(COMPANY_STATUS_KEY) === 'active',
         isLoading: false,
+        meLoaded: false,
         error: null as string | null,
         roles: [] as string[],
         permissions: [] as string[],
@@ -30,6 +34,8 @@ export const useAuthStore = defineStore('auth', {
             state.roles.includes(role),
         canSetupCompany: (state): boolean =>
             state.permissions.includes('api.core.companies.store'),
+        isPendingApproval: (state): boolean =>
+            !!state.companyId && !state.isCompanyApproved,
     },
 
     actions: {
@@ -46,13 +52,21 @@ export const useAuthStore = defineStore('auth', {
                     response.company_id,
                     response.roles,
                     response.permissions,
+                    response.company_status ?? null,
+                    response.is_company_approved ?? false,
                 )
 
                 // ── السنة المالية الافتراضية من الباك اند ────────────
                 // نحفظها فقط إن لم يكن المستخدم قد اختار سنة سابقاً
                 this._initFiscalYear(response.fiscal_year_id ?? null)
 
-                await router.push(response.company_id ? '/dashboard' : '/company-setup')
+                if (!response.company_id) {
+                    await router.push('/company-setup')
+                } else if (!response.is_company_approved) {
+                    await router.push('/pending-approval')
+                } else {
+                    await router.push('/dashboard')
+                }
             } catch (err: unknown) {
                 this.error = this._extractError(err)
                 throw err
@@ -73,6 +87,8 @@ export const useAuthStore = defineStore('auth', {
                     null,
                     response.roles,
                     response.permissions,
+                    response.company_status ?? null,
+                    response.is_company_approved ?? false,
                 )
 
                 // مستخدم جديد → لا شركة → امسح أي سنة قديمة
@@ -100,6 +116,7 @@ export const useAuthStore = defineStore('auth', {
         // ══ Fetch Me (تحميل التطبيق) ════════════════════════════════
         async fetchMe(): Promise<void> {
             if (!this.token) return
+            this.isLoading = true
             try {
                 const data = await authService.me()
                 this.user = data.user
@@ -115,14 +132,32 @@ export const useAuthStore = defineStore('auth', {
                     localStorage.removeItem(COMPANY_KEY)
                 }
 
+                // ── حالة اعتماد الشركة ─────────────────────────────────
+                this.companyStatus = data.company_status ?? null
+                this.isCompanyApproved = data.is_company_approved ?? false
+                const cs = data.company_status
+                if (cs) {
+                    localStorage.setItem(COMPANY_STATUS_KEY, cs)
+                } else {
+                    localStorage.removeItem(COMPANY_STATUS_KEY)
+                }
+
                 // ── السنة المالية ─────────────────────────────────────
                 // نمرر السنة الافتراضية من الباك اند
                 // _initFiscalYear ستحترم اختيار المستخدم السابق إن وُجد
                 this._initFiscalYear(data.fiscal_year_id ?? null)
 
+                this.meLoaded = true
             } catch {
                 this._clearAuth()
+                this.meLoaded = true
+            } finally {
+                this.isLoading = false
             }
+        },
+
+        async refreshApprovalStatus(): Promise<void> {
+            await this.fetchMe()
         },
 
         // ── يُستدعى من CompanySetup بعد نجاح الإنشاء ─────────────────
@@ -171,12 +206,16 @@ export const useAuthStore = defineStore('auth', {
             companyId: string | null,
             roles: string[] = [],
             permissions: string[] = [],
+            companyStatus: string | null = null,
+            isCompanyApproved: boolean = false,
         ): void {
             this.token = token
             this.user = user
             this.companyId = companyId
             this.roles = roles
             this.permissions = permissions
+            this.companyStatus = companyStatus
+            this.isCompanyApproved = isCompanyApproved
 
             localStorage.setItem(TOKEN_KEY, token)
 
@@ -184,6 +223,12 @@ export const useAuthStore = defineStore('auth', {
                 localStorage.setItem(COMPANY_KEY, companyId)
             } else {
                 localStorage.removeItem(COMPANY_KEY)
+            }
+
+            if (companyStatus) {
+                localStorage.setItem(COMPANY_STATUS_KEY, companyStatus)
+            } else {
+                localStorage.removeItem(COMPANY_STATUS_KEY)
             }
         },
 
@@ -193,10 +238,14 @@ export const useAuthStore = defineStore('auth', {
             this.companyId = null
             this.roles = []
             this.permissions = []
+            this.companyStatus = null
+            this.isCompanyApproved = false
+            this.meLoaded = false
 
             localStorage.removeItem(TOKEN_KEY)
             localStorage.removeItem(COMPANY_KEY)
             localStorage.removeItem(FISCAL_YEAR_KEY) // ← امسح السنة عند تسجيل الخروج
+            localStorage.removeItem(COMPANY_STATUS_KEY)
         },
 
         _startLoading(): void {
