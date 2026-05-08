@@ -672,13 +672,30 @@ watch(activeTab, async (tab) => {
     setupLoading.value = true
     try {
         const d = await geographyService.getSetupData(langStore.lang)
+        console.debug('[ProfileView] setup-data before state assignment', {
+            countries: d.countries?.length ?? 0,
+            allRegions: d.allRegions?.length ?? 0,
+            allCities: d.allCities?.length ?? 0,
+            currencies: d.currencies?.length ?? 0,
+            industries: d.industries?.length ?? 0,
+            allBusinessTypes: d.allBusinessTypes?.length ?? 0,
+        })
         countries.value = d.countries
         allRegions.value = d.allRegions
         allCities.value = d.allCities
         currencies.value = d.currencies
         industries.value = d.industries
         allBusinessTypes.value = d.allBusinessTypes
-    } catch {
+        console.debug('[ProfileView] setup-data state assigned', {
+            countries: countries.value.length,
+            filteredRegions: filteredRegions.value.length,
+            filteredCities: filteredCities.value.length,
+            currencies: currencies.value.length,
+            industries: industries.value.length,
+            filteredBusinessTypes: filteredBusinessTypes.value.length,
+        })
+    } catch (err) {
+        console.error('[ProfileView] setup-data load failed', err)
         showToast(t('setup.errors.loadFailed'), 'error')
     } finally {
         setupLoading.value = false

@@ -818,6 +818,14 @@ onMounted(async () => {
     const lang = langStore.lang
     try {
         const data = await geographyService.getSetupData(lang)
+        console.debug('[CompanySetup] setup-data before state assignment', {
+            countries: data.countries?.length ?? 0,
+            allRegions: data.allRegions?.length ?? 0,
+            allCities: data.allCities?.length ?? 0,
+            currencies: data.currencies?.length ?? 0,
+            industries: data.industries?.length ?? 0,
+            allBusinessTypes: data.allBusinessTypes?.length ?? 0,
+        })
         countries.value = data.countries
         allRegions.value = data.allRegions
         allCities.value = data.allCities
@@ -825,7 +833,16 @@ onMounted(async () => {
         currencyRawList.value = data.currenciesRaw ?? []
         industries.value = data.industries
         allBusinessTypes.value = data.allBusinessTypes
-    } catch {
+        console.debug('[CompanySetup] setup-data state assigned', {
+            countries: countries.value.length,
+            filteredRegions: filteredRegions.value.length,
+            filteredCities: filteredCities.value.length,
+            currencies: currencies.value.length,
+            industries: industries.value.length,
+            filteredBusinessTypes: filteredBusinessTypes.value.length,
+        })
+    } catch (err) {
+        console.error('[CompanySetup] setup-data load failed', err)
         generalError.value = t('setup.errors.loadFailed')
     } finally {
         initialLoading.value = false

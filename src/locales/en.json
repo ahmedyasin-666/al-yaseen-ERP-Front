@@ -153,6 +153,10 @@
         "hints": {
             "vatRate": "Enter 0 if not VAT-registered",
             "incomeTax": "Enter 0 if income tax does not apply"
+        },
+        "errors": {
+            "loadFailed": "Failed to load setup data. Please try again.",
+            "submitFailed": "Failed to complete company setup. Please verify your data and try again."
         }
     },
     "pendingApproval": {

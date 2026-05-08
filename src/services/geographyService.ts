@@ -100,36 +100,61 @@ export const geographyService = {
     * ✅ جلب كل البيانات في طلب واحد فقط
     */
     async getSetupData(lang = 'ar'): Promise<SetupData> {
-        const { data } = await api.get('core/setup-data')
-        const setup = data.data
+        const response = await api.get('core/setup-data')
+        console.debug('[setup-data] raw axios response', response)
+
+        const payload = response.data
+        // Some endpoints wrap with { data: {...} } while others return flat object.
+        const setup = payload?.data ?? payload
+        console.debug('[setup-data] parsed payload', {
+            hasDataWrapper: Boolean(payload?.data),
+            keys: Object.keys(setup ?? {}),
+        })
+
+        const countriesRaw = Array.isArray(setup?.countries) ? setup.countries : []
+        const regionsRaw = Array.isArray(setup?.regions) ? setup.regions : []
+        const citiesRaw = Array.isArray(setup?.cities) ? setup.cities : []
+        const currenciesRaw = Array.isArray(setup?.currencies) ? setup.currencies : []
+        const industriesRaw = Array.isArray(setup?.industries) ? setup.industries : []
+        const businessTypesRaw = Array.isArray(setup?.business_types) ? setup.business_types : []
+
+        console.debug('[setup-data] array diagnostics', {
+            countries: countriesRaw.length,
+            regions: regionsRaw.length,
+            cities: citiesRaw.length,
+            currencies: currenciesRaw.length,
+            industries: industriesRaw.length,
+            business_types: businessTypesRaw.length,
+        })
+
         // lang يُرسل تلقائياً من الـ interceptor، لكن نحتاجه هنا للـ mapping
         return {
-            countries: setup.countries.map((c: any): SelectOption => ({
+            countries: countriesRaw.map((c: any): SelectOption => ({
                 value: c.ulid,
                 text: pick(c, lang),
                 secondary: c.code,
             })),
-            allRegions: setup.regions.map((r: any): RegionOption => ({
+            allRegions: regionsRaw.map((r: any): RegionOption => ({
                 value: r.ulid,
                 text: pick(r, lang),
                 countryUlid: r.country?.ulid ?? '',
             })),
-            allCities: setup.cities.map((c: any): CityOption => ({
+            allCities: citiesRaw.map((c: any): CityOption => ({
                 value: c.ulid,
                 text: pick(c, lang),
                 regionUlid: c.region?.ulid ?? '',   // ← تأكد أن الـ Resource يُرجع region.ulid
             })),
-            currencies: setup.currencies.map((c: any): SelectOption => ({
+            currencies: currenciesRaw.map((c: any): SelectOption => ({
                 value: c.ulid,
                 text: pick(c, lang),
                 secondary: c.symbol || c.code,
             })),
-            currenciesRaw: data.currencies,
-            industries: data.industries.map((i: any): SelectOption => ({
+            currenciesRaw: currenciesRaw,
+            industries: industriesRaw.map((i: any): SelectOption => ({
                 value: i.ulid,
                 text: pick(i, lang),
             })),
-            allBusinessTypes: setup.business_types.map((b: any): BusinessTypeOption => ({
+            allBusinessTypes: businessTypesRaw.map((b: any): BusinessTypeOption => ({
                 value: b.ulid,
                 text: pick(b, lang),
                 industryUlid: b.industry?.ulid ?? '',
